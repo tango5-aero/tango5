@@ -1,33 +1,8 @@
 import { FeatureCollection } from 'geojson';
-import { Fragment, FunctionComponent, useEffect, useState } from 'react';
-import { Layer, Source, useMap } from 'react-map-gl';
-import { composeMapElements } from '@/helpers/composer';
+import { Fragment, FunctionComponent } from 'react';
+import { Layer, Source } from 'react-map-gl';
 import data from '@/data/sample_us.json';
-import { flightSchema } from '@/models/flight';
 import { Labels } from './labels';
-
-const flights = flightSchema.array().parse(data);
-
-const useCollection = () => {
-    const [collection, setCollection] = useState<FeatureCollection>({ type: 'FeatureCollection', features: [] });
-    const { map } = useMap();
-
-    useEffect(() => {
-        const center = map ? map.getCenter() : undefined;
-
-        const labelThreshold = map ? map.getZoom() <= 6 || flights.length > 250 : undefined;
-
-        if (center === undefined || labelThreshold === undefined) {
-            return;
-        }
-
-        const features = composeMapElements(flights, center, labelThreshold);
-
-        setCollection({ type: 'FeatureCollection', features });
-    }, [map]);
-
-    return collection;
-};
 
 const FlightsLayout: FunctionComponent<{ collection: FeatureCollection }> = ({ collection }) => (
     <Fragment>
@@ -99,8 +74,7 @@ const FlightsLayout: FunctionComponent<{ collection: FeatureCollection }> = ({ c
 );
 
 const Flights = () => {
-    const collection = useCollection();
-    return <FlightsLayout collection={collection} />;
+    return <FlightsLayout collection={data as FeatureCollection} />;
 };
 
 export { Flights };
