@@ -1,0 +1,63 @@
+
+@font-face
+    font-family: 'B612'
+    src: url('./fonts/B612-Regular.ttf') format('truetype')
+
+:root
+    --app-height: 100%
+
+body
+    margin: 0
+    padding: 0
+    text-rendering: optimizeLegibility
+    -webkit-font-smoothing: antialiased
+    font-size: 16px
+    font-family: 'B612', monospace
+    background-color: #242c36
+    color: hsl(0, 0%, 100%)
+    overflow: hidden
+
+html
+    scrollbar-face-color: #646464
+    scrollbar-base-color: #646464
+    scrollbar-3dlight-color: #646464
+    scrollbar-highlight-color: #646464
+    scrollbar-track-color: #000
+    scrollbar-arrow-color: #000
+    scrollbar-shadow-color: #646464
+    scrollbar-dark-shadow-color: #646464
+    overflow: hidden
+
+a
+    color: white
+    text-decoration: none
+
+    &:hover
+        color: inherit
+
+.mapboxgl-ctrl-logo
+    display: none !important
+
+::-webkit-scrollbar
+    width: 8px
+    height: 3px
+
+::-webkit-scrollbar-button
+    background-color: #000
+
+::-webkit-scrollbar-track
+    background-color: #646464
+
+::-webkit-scrollbar-track-piece
+    background-color: #000
+
+::-webkit-scrollbar-thumb
+    height: 50px
+    background-color: #666
+    border-radius: 3px
+
+::-webkit-scrollbar-corner
+    background-color: #646464
+
+::-webkit-resizer
+    background-color: #666
