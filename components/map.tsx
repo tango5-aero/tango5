@@ -4,31 +4,31 @@ import MapGL, { MapProvider } from 'react-map-gl';
 import { Layer, Source } from 'react-map-gl';
 import data from '~/data/sample_us.json';
 import { Feature, Polygon } from 'geojson';
-import { FunctionComponent, useEffect, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '~/styles/globals.sass';
 
-const Label: FunctionComponent<{ label: Feature }> = ({ label }) => {
+const Label = ({ feature }: PropsWithChildren<{ feature: Feature }>) => {
     const [canvas] = useState<HTMLCanvasElement>(document.createElement('canvas'));
 
-    const id = label.properties?.id as string;
-    const geometry = label.geometry as Polygon;
+    const id = feature.properties?.id as string;
+    const geometry = feature.geometry as Polygon;
     const coordinates = geometry.coordinates[0];
 
     canvas.height = 300;
     canvas.width = 300;
 
     useEffect(() => {
-        const selFL = label.properties?.selectedAlt ? (label.properties.selectedAlt / 100).toFixed(0).padStart(3, '0') : '';
-        const actFL = label.properties?.alt ? (label.properties.alt / 100).toFixed(0).padStart(3, '0') : '';
-        const actGS = label.properties?.gs ? (label.properties.gs / 10).toFixed(0) : '';
+        const selFL = feature.properties?.selectedAlt ? (feature.properties.selectedAlt / 100).toFixed(0).padStart(3, '0') : '';
+        const actFL = feature.properties?.alt ? (feature.properties.alt / 100).toFixed(0).padStart(3, '0') : '';
+        const actGS = feature.properties?.gs ? (feature.properties.gs / 10).toFixed(0) : '';
 
-        const next = label.properties?.nextPoint ? label.properties.nextPoint : '';
+        const next = feature.properties?.nextPoint ? feature.properties.nextPoint : '';
 
         let vstatus = ' ';
 
-        switch (label.properties?.verticalStatus) {
+        switch (feature.properties?.verticalStatus) {
             case 'climbing':
                 vstatus = '↑';
                 break;
@@ -40,10 +40,10 @@ const Label: FunctionComponent<{ label: Feature }> = ({ label }) => {
 
         context.font = '60px B612';
         context.fillStyle = '#ffffff';
-        context.fillText(label.properties?.callsign ?? '', 10, 60);
+        context.fillText(feature.properties?.callsign ?? '', 10, 60);
         context.fillText(`${actFL}${vstatus}${selFL}`, 10, 160);
         context.fillText(`${actGS} ${next}`, 10, 260);
-    }, [canvas, label.properties]);
+    }, [canvas, feature.properties]);
 
     return (
         <Source id={id} key={id} type="canvas" coordinates={coordinates.slice(0, 4)} animate={true} canvas={canvas}>
@@ -82,7 +82,7 @@ const Map = () => {
                 {data.features
                     .filter((label) => label.properties?.type === 'flightLabel')
                     .map((label) => (
-                        <Label label={label as Feature} key={label.properties?.id} />
+                        <Label feature={label as Feature} key={label.properties?.id} />
                     ))}
             </MapGL>
         </MapProvider>
