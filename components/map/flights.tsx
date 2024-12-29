@@ -1,7 +1,7 @@
 import { FeatureCollection } from 'geojson';
 import { Fragment, FunctionComponent } from 'react';
 import { Layer, Source } from 'react-map-gl';
-import data from '@/data/sample_us.json';
+import data from '~/data/sample_us.json';
 import { Labels } from './labels';
 
 const FlightsLayout: FunctionComponent<{ collection: FeatureCollection }> = ({ collection }) => (

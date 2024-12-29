@@ -1,7 +1,10 @@
+"use client"
+
 import MapGL, { MapProvider } from 'react-map-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
 import { Flights } from './flights';
-import '@/styles/globals.sass';
+
+import 'mapbox-gl/dist/mapbox-gl.css';
+import '~/styles/globals.sass';
 
 const Map = () => {
     return (
