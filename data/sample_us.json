@@ -6,7 +6,6 @@
             "properties": {
                 "id": "981a1b1f75c19e64bacdfed1ec2580cf",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -22,7 +21,6 @@
             "properties": {
                 "id": "981a1b1f75c19e64bacdfed1ec2580cf",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -43,7 +41,6 @@
             "properties": {
                 "id": "4e698ca7bef7d8b58464887f596ad729",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -59,7 +56,6 @@
             "properties": {
                 "id": "4e698ca7bef7d8b58464887f596ad729",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -80,7 +76,6 @@
             "properties": {
                 "id": "184ae47c40fdf218b45d8508f4140e0b",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -96,7 +91,6 @@
             "properties": {
                 "id": "184ae47c40fdf218b45d8508f4140e0b",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -117,7 +111,6 @@
             "properties": {
                 "id": "0f4e6ec2a6e18b6c5c10b3d1d9b67b33",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -133,7 +126,6 @@
             "properties": {
                 "id": "0f4e6ec2a6e18b6c5c10b3d1d9b67b33",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -154,7 +146,6 @@
             "properties": {
                 "id": "cde3b14e2dace8d44d5392cd9aab2b84",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -170,7 +161,6 @@
             "properties": {
                 "id": "cde3b14e2dace8d44d5392cd9aab2b84",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -191,7 +181,6 @@
             "properties": {
                 "id": "32c59b0b5b4a82215909999fb1f82e6d",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -207,7 +196,6 @@
             "properties": {
                 "id": "32c59b0b5b4a82215909999fb1f82e6d",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -228,7 +216,6 @@
             "properties": {
                 "id": "33829c1293b36cc340cb2a0774e996bc",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -244,7 +231,6 @@
             "properties": {
                 "id": "33829c1293b36cc340cb2a0774e996bc",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -265,7 +251,6 @@
             "properties": {
                 "id": "1daac8eb6d7f931585048ffd54f47416",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": true
             },
             "geometry": {
@@ -281,7 +266,6 @@
             "properties": {
                 "id": "1daac8eb6d7f931585048ffd54f47416",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": true
             },
             "geometry": {
@@ -302,7 +286,6 @@
             "properties": {
                 "id": "45ef496161c68e2979ea2b8d817ea2df",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -318,7 +301,6 @@
             "properties": {
                 "id": "45ef496161c68e2979ea2b8d817ea2df",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -339,7 +321,6 @@
             "properties": {
                 "id": "bc6999489bf6c079e8fc3659384c1617",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -355,7 +336,6 @@
             "properties": {
                 "id": "bc6999489bf6c079e8fc3659384c1617",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -376,7 +356,6 @@
             "properties": {
                 "id": "74f80616da5243cd4a120e406940a15e",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -392,7 +371,6 @@
             "properties": {
                 "id": "74f80616da5243cd4a120e406940a15e",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -413,7 +391,6 @@
             "properties": {
                 "id": "5d397755dda81fbdb16c16bf21f3cb31",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -429,7 +406,6 @@
             "properties": {
                 "id": "5d397755dda81fbdb16c16bf21f3cb31",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -450,7 +426,6 @@
             "properties": {
                 "id": "0cd0a2dcf8e30c45212c6493b68b6617",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -466,7 +441,6 @@
             "properties": {
                 "id": "0cd0a2dcf8e30c45212c6493b68b6617",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -487,7 +461,6 @@
             "properties": {
                 "id": "d231f2dc651ad7868f62e2d87515bbcf",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -503,7 +476,6 @@
             "properties": {
                 "id": "d231f2dc651ad7868f62e2d87515bbcf",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -524,7 +496,6 @@
             "properties": {
                 "id": "6160b171fd4184213708cfce32da337f",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -540,7 +511,6 @@
             "properties": {
                 "id": "6160b171fd4184213708cfce32da337f",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -561,7 +531,6 @@
             "properties": {
                 "id": "60e236301fa4088f7ce07607397fe24a",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -577,7 +546,6 @@
             "properties": {
                 "id": "60e236301fa4088f7ce07607397fe24a",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -598,7 +566,6 @@
             "properties": {
                 "id": "775abe0a1e001975cc82e79696823f54",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -614,7 +581,6 @@
             "properties": {
                 "id": "775abe0a1e001975cc82e79696823f54",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -635,7 +601,6 @@
             "properties": {
                 "id": "e4dc9f8cca37e1395ddc814e85bba858",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -651,7 +616,6 @@
             "properties": {
                 "id": "e4dc9f8cca37e1395ddc814e85bba858",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -672,7 +636,6 @@
             "properties": {
                 "id": "abc755d0b4e5ec20fc0bc99db6a4a604",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -688,7 +651,6 @@
             "properties": {
                 "id": "abc755d0b4e5ec20fc0bc99db6a4a604",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -709,7 +671,6 @@
             "properties": {
                 "id": "44138e17c5f853dec06646f3a994241f",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -725,7 +686,6 @@
             "properties": {
                 "id": "44138e17c5f853dec06646f3a994241f",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -746,7 +706,6 @@
             "properties": {
                 "id": "ae7b606dd21b7453c97e1f12e4dfcde6",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -762,7 +721,6 @@
             "properties": {
                 "id": "ae7b606dd21b7453c97e1f12e4dfcde6",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -783,7 +741,6 @@
             "properties": {
                 "id": "80249bc17df09576674b6ff3acab50f2",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -799,7 +756,6 @@
             "properties": {
                 "id": "80249bc17df09576674b6ff3acab50f2",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -820,7 +776,6 @@
             "properties": {
                 "id": "b71ca57b7645ee30bea63fb6944f7f21",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -836,7 +791,6 @@
             "properties": {
                 "id": "b71ca57b7645ee30bea63fb6944f7f21",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -857,7 +811,6 @@
             "properties": {
                 "id": "808995e56984f1c17d6ea92477c417de",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -873,7 +826,6 @@
             "properties": {
                 "id": "808995e56984f1c17d6ea92477c417de",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -894,7 +846,6 @@
             "properties": {
                 "id": "42f2a1e09a6ade7478eb8c9a2f561d03",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -910,7 +861,6 @@
             "properties": {
                 "id": "42f2a1e09a6ade7478eb8c9a2f561d03",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -931,7 +881,6 @@
             "properties": {
                 "id": "0900a75a3295a598a5cd345d1dc4e6c5",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -947,7 +896,6 @@
             "properties": {
                 "id": "0900a75a3295a598a5cd345d1dc4e6c5",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -968,7 +916,6 @@
             "properties": {
                 "id": "81b66ddd6c7de4deb3a6449375789a83",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -984,7 +931,6 @@
             "properties": {
                 "id": "81b66ddd6c7de4deb3a6449375789a83",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1005,7 +951,6 @@
             "properties": {
                 "id": "30d3951e6ce29d998baa301bc6fc679d",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": true
             },
             "geometry": {
@@ -1021,7 +966,6 @@
             "properties": {
                 "id": "30d3951e6ce29d998baa301bc6fc679d",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": true
             },
             "geometry": {
@@ -1042,7 +986,6 @@
             "properties": {
                 "id": "7c0ac5b352123ee4936b6facfc65d49a",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1058,7 +1001,6 @@
             "properties": {
                 "id": "7c0ac5b352123ee4936b6facfc65d49a",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1079,7 +1021,6 @@
             "properties": {
                 "id": "73745cb4c8587c2821953ee718dfb004",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1095,7 +1036,6 @@
             "properties": {
                 "id": "73745cb4c8587c2821953ee718dfb004",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1116,7 +1056,6 @@
             "properties": {
                 "id": "167e232e34b84f66052fc1a94afb2b07",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1132,7 +1071,6 @@
             "properties": {
                 "id": "167e232e34b84f66052fc1a94afb2b07",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1153,7 +1091,6 @@
             "properties": {
                 "id": "02f63378d1ebbce80b933d7ca8e6b1fc",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1169,7 +1106,6 @@
             "properties": {
                 "id": "02f63378d1ebbce80b933d7ca8e6b1fc",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1190,7 +1126,6 @@
             "properties": {
                 "id": "6575787ac1bbfd859939f53dba4c073d",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1206,7 +1141,6 @@
             "properties": {
                 "id": "6575787ac1bbfd859939f53dba4c073d",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1227,7 +1161,6 @@
             "properties": {
                 "id": "b099120c791d5f39e974dc92371c6059",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1243,7 +1176,6 @@
             "properties": {
                 "id": "b099120c791d5f39e974dc92371c6059",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1264,7 +1196,6 @@
             "properties": {
                 "id": "0da2b2a3323c78a8f55c6356b3cf8d10",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1280,7 +1211,6 @@
             "properties": {
                 "id": "0da2b2a3323c78a8f55c6356b3cf8d10",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1301,7 +1231,6 @@
             "properties": {
                 "id": "fcefdbf8b8b305a43492f98d98c94579",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1317,7 +1246,6 @@
             "properties": {
                 "id": "fcefdbf8b8b305a43492f98d98c94579",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1338,7 +1266,6 @@
             "properties": {
                 "id": "6068253886ac32fe633f0de15d5796ba",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1354,7 +1281,6 @@
             "properties": {
                 "id": "6068253886ac32fe633f0de15d5796ba",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1375,7 +1301,6 @@
             "properties": {
                 "id": "7cd353e2b109e607e31db9282bb3c248",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1391,7 +1316,6 @@
             "properties": {
                 "id": "7cd353e2b109e607e31db9282bb3c248",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1412,7 +1336,6 @@
             "properties": {
                 "id": "507bc6756b3fa2a8186bd51d7ab8cd64",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1428,7 +1351,6 @@
             "properties": {
                 "id": "507bc6756b3fa2a8186bd51d7ab8cd64",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1449,7 +1371,6 @@
             "properties": {
                 "id": "1c6749d6bc5dda1e3ea4d35e63eb61a0",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1465,7 +1386,6 @@
             "properties": {
                 "id": "1c6749d6bc5dda1e3ea4d35e63eb61a0",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1486,7 +1406,6 @@
             "properties": {
                 "id": "70c43e84819529e4195f82376abc88db",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1502,7 +1421,6 @@
             "properties": {
                 "id": "70c43e84819529e4195f82376abc88db",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1523,7 +1441,6 @@
             "properties": {
                 "id": "59f2088c34d03f1e4afd1231f9fc3059",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1539,7 +1456,6 @@
             "properties": {
                 "id": "59f2088c34d03f1e4afd1231f9fc3059",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1560,7 +1476,6 @@
             "properties": {
                 "id": "1964c7224185efad1966b9ccc33efea4",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1576,7 +1491,6 @@
             "properties": {
                 "id": "1964c7224185efad1966b9ccc33efea4",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1597,7 +1511,6 @@
             "properties": {
                 "id": "93530cd891e0f48f310be593c2d7daa1",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1613,7 +1526,6 @@
             "properties": {
                 "id": "93530cd891e0f48f310be593c2d7daa1",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1634,7 +1546,6 @@
             "properties": {
                 "id": "a100077fc245727751d1f4f76529e09a",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1650,7 +1561,6 @@
             "properties": {
                 "id": "a100077fc245727751d1f4f76529e09a",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1671,7 +1581,6 @@
             "properties": {
                 "id": "bb9595171daa7608e66b723de4a3ce50",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1687,7 +1596,6 @@
             "properties": {
                 "id": "bb9595171daa7608e66b723de4a3ce50",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1708,7 +1616,6 @@
             "properties": {
                 "id": "56ffb1b53695768052b49ba57dff866a",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1724,7 +1631,6 @@
             "properties": {
                 "id": "56ffb1b53695768052b49ba57dff866a",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1745,7 +1651,6 @@
             "properties": {
                 "id": "6dd3c08ef25812897f259d235df23235",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1761,7 +1666,6 @@
             "properties": {
                 "id": "6dd3c08ef25812897f259d235df23235",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1782,7 +1686,6 @@
             "properties": {
                 "id": "d3b089c0cb3a3e516fbe2e84f8f0e025",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1798,7 +1701,6 @@
             "properties": {
                 "id": "d3b089c0cb3a3e516fbe2e84f8f0e025",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1819,7 +1721,6 @@
             "properties": {
                 "id": "f3a5112ecad09ce3f0b54f7fe239c676",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1835,7 +1736,6 @@
             "properties": {
                 "id": "f3a5112ecad09ce3f0b54f7fe239c676",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1856,7 +1756,6 @@
             "properties": {
                 "id": "8fe0e9973f8b5f4a7b6e7a850bac19ff",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1872,7 +1771,6 @@
             "properties": {
                 "id": "8fe0e9973f8b5f4a7b6e7a850bac19ff",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1893,7 +1791,6 @@
             "properties": {
                 "id": "265cd1a337a141e69ac5d802d5af5e19",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1909,7 +1806,6 @@
             "properties": {
                 "id": "265cd1a337a141e69ac5d802d5af5e19",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1930,7 +1826,6 @@
             "properties": {
                 "id": "b6476dc1aeb9eba85f30b03f0884aaac",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1946,7 +1841,6 @@
             "properties": {
                 "id": "b6476dc1aeb9eba85f30b03f0884aaac",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1967,7 +1861,6 @@
             "properties": {
                 "id": "3cf1fbb7a784f736631f051aecab9360",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -1983,7 +1876,6 @@
             "properties": {
                 "id": "3cf1fbb7a784f736631f051aecab9360",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2004,7 +1896,6 @@
             "properties": {
                 "id": "8e078003230fffc6a4374bcbb5922f33",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": true
             },
             "geometry": {
@@ -2020,7 +1911,6 @@
             "properties": {
                 "id": "8e078003230fffc6a4374bcbb5922f33",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": true
             },
             "geometry": {
@@ -2041,7 +1931,6 @@
             "properties": {
                 "id": "e025ca46e6016430c8308337ab9f0deb",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2057,7 +1946,6 @@
             "properties": {
                 "id": "e025ca46e6016430c8308337ab9f0deb",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2078,7 +1966,6 @@
             "properties": {
                 "id": "451041aa1438a298ca214ae82fa2a659",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2094,7 +1981,6 @@
             "properties": {
                 "id": "451041aa1438a298ca214ae82fa2a659",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2115,7 +2001,6 @@
             "properties": {
                 "id": "44cec051833300fd55434062d4aae073",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2131,7 +2016,6 @@
             "properties": {
                 "id": "44cec051833300fd55434062d4aae073",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2152,7 +2036,6 @@
             "properties": {
                 "id": "9f59f15cd64fe9c7a726665f56b31158",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2168,7 +2051,6 @@
             "properties": {
                 "id": "9f59f15cd64fe9c7a726665f56b31158",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2189,7 +2071,6 @@
             "properties": {
                 "id": "3151ed3bf963db7ad359f95f069d2101",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2205,7 +2086,6 @@
             "properties": {
                 "id": "3151ed3bf963db7ad359f95f069d2101",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2226,7 +2106,6 @@
             "properties": {
                 "id": "f022b5ee0bcdd93f55e952596a41f2ea",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2242,7 +2121,6 @@
             "properties": {
                 "id": "f022b5ee0bcdd93f55e952596a41f2ea",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2263,7 +2141,6 @@
             "properties": {
                 "id": "1e877afcde7f032cb746edb1c0b16e62",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2279,7 +2156,6 @@
             "properties": {
                 "id": "1e877afcde7f032cb746edb1c0b16e62",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2300,7 +2176,6 @@
             "properties": {
                 "id": "cd4d9eb5abe66f7d802ac5f2b928efd7",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2316,7 +2191,6 @@
             "properties": {
                 "id": "cd4d9eb5abe66f7d802ac5f2b928efd7",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2337,7 +2211,6 @@
             "properties": {
                 "id": "83518d7c3980a66135d3bad44a76a89c",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2353,7 +2226,6 @@
             "properties": {
                 "id": "83518d7c3980a66135d3bad44a76a89c",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2374,7 +2246,6 @@
             "properties": {
                 "id": "dbf73771ec82e2e6a2e2b2c054b226e7",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2390,7 +2261,6 @@
             "properties": {
                 "id": "dbf73771ec82e2e6a2e2b2c054b226e7",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2411,7 +2281,6 @@
             "properties": {
                 "id": "996c9ce7af542aff9d38c01ed438ebb7",
                 "type": "flightSpeed",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2427,7 +2296,6 @@
             "properties": {
                 "id": "996c9ce7af542aff9d38c01ed438ebb7",
                 "type": "flightPosition",
-                "isNct": false,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2448,7 +2316,6 @@
             "properties": {
                 "id": "3d71e7fa1c3a2808da6ca36e6b43f403",
                 "type": "flightSpeed",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2464,7 +2331,6 @@
             "properties": {
                 "id": "3d71e7fa1c3a2808da6ca36e6b43f403",
                 "type": "flightPosition",
-                "isNct": true,
                 "isPcdFirst": false
             },
             "geometry": {
@@ -2484,7 +2350,7 @@
             "type": "Feature",
             "properties": {
                 "id": "015e4bab5f14722e1df4dc7258a44766",
-                "type": "MTCD"
+                "type": "pcdLinkLine"
             },
             "geometry": {
                 "type": "LineString",
@@ -2498,7 +2364,7 @@
             "type": "Feature",
             "properties": {
                 "id": "4807ad151ac3aa78689ddc194f3d1655",
-                "type": "MTCD"
+                "type": "pcdLinkLine"
             },
             "geometry": {
                 "type": "LineString",
@@ -2512,7 +2378,7 @@
             "type": "Feature",
             "properties": {
                 "id": "df74adcadfe7f24b8f496ad4faf1ff20",
-                "type": "MTCD"
+                "type": "pcdLinkLine"
             },
             "geometry": {
                 "type": "LineString",
