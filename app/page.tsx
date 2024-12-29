@@ -1,4 +1,3 @@
-
 import { Map } from '~/components/map';
 import { UserBadge } from '~/components/user-badge';
 

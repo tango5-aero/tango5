@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import MapGL, { MapProvider } from 'react-map-gl';
 import { Flights } from './flights';
