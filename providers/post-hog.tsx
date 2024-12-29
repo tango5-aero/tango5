@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, PropsWithChildren } from 'react';
+import { useEffect, PropsWithChildren, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useAuth, useUser } from '@clerk/nextjs';
 import { usePostHog, PostHogProvider } from 'posthog-js/react';
@@ -50,7 +50,9 @@ if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_POSTHOG_KEY && proc
 export function CSPostHogProvider({ children }: PropsWithChildren) {
     return (
         <PostHogProvider client={posthog}>
-            <PostHogPageView />
+            <Suspense>
+                <PostHogPageView />
+            </Suspense>
             {children}
         </PostHogProvider>
     );
