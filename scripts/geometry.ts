@@ -1,4 +1,4 @@
-import CheapRuler, { type BBox, type Point } from 'cheap-ruler';
+import CheapRuler from 'cheap-ruler';
 
 interface LatLng {
     lat: number;
@@ -137,14 +137,14 @@ class LocalGeometry extends CheapRuler {
         return { lat, lng };
     }
 
-    bufferPointAsRectangle(p: Point, buffer: number): Rectangle {
-        const [w, s, e, n]: BBox = this.bufferPoint(p, buffer);
+    bufferPointAsRectangle(p: [number, number], buffer: number): Rectangle {
+        const [w, s, e, n]: [number, number, number, number] = this.bufferPoint(p, buffer);
 
         return { min: { lat: s, lng: w }, max: { lat: n, lng: e } };
     }
 
-    bufferPointAsPolygon(p: Point, buffer: number) {
-        const [w, s, e, n]: BBox = this.bufferPoint(p, buffer);
+    bufferPointAsPolygon(p: [number, number], buffer: number) {
+        const [w, s, e, n]: [number, number, number, number] = this.bufferPoint(p, buffer);
 
         return [
             [w, n],
@@ -155,8 +155,8 @@ class LocalGeometry extends CheapRuler {
         ];
     }
 
-    bufferPointAsCorners(p: Point, buffer: number): Corners {
-        const [w, s, e, n]: BBox = this.bufferPoint(p, buffer);
+    bufferPointAsCorners(p: [number, number], buffer: number): Corners {
+        const [w, s, e, n]: [number, number, number, number] = this.bufferPoint(p, buffer);
 
         return [
             [w, n],
