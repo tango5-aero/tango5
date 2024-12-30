@@ -1,0 +1,15 @@
+{
+    "name": "generate-geojson",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "generate": "node --experimental-strip-types  index.ts "
+    },
+    "dependencies": {
+        "@turf/turf": "^7.2.0",
+        "cheap-ruler": "^3.0.2",
+        "geojson": "^0.5.0",
+        "zod": "^3.24.1"
+    },
+    "type": "module"
+}
