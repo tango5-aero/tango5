@@ -1,10 +1,20 @@
 import { z } from 'zod';
 
-const verticalStatusSchema = z.union([z.literal('climbing'), z.literal('descending'), z.literal('cruising'), z.literal('unknown')]);
+const verticalStatusSchema = z.union([
+    z.literal('climbing'),
+    z.literal('descending'),
+    z.literal('cruising'),
+    z.literal('unknown')
+]);
 
 export type VerticalStatus = z.infer<typeof verticalStatusSchema>;
 
-const horizontalStatusSchema = z.union([z.literal('right-turn'), z.literal('left-turn'), z.literal('cruising'), z.literal('unknown')]);
+const horizontalStatusSchema = z.union([
+    z.literal('right-turn'),
+    z.literal('left-turn'),
+    z.literal('cruising'),
+    z.literal('unknown')
+]);
 
 export type HorizontalStatus = z.infer<typeof horizontalStatusSchema>;
 

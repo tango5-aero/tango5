@@ -15,7 +15,12 @@ function center(bbox: BBox): Point2D {
 }
 
 function onSegment(p: Point2D, q: Point2D, r: Point2D) {
-    return r[0] <= Math.max(p[0], q[0]) && r[0] >= Math.min(p[0], q[0]) && r[1] <= Math.max(p[1], q[1]) && r[1] >= Math.min(p[1], q[1]);
+    return (
+        r[0] <= Math.max(p[0], q[0]) &&
+        r[0] >= Math.min(p[0], q[0]) &&
+        r[1] <= Math.max(p[1], q[1]) &&
+        r[1] >= Math.min(p[1], q[1])
+    );
 }
 
 function crossProduct(p: Point2D, q: Point2D): number {
@@ -155,7 +160,10 @@ export function toPolygon(bbox: BBox): Point2D[] {
 
 export function destination(anchor: Point2D, track: number, distance: number): Point2D {
     const trackRadians = (track * Math.PI) / 180;
-    const transformed: Point2D = [anchor[0] + Math.sin(trackRadians) * distance, anchor[1] - Math.cos(trackRadians) * distance];
+    const transformed: Point2D = [
+        anchor[0] + Math.sin(trackRadians) * distance,
+        anchor[1] - Math.cos(trackRadians) * distance
+    ];
 
     return transformed;
 }

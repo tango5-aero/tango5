@@ -33,7 +33,13 @@ export class Flight {
      * This method calculates the position of this flight in a given time assuming constant velocity
      */
     public positionIn(timeMs: number) {
-        if (this.longitudeDeg === undefined || this.latitudeDeg === undefined || this.groundSpeedKts === undefined || this.trackDeg === undefined) return;
+        if (
+            this.longitudeDeg === undefined ||
+            this.latitudeDeg === undefined ||
+            this.groundSpeedKts === undefined ||
+            this.trackDeg === undefined
+        )
+            return;
 
         const distanceNM = (this.groundSpeedKts * timeMs) / 3600_000;
         const currentPoint = point([this.longitudeDeg, this.latitudeDeg]);
@@ -117,19 +123,31 @@ export class Flight {
 
         const minimumDistanceNM = previousDistanceNM;
 
-        if (minimumDistanceNM === currentDistanceNM || this.groundSpeedKts === undefined || that.groundSpeedKts === undefined) return { currentDistanceNM };
+        if (
+            minimumDistanceNM === currentDistanceNM ||
+            this.groundSpeedKts === undefined ||
+            that.groundSpeedKts === undefined
+        )
+            return { currentDistanceNM };
 
         const timeToMinimumDistanceMs = timeMs - minTimeMs;
 
         // compute where the crossings are and the minimum time it takes for both to reach any of them
         const crossings = this.crossingsWithFlight(that, minTimeMs, maxTimeMs);
 
-        const thisMinDistanceToCrossingNM = crossings.reduce((minDistanceNM, crossing) => Math.min(minDistanceNM, this.distanceToNM(crossing) ?? Infinity), Infinity);
+        const thisMinDistanceToCrossingNM = crossings.reduce(
+            (minDistanceNM, crossing) => Math.min(minDistanceNM, this.distanceToNM(crossing) ?? Infinity),
+            Infinity
+        );
 
-        const thatMinDistanceToCrossingNM = crossings.reduce((minDistanceNM, crossing) => Math.min(minDistanceNM, that.distanceToNM(crossing) ?? Infinity), Infinity);
+        const thatMinDistanceToCrossingNM = crossings.reduce(
+            (minDistanceNM, crossing) => Math.min(minDistanceNM, that.distanceToNM(crossing) ?? Infinity),
+            Infinity
+        );
 
         // `isFirstAtCrossing=true` means `flight` is crossing first and `this` is crossing second
-        const isFirstAtCrossing = thatMinDistanceToCrossingNM * that.groundSpeedKts < thisMinDistanceToCrossingNM * this.groundSpeedKts;
+        const isFirstAtCrossing =
+            thatMinDistanceToCrossingNM * that.groundSpeedKts < thisMinDistanceToCrossingNM * this.groundSpeedKts;
 
         return {
             currentDistanceNM,

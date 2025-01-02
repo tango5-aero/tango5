@@ -46,7 +46,10 @@ export function measureTextBBox(text: string, fontSize: number): { height: numbe
     const metrics = lines.map((line) => context.measureText(line));
 
     const width = metrics.reduce((prev, curr) => Math.max(prev, curr.width), 0);
-    let height = metrics.reduce((prev, curr) => prev + 1.5 * (curr.actualBoundingBoxAscent + curr.actualBoundingBoxDescent), 0);
+    let height = metrics.reduce(
+        (prev, curr) => prev + 1.5 * (curr.actualBoundingBoxAscent + curr.actualBoundingBoxDescent),
+        0
+    );
 
     const lastMetric = metrics.at(-1);
 
