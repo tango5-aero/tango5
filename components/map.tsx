@@ -1,89 +1,61 @@
 'use client';
 
 import MapGL, { MapProvider } from 'react-map-gl';
-import { Layer, Source } from 'react-map-gl';
-import data from '~/data/sample_us.json';
-import { Feature, Polygon } from 'geojson';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { Layers, LayersIds } from './layers';
+import { Flight } from '~/models/flight';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '~/styles/globals.sass';
 
-const Label = ({ feature }: PropsWithChildren<{ feature: Feature }>) => {
-    const [canvas] = useState<HTMLCanvasElement>(document.createElement('canvas'));
-
-    const id = feature.properties?.id as string;
-    const geometry = feature.geometry as Polygon;
-    const coordinates = geometry.coordinates[0];
-
-    canvas.height = 300;
-    canvas.width = 300;
-
-    useEffect(() => {
-        const selFL = feature.properties?.selectedAlt ? (feature.properties.selectedAlt / 100).toFixed(0).padStart(3, '0') : '';
-        const actFL = feature.properties?.alt ? (feature.properties.alt / 100).toFixed(0).padStart(3, '0') : '';
-        const actGS = feature.properties?.gs ? (feature.properties.gs / 10).toFixed(0) : '';
-
-        const next = feature.properties?.nextPoint ? feature.properties.nextPoint : '';
-
-        let vstatus = ' ';
-
-        switch (feature.properties?.verticalStatus) {
-            case 'climbing':
-                vstatus = '↑';
-                break;
-            case 'descending':
-                vstatus = '↓';
-        }
-
-        const context = canvas.getContext('2d')!;
-
-        context.font = '60px B612';
-        context.fillStyle = '#ffffff';
-        context.fillText(feature.properties?.callsign ?? '', 10, 60);
-        context.fillText(`${actFL}${vstatus}${selFL}`, 10, 160);
-        context.fillText(`${actGS} ${next}`, 10, 260);
-    }, [canvas, feature.properties]);
-
-    return (
-        <Source id={id} key={id} type="canvas" coordinates={coordinates.slice(0, 4)} animate={true} canvas={canvas}>
-            <Layer id={id} type="raster" paint={{ 'raster-fade-duration': 0 }} />
-        </Source>
-    );
+// TODO: use dynamic data instead of static sample
+import DATA from '~/data/sample_us.json';
+import { useState } from 'react';
+const FLIGHTS = DATA.map(
+    (item) =>
+        new Flight(
+            item.id,
+            item.latitudeDeg,
+            item.longitudeDeg,
+            item.callsign,
+            item.category,
+            item.groundSpeedKts,
+            item.trackDeg,
+            item.altitudeFt,
+            item.verticalSpeedFtpm,
+            item.selectedAltitudeFt
+        )
+);
+const DEFAULT_VIEW = {
+    longitude: -76.96729,
+    latitude: 35.78202,
+    zoom: 7
 };
+const MAP_BOUNDARIES = [-85.5, 24.18, -67.8, 46.3] satisfies [number, number, number, number];
 
 const Map = () => {
+    const [view, setView] = useState(DEFAULT_VIEW);
+
     return (
         <MapProvider>
             <MapGL
+                {...view}
                 id="map"
+                onMove={(evt) => setView(evt.viewState)}
                 mapboxAccessToken="pk.eyJ1Ijoic2FtdWVsLWNyaXN0b2JhbCIsImEiOiJja3Y2bHBnNnAwaHhzMnFrOTNoM3U1ZzAyIn0.FokOBQmMj65P1V3qb6zd-w"
-                initialViewState={{
-                    longitude: -76.96729,
-                    latitude: 35.78202,
-                    zoom: 7
-                }}
-                maxBounds={[-85.5, 24.18, -67.8, 46.3]}
+                maxBounds={MAP_BOUNDARIES}
                 style={{ width: '100%', height: '100dvh' }}
-                mapStyle="mapbox://styles/samuel-cristobal/cl9zn67ak006k15phkih6malq">
-                <Source id="flights" type="geojson" data={data}>
-                    <Layer id="positions-borders" type="line" paint={{ 'line-color': 'hsl(0, 0%, 100%)' }} filter={['==', ['get', 'type'], 'flightPosition']} />
-                    <Layer id="positions-inside" type="fill" paint={{ 'fill-color': '#242c36' }} filter={['==', ['get', 'type'], 'flightPosition']} beforeId="positions-borders" />
-                    <Layer
-                        id="speeds"
-                        type="line"
-                        paint={{
-                            'line-color': 'hsl(0, 0%, 100%)'
-                        }}
-                        filter={['==', ['get', 'type'], 'flightSpeed']}
-                        beforeId="positions-inside"
-                    />
-                </Source>
-                {data.features
-                    .filter((label) => label.properties?.type === 'flightLabel')
-                    .map((label) => (
-                        <Label feature={label as Feature} key={label.properties?.id} />
-                    ))}
+                mapStyle="mapbox://styles/samuel-cristobal/cl9zn67ak006k15phkih6malq"
+                interactive={true}
+                maxPitch={0}
+                minPitch={0}
+                dragRotate={false}
+                pitchWithRotate={false}
+                touchPitch={false}
+                touchZoomRotate={true}
+                attributionControl={false}
+                fadeDuration={0}
+                interactiveLayerIds={[LayersIds.positionFill, LayersIds.labelsFill]}>
+                <Layers flights={FLIGHTS} view={view} />
             </MapGL>
         </MapProvider>
     );
