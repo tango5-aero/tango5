@@ -3,14 +3,16 @@
 import MapGL, { MapProvider } from 'react-map-gl';
 import { Layers, LayersIds } from './layers';
 import { Flight } from '~/models/flight';
+import { useState } from 'react';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '~/styles/globals.sass';
 
 // TODO: use dynamic data instead of static sample
-import DATA from '~/data/sample_us.json';
-import { useState } from 'react';
-const FLIGHTS = DATA.map(
+import DATA from '~/data/sample_data.json';
+import SCENARIO from '~/data/sample_scenario.json';
+
+const flights = DATA.map(
     (item) =>
         new Flight(
             item.id,
@@ -25,15 +27,11 @@ const FLIGHTS = DATA.map(
             item.selectedAltitudeFt
         )
 );
-const DEFAULT_VIEW = {
-    longitude: -76.96729,
-    latitude: 35.78202,
-    zoom: 7
-};
-const MAP_BOUNDARIES = [-85.5, 24.18, -67.8, 46.3] satisfies [number, number, number, number];
+const default_view = SCENARIO.view;
+const mapBoundaries = SCENARIO.boundaries;
 
 const Map = () => {
-    const [view, setView] = useState(DEFAULT_VIEW);
+    const [view, setView] = useState(default_view);
 
     return (
         <MapProvider>
@@ -42,7 +40,7 @@ const Map = () => {
                 id="map"
                 onMove={(evt) => setView(evt.viewState)}
                 mapboxAccessToken="pk.eyJ1Ijoic2FtdWVsLWNyaXN0b2JhbCIsImEiOiJja3Y2bHBnNnAwaHhzMnFrOTNoM3U1ZzAyIn0.FokOBQmMj65P1V3qb6zd-w"
-                maxBounds={MAP_BOUNDARIES}
+                maxBounds={mapBoundaries as [number, number, number, number]}
                 style={{ width: '100%', height: '100dvh' }}
                 mapStyle="mapbox://styles/samuel-cristobal/cl9zn67ak006k15phkih6malq"
                 interactive={true}
@@ -55,7 +53,7 @@ const Map = () => {
                 attributionControl={false}
                 fadeDuration={0}
                 interactiveLayerIds={[LayersIds.positionFill, LayersIds.labelsFill]}>
-                <Layers flights={FLIGHTS} view={view} />
+                <Layers flights={flights} view={view} />
             </MapGL>
         </MapProvider>
     );
