@@ -1,10 +1,8 @@
 export const FlightLayersTypes = {
-    flightSpeed: 'flightSpeed',
-    labelLink: 'labelLink',
+    speedVector: 'speed',
+    labelLink: 'label-link',
     halo: 'halo',
-    flightPosition: 'flightPosition',
-    flightTrail: 'flightTrail',
-    flightTrajectory: 'flightTrajectory',
-    flightLabel: 'flightLabel',
-    flightLabelText: 'flightLabelText'
+    position: 'position',
+    label: 'label',
+    labelText: 'label-text'
 } as const;

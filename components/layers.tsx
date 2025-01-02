@@ -42,18 +42,16 @@ const Layers = ({ flights, view }: PropsWithChildren<{ flights: Flight[]; view: 
 
     return (
         <Source id="flights-source" type="geojson" data={collection}>
-            <Layer id={LayersIds.leadVector} type="line" paint={{ 'line-color': '#FFFFFF' }} filter={['==', ['get', 'type'], FlightLayersTypes.flightSpeed]} />
+            <Layer id={LayersIds.leadVector} type="line" paint={{ 'line-color': '#FFFFFF' }} filter={['==', ['get', 'type'], FlightLayersTypes.speedVector]} />
             <Layer id={LayersIds.labelAnchor} type="line" paint={{ 'line-color': '#FFFFFF', 'line-opacity': 0.3 }} filter={['==', ['get', 'type'], FlightLayersTypes.labelLink]} />
             <Layer id={LayersIds.halo} type="line" paint={{ 'line-color': '#FFFFFF' }} filter={['==', ['get', 'type'], FlightLayersTypes.halo]} />
-            <Layer id={LayersIds.positionFill} type="fill" paint={{ 'fill-color': '#FFFFFF' }} filter={['==', ['get', 'type'], FlightLayersTypes.flightPosition]} />
-            <Layer id={LayersIds.positionBorder} type="line" paint={{ 'line-color': '#FFFFFF' }} filter={['==', ['get', 'type'], FlightLayersTypes.flightPosition]} />
-            <Layer id={LayersIds.trailsBorder} type="line" paint={{ 'line-color': '#FFFFFF' }} filter={['==', ['get', 'type'], FlightLayersTypes.flightTrail]} />
-            <Layer id={LayersIds.trajectoryFill} type="fill" paint={{ 'fill-color': '#FFFFFF' }} filter={['==', ['get', 'type'], FlightLayersTypes.flightTrajectory]} />
-            <Layer id={LayersIds.labelsFill} type="fill" paint={{ 'fill-opacity': 0.3 }} filter={['==', ['get', 'type'], FlightLayersTypes.flightLabel]} />
+            <Layer id={LayersIds.positionFill} type="fill" paint={{ 'fill-color': '#FFFFFF' }} filter={['==', ['get', 'type'], FlightLayersTypes.position]} />
+            <Layer id={LayersIds.positionBorder} type="line" paint={{ 'line-color': '#FFFFFF' }} filter={['==', ['get', 'type'], FlightLayersTypes.position]} />
+            <Layer id={LayersIds.labelsFill} type="fill" paint={{ 'fill-opacity': 0.3 }} filter={['==', ['get', 'type'], FlightLayersTypes.label]} />
             <Layer
                 id={LayersIds.labelsText}
                 type="symbol"
-                filter={['==', ['get', 'type'], FlightLayersTypes.flightLabelText]}
+                filter={['==', ['get', 'type'], FlightLayersTypes.labelText]}
                 layout={{
                     // 'text-font': ['B612 Regular'],
                     'text-field': ['get', 'text'],

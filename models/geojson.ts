@@ -9,7 +9,7 @@ type Props = {
 } & (FlightLabel | FlightSpeed | FlightPositionProps | FlightLabelAnchorProps | LabelLink);
 
 type FlightLabel = {
-    type: typeof FlightLayersTypes.flightLabel;
+    type: typeof FlightLayersTypes.label;
 };
 
 type LabelLink = {
@@ -17,17 +17,17 @@ type LabelLink = {
 };
 
 type FlightSpeed = {
-    type: typeof FlightLayersTypes.flightSpeed;
+    type: typeof FlightLayersTypes.speedVector;
 };
 
 type FlightLabelAnchorProps = {
-    type: typeof FlightLayersTypes.flightLabelText;
+    type: typeof FlightLayersTypes.labelText;
     text: string;
     fontSize: number;
 };
 
 type FlightPositionProps = {
-    type: typeof FlightLayersTypes.flightPosition;
+    type: typeof FlightLayersTypes.position;
 };
 
 export function measureTextBBox(text: string, fontSize: number): { height: number; width: number } {
@@ -92,7 +92,7 @@ export function featureCollection(
             type: 'Feature' as const,
             properties: {
                 ref: flight.id,
-                type: FlightLayersTypes.flightPosition
+                type: FlightLayersTypes.position
             },
             geometry: {
                 type: 'Polygon' as const,
@@ -109,7 +109,7 @@ export function featureCollection(
                 type: 'Feature' as const,
                 properties: {
                     ref: flight.id,
-                    type: FlightLayersTypes.flightSpeed
+                    type: FlightLayersTypes.speedVector
                 },
                 geometry: {
                     type: 'LineString' as const,
@@ -159,7 +159,7 @@ export function featureCollection(
             type: 'Feature' as const,
             properties: {
                 ref,
-                type: FlightLayersTypes.flightLabel
+                type: FlightLayersTypes.label
             },
             geometry: {
                 type: 'Polygon' as const,
@@ -173,7 +173,7 @@ export function featureCollection(
             type: 'Feature' as const,
             properties: {
                 ref,
-                type: FlightLayersTypes.flightLabelText,
+                type: FlightLayersTypes.labelText,
                 text,
                 fontSize
             },
