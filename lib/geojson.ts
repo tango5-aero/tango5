@@ -1,33 +1,33 @@
 import type { FeatureCollection, LineString, Point, Polygon } from 'geojson';
 import { closestBorder, expand, toBBox, toPolygon } from './geometry';
 import { Movable, spread } from './spreader';
-import { Flight } from './flight';
-import { FlightLayersTypes } from '~/constants';
+import { Flight } from '../lib/flight';
+import { LayerTypes } from '~/components/map';
 
 type Props = {
     ref: string;
 } & (FlightLabel | FlightSpeed | FlightPositionProps | FlightLabelAnchorProps | LabelLink);
 
 type FlightLabel = {
-    type: typeof FlightLayersTypes.label;
+    type: typeof LayerTypes.label;
 };
 
 type LabelLink = {
-    type: typeof FlightLayersTypes.labelLink;
+    type: typeof LayerTypes.labelLink;
 };
 
 type FlightSpeed = {
-    type: typeof FlightLayersTypes.speedVector;
+    type: typeof LayerTypes.speedVector;
 };
 
 type FlightLabelAnchorProps = {
-    type: typeof FlightLayersTypes.labelText;
+    type: typeof LayerTypes.labelText;
     text: string;
     fontSize: number;
 };
 
 type FlightPositionProps = {
-    type: typeof FlightLayersTypes.position;
+    type: typeof LayerTypes.position;
 };
 
 export function measureTextBBox(text: string, fontSize: number): { height: number; width: number } {
@@ -95,7 +95,7 @@ export function featureCollection(
             type: 'Feature' as const,
             properties: {
                 ref: flight.id,
-                type: FlightLayersTypes.position
+                type: LayerTypes.position
             },
             geometry: {
                 type: 'Polygon' as const,
@@ -112,7 +112,7 @@ export function featureCollection(
                 type: 'Feature' as const,
                 properties: {
                     ref: flight.id,
-                    type: FlightLayersTypes.speedVector
+                    type: LayerTypes.speedVector
                 },
                 geometry: {
                     type: 'LineString' as const,
@@ -162,7 +162,7 @@ export function featureCollection(
             type: 'Feature' as const,
             properties: {
                 ref,
-                type: FlightLayersTypes.label
+                type: LayerTypes.label
             },
             geometry: {
                 type: 'Polygon' as const,
@@ -176,7 +176,7 @@ export function featureCollection(
             type: 'Feature' as const,
             properties: {
                 ref,
-                type: FlightLayersTypes.labelText,
+                type: LayerTypes.labelText,
                 text,
                 fontSize
             },
@@ -194,7 +194,7 @@ export function featureCollection(
             type: 'Feature' as const,
             properties: {
                 ref,
-                type: FlightLayersTypes.labelLink
+                type: LayerTypes.labelLink
             },
             geometry: {
                 type: 'LineString' as const,

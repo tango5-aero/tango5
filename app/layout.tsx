@@ -1,5 +1,5 @@
 import { ClerkProvider } from '@clerk/nextjs';
-import { CSPostHogProvider } from '~/providers/post-hog';
+import { CSPostHogProvider } from '~/components/post-hog';
 
 import './globals.css';
 import { Suspense } from 'react';

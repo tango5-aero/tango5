@@ -3,12 +3,11 @@
 import { useState, useEffect, type PropsWithChildren } from 'react';
 import MapGL, { MapProvider, Layer, Source, useMap } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
-import { Flight } from '~/models/flight';
-import { featureCollection as featureCollection } from '~/models/geojson';
-import { FlightLayersTypes, LayersIds } from '~/constants';
+import { Flight } from '~/lib/flight';
+import { featureCollection as featureCollection } from '~/lib/geojson';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
-import '~/styles/globals.sass';
+import './map.sass';
 
 // TODO: use dynamic data instead of static sample
 import DATA from '~/data/sample_data.json';
@@ -31,6 +30,27 @@ const flights = DATA.map(
 );
 const default_view = SCENARIO.view;
 const mapBoundaries = SCENARIO.boundaries;
+
+const LayerTypes = {
+    speedVector: 'speed',
+    labelLink: 'label-link',
+    halo: 'halo',
+    position: 'position',
+    label: 'label',
+    labelText: 'label-text'
+} as const;
+
+const LayersIds = {
+    leadVector: 'lead-vector',
+    labelAnchor: 'label-anchor',
+    halo: 'halo',
+    positionFill: 'position-fill',
+    positionBorder: 'position-border',
+    trailsBorder: 'trails-border',
+    trajectoryFill: 'trajectory-fill',
+    labelsFill: 'labels-fill',
+    labelsText: 'labels-text'
+} as const;
 
 type View = { longitude: number; latitude: number; zoom: number };
 
@@ -92,42 +112,42 @@ const Layers = ({ flights, view }: PropsWithChildren<{ flights: Flight[]; view: 
                 id={LayersIds.leadVector}
                 type="line"
                 paint={{ 'line-color': '#FFFFFF' }}
-                filter={['==', ['get', 'type'], FlightLayersTypes.speedVector]}
+                filter={['==', ['get', 'type'], LayerTypes.speedVector]}
             />
             <Layer
                 id={LayersIds.labelAnchor}
                 type="line"
                 paint={{ 'line-color': '#FFFFFF', 'line-opacity': 0.3 }}
-                filter={['==', ['get', 'type'], FlightLayersTypes.labelLink]}
+                filter={['==', ['get', 'type'], LayerTypes.labelLink]}
             />
             <Layer
                 id={LayersIds.halo}
                 type="line"
                 paint={{ 'line-color': '#FFFFFF' }}
-                filter={['==', ['get', 'type'], FlightLayersTypes.halo]}
+                filter={['==', ['get', 'type'], LayerTypes.halo]}
             />
             <Layer
                 id={LayersIds.positionFill}
                 type="fill"
                 paint={{ 'fill-color': '#FFFFFF' }}
-                filter={['==', ['get', 'type'], FlightLayersTypes.position]}
+                filter={['==', ['get', 'type'], LayerTypes.position]}
             />
             <Layer
                 id={LayersIds.positionBorder}
                 type="line"
                 paint={{ 'line-color': '#FFFFFF' }}
-                filter={['==', ['get', 'type'], FlightLayersTypes.position]}
+                filter={['==', ['get', 'type'], LayerTypes.position]}
             />
             <Layer
                 id={LayersIds.labelsFill}
                 type="fill"
                 paint={{ 'fill-opacity': 0 }}
-                filter={['==', ['get', 'type'], FlightLayersTypes.label]}
+                filter={['==', ['get', 'type'], LayerTypes.label]}
             />
             <Layer
                 id={LayersIds.labelsText}
                 type="symbol"
-                filter={['==', ['get', 'type'], FlightLayersTypes.labelText]}
+                filter={['==', ['get', 'type'], LayerTypes.labelText]}
                 layout={{
                     // TODO: upload fonts to MapBox studio
                     // 'text-font': ['DIN Pro Regular', 'B612 Regular','B612', 'JetBrains Mono', 'JetBrains Mono Regular', 'DIN Pro Regular'],
@@ -143,4 +163,4 @@ const Layers = ({ flights, view }: PropsWithChildren<{ flights: Flight[]; view: 
     );
 };
 
-export { Map };
+export { Map, LayerTypes };
