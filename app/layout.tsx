@@ -1,18 +1,20 @@
 import { ClerkProvider } from '@clerk/nextjs';
 import { CSPostHogProvider } from '~/components/post-hog';
+import { ThemeProvider } from 'next-themes';
 
 import './globals.css';
-import { Suspense } from 'react';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <ClerkProvider>
             <CSPostHogProvider>
-                <Suspense>
-                    <html lang="en">
-                        <body>{children}</body>
-                    </html>
-                </Suspense>
+                <html lang="en">
+                    <body>
+                        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                            {children}
+                        </ThemeProvider>
+                    </body>
+                </html>
             </CSPostHogProvider>
         </ClerkProvider>
     );
