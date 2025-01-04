@@ -10,10 +10,9 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import './map.sass';
 
 // TODO: use dynamic data instead of static sample
-import DATA from '~/data/sample_data.json';
-import SCENARIO from '~/data/sample_scenario.json';
+import data from '~/data/scripts/output.json';
 
-const flights = DATA.map(
+const flights = data.flights.map(
     (item) =>
         new Flight(
             item.id,
@@ -28,8 +27,8 @@ const flights = DATA.map(
             item.selectedAltitudeFt
         )
 );
-const default_view = SCENARIO.view;
-const mapBoundaries = SCENARIO.boundaries;
+const default_view = data.view;
+const mapBoundaries = data.boundaries;
 
 const LayerTypes = {
     speedVector: 'speed',

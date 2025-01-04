@@ -78,13 +78,8 @@ export class Flight {
     }
 
     /**
-     * This method is a placeholder for the actual implementation of the distance measurement
-     *
-     * note: `isFirstAtCrossing=true` means `flight` is crossing first and `this` is crossing second
-     *  if `isFirstAtCrossing=undefined` both are parallel or the crossing can not be determined
-     *
-     * note: this function only makes sense if flight positions are interpolated.
-     * note2: the minimum and maximum look ahead times are given by `minTimeMs` and `maxTimeMs` respectively
+     * Measure distance to another flight
+     * note1: the minimum and maximum look ahead times are given by `minTimeMs` and `maxTimeMs` respectively
      */
     public measureDistanceTo(
         that: Flight,
@@ -157,72 +152,61 @@ export class Flight {
         };
     }
 
+    get identificationDisplay() {
+        const identification = this.callsign?.trim();
+
+        let name = 'UNKNOWN';
+
+        if (identification !== undefined && identification !== '') {
+            name = identification.toLocaleUpperCase();
+        }
+
+        return name;
+    }
+
+    get intentDisplay(): '↑' | '↓' | '' {
+        if (this.verticalSpeedFtpm === undefined) return '';
+
+        if (this.verticalSpeedFtpm >= 200) return '↑';
+        if (this.verticalSpeedFtpm <= -200) return '↓';
+
+        return '';
+    }
+
+    get categoryDisplay() {
+        return this.category ?? '-';
+    }
+
+    get shortSpeedDisplay() {
+        return this.groundSpeedKts !== undefined ? (this.groundSpeedKts / 10).toFixed(0).padStart(2, '0') : '';
+    }
+
+    get selectedFlightLevelDisplay() {
+        let selected;
+
+        if (this.selectedAltitudeFt === undefined) {
+            selected = '';
+        } else {
+            selected = (this.selectedAltitudeFt / 100).toFixed(0).padStart(3, '0');
+        }
+
+        return selected;
+    }
+
+    get uncorrectedFlightLevelDisplay() {
+        let vertical: string;
+
+        if (this.altitudeFt === undefined) {
+            vertical = '---';
+        } else {
+            vertical = (this.altitudeFt / 100).toFixed(0).padStart(3, '0');
+        }
+        return vertical;
+    }
+
     get label() {
-        return label(this);
+        return `${this.identificationDisplay}
+${this.uncorrectedFlightLevelDisplay} ${this.intentDisplay} ${this.selectedFlightLevelDisplay}
+${this.shortSpeedDisplay} ${this.categoryDisplay}`;
     }
 }
-
-function identificationDisplay(flight: Flight) {
-    const identification = flight.callsign?.trim();
-
-    let name = 'UNKNOWN';
-
-    if (identification !== undefined && identification !== '') {
-        name = identification.toLocaleUpperCase();
-    }
-
-    return name;
-}
-
-function intentDisplay(flight: Flight): '↑' | '↓' | '' {
-    if (flight.verticalSpeedFtpm === undefined) return '';
-
-    if (flight.verticalSpeedFtpm >= 200) return '↑';
-    if (flight.verticalSpeedFtpm <= -200) return '↓';
-
-    return '';
-}
-
-function categoryDisplay(flight: Flight) {
-    return flight.category ?? '-';
-}
-
-function shortSpeedDisplay(flight: Flight) {
-    return flight.groundSpeedKts !== undefined ? (flight.groundSpeedKts / 10).toFixed(0).padStart(2, '0') : '';
-}
-
-function selectedFlightLevelDisplay(flight: Flight) {
-    let selected;
-
-    if (flight.selectedAltitudeFt === undefined) {
-        selected = '';
-    } else {
-        selected = (flight.selectedAltitudeFt / 100).toFixed(0).padStart(3, '0');
-    }
-
-    return selected;
-}
-
-function uncorrectedFlightLevelDisplay(flight: Flight) {
-    let vertical: string;
-
-    if (flight.altitudeFt === undefined) {
-        vertical = '---';
-    } else {
-        vertical = (flight.altitudeFt / 100).toFixed(0).padStart(3, '0');
-    }
-    return vertical;
-}
-
-const label = (flight: Flight) => {
-    const name = identificationDisplay(flight);
-    const vertical = uncorrectedFlightLevelDisplay(flight);
-    const verticalIntent = intentDisplay(flight);
-    const selected = selectedFlightLevelDisplay(flight);
-    const speed = shortSpeedDisplay(flight);
-    const category = categoryDisplay(flight);
-
-    const label = `${name}\n${vertical} ${verticalIntent} ${selected}\n${speed} ${category}`;
-
-    return label;
-};
