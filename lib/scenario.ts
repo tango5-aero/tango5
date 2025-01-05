@@ -38,8 +38,6 @@ export const pcd = z.object({
 export type Pcd = z.infer<typeof pcd>;
 
 export const scenario = z.object({
-    name: z.string(),
-    id: z.string(),
     view: view,
     boundaries: boundaries,
     flights: flight.array(),

@@ -2,7 +2,7 @@ import type { FeatureCollection, LineString, Point, Polygon } from 'geojson';
 import { closestBorder, expand, toBBox, toPolygon } from './geometry';
 import { Movable, spread } from './spreader';
 import { Flight } from '../lib/flight';
-import { LayerTypes } from '~/components/map';
+import { LayerTypes } from '~/components/scenario-map';
 
 type Props = {
     ref: string;

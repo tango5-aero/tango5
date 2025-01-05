@@ -1,21 +1,26 @@
 import { ClerkProvider } from '@clerk/nextjs';
-import { CSPostHogProvider } from '~/components/post-hog';
-import { ThemeProvider } from 'next-themes';
 
 import './globals.css';
+import { ThemeProvider } from '~/components/theme-provider';
+import { PostHogProvider } from '~/components/posthog-provider';
+import { UserBadge } from '~/components/user-badge';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <ClerkProvider>
-            <CSPostHogProvider>
-                <html lang="en">
-                    <body>
+            <html
+                lang="en"
+                suppressHydrationWarning /* https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app */
+            >
+                <body>
+                    <PostHogProvider>
                         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                            <UserBadge />
                             {children}
                         </ThemeProvider>
-                    </body>
-                </html>
-            </CSPostHogProvider>
+                    </PostHogProvider>
+                </body>
+            </html>
         </ClerkProvider>
     );
 }

@@ -1,60 +1,32 @@
 'use client';
 
-import { useState, useEffect, type PropsWithChildren } from 'react';
+import { useState, useEffect, type PropsWithChildren, CSSProperties } from 'react';
 import MapGL, { MapProvider, Layer, Source, useMap } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
 import { Flight } from '~/lib/flight';
 import { featureCollection as featureCollection } from '~/lib/geojson';
+import { Scenario, View } from '~/lib/scenario';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
-import './map.sass';
 
-// TODO: use dynamic data instead of static sample
-import data from '~/data/scripts/output.json';
+const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario: Scenario }>) => {
+    const [view, setView] = useState(props.scenario.view);
 
-const flights = data.flights.map(
-    (item) =>
-        new Flight(
-            item.id,
-            item.latitudeDeg,
-            item.longitudeDeg,
-            item.callsign,
-            item.category,
-            item.groundSpeedKts,
-            item.trackDeg,
-            item.altitudeFt,
-            item.verticalSpeedFtpm,
-            item.selectedAltitudeFt
-        )
-);
-const default_view = data.view;
-const mapBoundaries = data.boundaries;
-
-const LayerTypes = {
-    speedVector: 'speed',
-    labelLink: 'label-link',
-    halo: 'halo',
-    position: 'position',
-    label: 'label',
-    labelText: 'label-text'
-} as const;
-
-const LayersIds = {
-    leadVector: 'lead-vector',
-    labelAnchor: 'label-anchor',
-    halo: 'halo',
-    positionFill: 'position-fill',
-    positionBorder: 'position-border',
-    trailsBorder: 'trails-border',
-    trajectoryFill: 'trajectory-fill',
-    labelsFill: 'labels-fill',
-    labelsText: 'labels-text'
-} as const;
-
-type View = { longitude: number; latitude: number; zoom: number };
-
-const Map = () => {
-    const [view, setView] = useState<View>(default_view);
+    const flights = props.scenario.flights.map(
+        (item) =>
+            new Flight(
+                item.id,
+                item.latitudeDeg,
+                item.longitudeDeg,
+                item.callsign,
+                item.category,
+                item.groundSpeedKts,
+                item.trackDeg,
+                item.altitudeFt,
+                item.verticalSpeedFtpm,
+                item.selectedAltitudeFt
+            )
+    );
 
     return (
         <MapProvider>
@@ -63,8 +35,8 @@ const Map = () => {
                 id="map"
                 onMove={(evt) => setView(evt.viewState)}
                 mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-                maxBounds={mapBoundaries as [number, number, number, number]}
-                style={{ width: '100%', height: '100dvh' }}
+                maxBounds={props.scenario.boundaries as [number, number, number, number]}
+                style={props.style}
                 mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
                 interactive={true}
                 maxPitch={0}
@@ -162,4 +134,25 @@ const Layers = ({ flights, view }: PropsWithChildren<{ flights: Flight[]; view: 
     );
 };
 
-export { Map, LayerTypes };
+const LayerTypes = {
+    speedVector: 'speed',
+    labelLink: 'label-link',
+    halo: 'halo',
+    position: 'position',
+    label: 'label',
+    labelText: 'label-text'
+} as const;
+
+const LayersIds = {
+    leadVector: 'lead-vector',
+    labelAnchor: 'label-anchor',
+    halo: 'halo',
+    positionFill: 'position-fill',
+    positionBorder: 'position-border',
+    trailsBorder: 'trails-border',
+    trajectoryFill: 'trajectory-fill',
+    labelsFill: 'labels-fill',
+    labelsText: 'labels-text'
+} as const;
+
+export { ScenarioMap, LayerTypes };

@@ -1,12 +1,5 @@
-import { Fragment } from 'react';
-import { Map } from '~/components/map';
-import { UserBadge } from '~/components/user-badge';
+import { redirect } from 'next/navigation';
 
 export default function App() {
-    return (
-        <Fragment>
-            <UserBadge />
-            <Map />
-        </Fragment>
-    );
+    redirect('/scenarios/view');
 }

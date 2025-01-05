@@ -1,0 +1,13 @@
+{
+    "recommendations": [
+        "bradlc.vscode-tailwindcss",
+        "christian-kohler.path-intellisense",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "davidanson.vscode-markdownlint",
+        "mikestead.dotenv",
+        "yoavbls.pretty-ts-errors",
+        "usernamehw.errorlens",
+        "yzhang.markdown-all-in-one"
+    ]
+}

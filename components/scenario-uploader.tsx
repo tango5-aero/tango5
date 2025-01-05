@@ -1,76 +1,30 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { toast } from '~/hooks/use-toast';
+import { useActionState, useState } from 'react';
 import { Button } from '~/components/ui/button';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
-import { Input } from './ui/input';
-import { scenario } from '../lib/scenario';
+import { Input } from '~/components/ui/input';
+import { Label } from '~/components/ui/label';
+import { createScenario } from '~/lib/actions';
 
-const FormSchema = z.object({
-    file: z.instanceof(FileList).refine(async (file) => {
-        const text = await file.item(0)?.text();
+export function ScenarioUpload() {
+    const [state, formAction, pending] = useActionState(createScenario, { message: '', error: false });
 
-        if (!text) return false;
-
-        let contents;
-
-        try {
-            contents = JSON.parse(text);
-        } catch {
-            return false;
-        }
-
-        const parse = scenario.safeParse(contents);
-
-        return parse.success;
-    }, 'No file chosen or the file does not contain valid scenario data.')
-});
-
-export function TextareaForm() {
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema)
-    });
-
-    const fileRef = form.register('file');
-
-    const onSubmit = (data: z.infer<typeof FormSchema>) => {
-        console.log('Submitted:', data);
-
-        const file = data.file.item(0)!;
-
-        // FIXME: remove console.log and fix toast not working
-        file.text().then(console.log);
-
-        toast({
-            title: 'Submission Successful',
-            description: `You submitted: ${data.file.item(0)?.name}`
-        });
-
-        // TODO: check and upload the scenario to the database
-    };
+    const [data, setData] = useState('');
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-                <FormField
-                    control={form.control}
-                    name="file"
-                    render={() => (
-                        <FormItem>
-                            <FormLabel>New scenario from file</FormLabel>
-                            <FormControl>
-                                <Input {...fileRef} type="file" accept="application/json" />
-                            </FormControl>
-                            <FormDescription>{'Upload scenario data.'}</FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <Button type="submit">Submit</Button>
-            </form>
-        </Form>
+        <form className="grid w-full max-w-sm items-center gap-1.5" action={formAction}>
+            <Label htmlFor="file">Upload scenario data</Label>
+            <Input
+                disabled={state.error}
+                id="file"
+                type="file"
+                onChange={(e) => e.target.files?.item(0)?.text().then(setData)}
+            />
+            <Input className="hidden" name="data" value={data} onChange={() => {}} />
+            <p className={state.error ? 'text-red-400' : 'text-green-400'}>{state.message}</p>
+            <Button type="submit" disabled={!data || pending || state.error}>
+                {pending ? 'Loading' : 'Submit'}
+            </Button>
+        </form>
     );
 }

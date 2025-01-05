@@ -1,3 +1,5 @@
+// Adapted from https://clerk.com/docs/quickstarts/nextjs#add-clerk-middleware-to-your-app
+
 import { clerkMiddleware } from '@clerk/nextjs/server';
 
 export default clerkMiddleware();
