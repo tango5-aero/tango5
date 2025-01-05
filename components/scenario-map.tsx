@@ -3,9 +3,9 @@
 import { useState, useEffect, type PropsWithChildren, CSSProperties } from 'react';
 import MapGL, { MapProvider, Layer, Source, useMap } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
-import { Flight } from '~/lib/flight';
-import { featureCollection as featureCollection } from '~/lib/geojson';
-import { Scenario, View } from '~/lib/scenario';
+import { Flight } from '~/lib/domain/flight';
+import { featureCollection as featureCollection } from '~/lib/domain/geojson';
+import { Scenario, View } from '~/lib/domain/scenario';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 

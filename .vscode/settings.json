@@ -1,3 +1,4 @@
 {
-    "cSpell.words": ["aprt", "Ftpm", "mapbox", "pageleave", "posthog", "Shadcn"]
+    "cSpell.words": ["aprt", "Ftpm", "mapbox", "pageleave", "posthog", "Shadcn"],
+    "typescript.tsdk": "node_modules/typescript/lib"
 }

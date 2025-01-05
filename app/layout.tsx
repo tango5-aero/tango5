@@ -4,6 +4,7 @@ import './globals.css';
 import { ThemeProvider } from '~/components/theme-provider';
 import { PostHogProvider } from '~/components/posthog-provider';
 import { UserBadge } from '~/components/user-badge';
+import { Toaster } from '~/components/ui/toaster';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                             <UserBadge />
                             {children}
+                            <Toaster />
                         </ThemeProvider>
                     </PostHogProvider>
                 </body>
