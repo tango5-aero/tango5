@@ -1,7 +1,7 @@
 import { ClerkProvider } from '@clerk/nextjs';
-import { ThemeProvider } from '~/components/theme-provider';
-import { PostHogProvider } from '~/components/posthog-provider';
-import { UserBadge } from '~/components/user-badge';
+import { ThemeProvider } from '~/components/theme/theme-provider';
+import { PostHogProvider } from '~/components/posthog/posthog-provider';
+import { UserBadge } from '~/components/user/user-badge';
 import { Toaster } from '~/components/ui/toaster';
 
 import './globals.css';

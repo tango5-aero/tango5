@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { ScenarioDeleteDialog } from '~/components/scenario-delete-dialog';
+import { ScenarioDeleteDialog } from '~/components/scenario/scenario-delete-dialog';
 import { type Scenario } from '~/lib/domain/scenario';
 import { ColumnDef } from '@tanstack/react-table';
-import { DataTable } from './ui/data-table';
+import { DataTable } from '~/components/ui/data-table';
 import { PropsWithoutRef } from 'react';
 import { PlayIcon } from 'lucide-react';
 
@@ -77,7 +77,7 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
     }
 ];
 
-export const ScenarioTable = (props: PropsWithoutRef<{ scenarios: { id: number; data: Scenario }[] }>) => {
+export const ScenariosTable = (props: PropsWithoutRef<{ scenarios: { id: number; data: Scenario }[] }>) => {
     return (
         <DataTable data={props.scenarios} columns={columns} initialState={{ columnVisibility: { scenario: false } }} />
     );

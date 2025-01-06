@@ -1,4 +1,4 @@
-import { ScenarioMap } from '~/components/scenario-map';
+import { ScenarioMap } from '~/components/scenario/scenario-map';
 import { redirect } from 'next/navigation';
 import { getScenario } from '~/lib/db/queries';
 
