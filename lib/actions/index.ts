@@ -33,13 +33,7 @@ export async function createScenario(_prevState: ActionState, formData: FormData
     return { message: `Scenario saved with id #${result[0].id}` };
 }
 
-export async function deleteScenario(_prevState: ActionState, formData: FormData): Promise<ActionState> {
-    const scenarioId = formData.get('scenarioId');
-
-    if (!scenarioId || typeof scenarioId !== 'string') return { message: 'Internal error' };
-
-    const id = parseInt(scenarioId, 10);
-
+export async function deleteScenario(_prevState: ActionState, id: number): Promise<ActionState> {
     const result = await deleteDBScenario(id);
 
     if (result.length === 0) return { message: `Scenario with id #${id} not found` };

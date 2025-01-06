@@ -1,8 +1,7 @@
 'use client';
 
-import { PropsWithoutRef, useActionState, useEffect, useState } from 'react';
+import { PropsWithoutRef, startTransition, useActionState, useEffect, useState } from 'react';
 import { Button } from '~/components/ui/button';
-import { Input } from '~/components/ui/input';
 import revalidateCacheTag, { deleteScenario } from '~/lib/actions';
 import { toast } from '~/hooks/use-toast';
 import {
@@ -20,7 +19,7 @@ import { cacheTags } from '~/lib/constants';
 
 export const ScenarioDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => {
     const [open, setOpen] = useState(false);
-    const [state, formAction, pending] = useActionState(deleteScenario, { message: '' });
+    const [state, action, pending] = useActionState(deleteScenario, { message: '' });
 
     useEffect(() => {
         if (state.message) toast({ description: state.message });
@@ -31,39 +30,34 @@ export const ScenarioDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => 
         if (pending) toast({ description: 'Deleting...' });
     }, [pending]);
 
+    const deleteCurrentScenario = () => {
+        startTransition(async () => {
+            action(props.id);
+            setOpen(false);
+        });
+    };
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger>
                 <Trash2Icon size={'1rem'} />
             </DialogTrigger>
             <DialogContent>
-                <form
-                    className="grid w-full items-center gap-6"
-                    action={formAction}
-                    onSubmitCapture={() => setOpen(false)}>
-                    <DialogHeader>
-                        <DialogTitle>{'Delete scenario'}</DialogTitle>
-                        <DialogDescription>
-                            {'Are you sure you want to delete the scenario? This action can not be undone. '}
-                        </DialogDescription>
-                    </DialogHeader>
+                <DialogHeader>
+                    <DialogTitle>{'Delete scenario'}</DialogTitle>
+                    <DialogDescription>
+                        {'Are you sure you want to delete the scenario? This action can not be undone. '}
+                    </DialogDescription>
+                </DialogHeader>
 
-                    <Input
-                        className="hidden"
-                        name="scenarioId"
-                        value={props.id}
-                        onChange={() => {} /* required to be  controlled */}
-                    />
-
-                    <DialogFooter>
-                        <Button type="submit" disabled={pending}>
-                            {pending ? 'Deleting' : 'Delete'}
-                        </Button>
-                        <DialogClose asChild>
-                            <Button>{'Cancel'}</Button>
-                        </DialogClose>
-                    </DialogFooter>
-                </form>
+                <DialogFooter>
+                    <Button disabled={pending} onClick={deleteCurrentScenario}>
+                        {pending ? 'Deleting' : 'Delete'}
+                    </Button>
+                    <DialogClose asChild>
+                        <Button>{'Cancel'}</Button>
+                    </DialogClose>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     );
