@@ -1,10 +1,10 @@
 import { ClerkProvider } from '@clerk/nextjs';
-
-import './globals.css';
 import { ThemeProvider } from '~/components/theme-provider';
 import { PostHogProvider } from '~/components/posthog-provider';
 import { UserBadge } from '~/components/user-badge';
 import { Toaster } from '~/components/ui/toaster';
+
+import './globals.css';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (

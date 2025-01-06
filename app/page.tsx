@@ -3,13 +3,14 @@ import { ScenarioTable } from '~/components/scenario-table';
 
 import { unstable_cache } from 'next/cache';
 import { getScenarios } from '~/lib/db/queries';
+import { cacheTags } from '~/lib/constants';
 
 const getScenariosCached = unstable_cache(
     async () => {
         return await getScenarios();
     },
-    ['scenarios'],
-    { revalidate: 3600, tags: ['scenarios'] }
+    [cacheTags.scenarios],
+    { revalidate: 3600, tags: [cacheTags.scenarios] }
 );
 export default async function App() {
     const scenarios = await getScenariosCached();

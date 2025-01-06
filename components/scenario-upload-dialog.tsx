@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useState } from 'react';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
-import { createScenario } from '~/lib/actions';
+import revalidateCacheTag, { createScenario } from '~/lib/actions';
 import { toast } from '~/hooks/use-toast';
 import {
     Dialog,
@@ -16,6 +16,7 @@ import {
     DialogClose
 } from '~/components/ui/dialog';
 import { FilePlus2 } from 'lucide-react';
+import { cacheTags } from '~/lib/constants';
 
 export function ScenarioUploadDialog() {
     const [open, setOpen] = useState(false);
@@ -24,9 +25,16 @@ export function ScenarioUploadDialog() {
 
     useEffect(() => {
         if (state.message) toast({ description: state.message });
-        setOpen(false);
-        setData('');
+        revalidateCacheTag(cacheTags.scenarios);
     }, [state]);
+
+    useEffect(() => {
+        if (!open) setData('');
+    }, [open]);
+
+    useEffect(() => {
+        if (pending) toast({ description: 'Loading...' });
+    }, [pending]);
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -34,14 +42,19 @@ export function ScenarioUploadDialog() {
                 <FilePlus2 size={'1rem'} />
             </DialogTrigger>
             <DialogContent>
-                <form className="grid w-full items-center gap-6" action={formAction}>
+                <form className="grid w-full items-center gap-6" action={formAction} onSubmit={() => setOpen(false)}>
                     <DialogHeader>
                         <DialogTitle>{'Scenario Upload'}</DialogTitle>
                         <DialogDescription>{'New scenario from a JSON file'}</DialogDescription>
                     </DialogHeader>
 
                     <Input type="file" onChange={(e) => e.target.files?.item(0)?.text().then(setData)} />
-                    <Input className="hidden" name="data" value={data} onChange={() => {}} />
+                    <Input
+                        className="hidden"
+                        name="data"
+                        value={data}
+                        onChange={() => {} /* required to be  controlled */}
+                    />
 
                     <DialogFooter>
                         <Button type="submit" disabled={data === '' || pending}>

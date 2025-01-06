@@ -30,8 +30,6 @@ export async function createScenario(_prevState: ActionState, formData: FormData
 
     if (result.length === 0) return { message: `Internal database error` };
 
-    revalidateTag('scenarios');
-
     return { message: `Scenario saved with id #${result[0].id}` };
 }
 
@@ -46,7 +44,9 @@ export async function deleteScenario(_prevState: ActionState, formData: FormData
 
     if (result.length === 0) return { message: `Scenario with id #${id} not found` };
 
-    revalidateTag('scenarios');
-
     return { message: `Scenario with id #${id} deleted successfully` };
+}
+
+export default async function revalidateCacheTag(tag: string) {
+    revalidateTag(tag);
 }

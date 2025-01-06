@@ -3,7 +3,7 @@
 import { PropsWithoutRef, useActionState, useEffect, useState } from 'react';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
-import { deleteScenario } from '~/lib/actions';
+import revalidateCacheTag, { deleteScenario } from '~/lib/actions';
 import { toast } from '~/hooks/use-toast';
 import {
     Dialog,
@@ -16,6 +16,7 @@ import {
 } from '~/components/ui/dialog';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { Trash2Icon } from 'lucide-react';
+import { cacheTags } from '~/lib/constants';
 
 export const ScenarioDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => {
     const [open, setOpen] = useState(false);
@@ -23,8 +24,12 @@ export const ScenarioDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => 
 
     useEffect(() => {
         if (state.message) toast({ description: state.message });
-        setOpen(false);
+        revalidateCacheTag(cacheTags.scenarios);
     }, [state]);
+
+    useEffect(() => {
+        if (pending) toast({ description: 'Deleting...' });
+    }, [pending]);
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -32,7 +37,10 @@ export const ScenarioDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => 
                 <Trash2Icon size={'1rem'} />
             </DialogTrigger>
             <DialogContent>
-                <form className="grid w-full items-center gap-6" action={formAction}>
+                <form
+                    className="grid w-full items-center gap-6"
+                    action={formAction}
+                    onSubmitCapture={() => setOpen(false)}>
                     <DialogHeader>
                         <DialogTitle>{'Delete scenario'}</DialogTitle>
                         <DialogDescription>
@@ -40,7 +48,12 @@ export const ScenarioDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => 
                         </DialogDescription>
                     </DialogHeader>
 
-                    <Input className="hidden" name="scenarioId" value={props.id} onChange={() => {}} />
+                    <Input
+                        className="hidden"
+                        name="scenarioId"
+                        value={props.id}
+                        onChange={() => {} /* required to be  controlled */}
+                    />
 
                     <DialogFooter>
                         <Button type="submit" disabled={pending}>
