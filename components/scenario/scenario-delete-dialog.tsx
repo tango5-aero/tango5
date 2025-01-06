@@ -3,7 +3,6 @@
 import { PropsWithoutRef, startTransition, useActionState, useEffect, useState } from 'react';
 import { Button } from '~/components/ui/button';
 import revalidateCacheTag, { deleteScenario } from '~/lib/actions';
-import { toast } from '~/hooks/use-toast';
 import {
     Dialog,
     DialogContent,
@@ -16,19 +15,21 @@ import {
 import { DialogClose } from '@radix-ui/react-dialog';
 import { Trash2Icon } from 'lucide-react';
 import { cacheTags } from '~/lib/constants';
+import { toast } from 'sonner';
 
 export const ScenarioDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => {
     const [open, setOpen] = useState(false);
-    const [state, action, pending] = useActionState(deleteScenario, { message: '' });
+    const [state, action, pending] = useActionState(deleteScenario, { message: '', error: false });
 
     useEffect(() => {
-        if (state.message) toast({ description: state.message });
+        if (state.message && state.error) toast.error(state.message);
+        if (state.message && !state.error) toast.success(state.message);
         revalidateCacheTag(cacheTags.scenarios);
     }, [state]);
 
     useEffect(() => {
-        if (pending) toast({ description: 'Deleting...' });
-    }, [pending]);
+        if (pending) toast.info(`Deleting scenario #${props.id}`);
+    }, [pending, props.id]);
 
     const deleteCurrentScenario = () => {
         startTransition(async () => {

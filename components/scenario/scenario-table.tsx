@@ -14,22 +14,21 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
         header: () => <div className="text-right">ID</div>
     },
     {
-        accessorKey: 'scenario',
-        header: () => <div className="text-right">Scenario</div>
+        accessorKey: 'data'
     },
     {
         accessorKey: 'lat',
-        header: () => <div className="text-right">Lat</div>,
+        header: () => <div className="text-right">Latitude</div>,
         cell: ({ row }) => {
-            const scenario = row.getValue('scenario') as Scenario;
+            const scenario = row.getValue('data') as Scenario;
             return <div className="text-right font-medium">{scenario.view.latitude}</div>;
         }
     },
     {
         accessorKey: 'lon',
-        header: () => <div className="text-right">Lon</div>,
+        header: () => <div className="text-right">Longitude</div>,
         cell: ({ row }) => {
-            const scenario = row.getValue('scenario') as Scenario;
+            const scenario = row.getValue('data') as Scenario;
             return <div className="text-right font-medium">{scenario.view.longitude}</div>;
         }
     },
@@ -37,7 +36,7 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
         accessorKey: 'zoom',
         header: () => <div className="text-right">Zoom</div>,
         cell: ({ row }) => {
-            const scenario = row.getValue('scenario') as Scenario;
+            const scenario = row.getValue('data') as Scenario;
 
             return <div className="text-right font-medium">{scenario.view.zoom}</div>;
         }
@@ -46,7 +45,7 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
         accessorKey: 'flights',
         header: () => <div className="text-right">Flights</div>,
         cell: ({ row }) => {
-            const scenario = row.getValue('scenario') as Scenario;
+            const scenario = row.getValue('data') as Scenario;
 
             return <div className="text-right font-medium">{scenario.flights.length}</div>;
         }
@@ -55,7 +54,7 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
         accessorKey: 'pcds',
         header: () => <div className="text-right">PCDs</div>,
         cell: ({ row }) => {
-            const scenario = row.getValue('scenario') as Scenario;
+            const scenario = row.getValue('data') as Scenario;
             return <div className="text-right font-medium">{scenario.pcds.length}</div>;
         }
     },
@@ -78,7 +77,5 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
 ];
 
 export const ScenariosTable = (props: PropsWithoutRef<{ scenarios: { id: number; data: Scenario }[] }>) => {
-    return (
-        <DataTable data={props.scenarios} columns={columns} initialState={{ columnVisibility: { scenario: false } }} />
-    );
+    return <DataTable data={props.scenarios} columns={columns} initialState={{ columnVisibility: { data: false } }} />;
 };
