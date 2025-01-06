@@ -8,6 +8,23 @@ import { featureCollection as featureCollection } from '~/lib/domain/geojson';
 import { Scenario, View } from '~/lib/domain/scenario';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { MapEvent, MapMouseEvent } from 'mapbox-gl';
+
+const onLoad = (e: MapEvent) => {
+    if (window) window.addEventListener('resize', () => e.target.resize());
+    e.target.touchZoomRotate.disableRotation();
+};
+
+const onRemove = (e: MapEvent) => {
+    if (window) window.removeEventListener('resize', () => e.target.resize());
+};
+
+const onMouseEnter = (e: MapEvent) => {
+    e.target.getCanvas().style.cursor = 'pointer';
+};
+const onMouseLeave = (e: MapEvent) => {
+    e.target.getCanvas().style.cursor = '';
+};
 
 const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario: Scenario }>) => {
     const [view, setView] = useState(props.scenario.view);
@@ -28,6 +45,16 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
             )
     );
 
+    const onClick = (e: MapMouseEvent) => {
+        const id = e.features?.at(0)?.properties?.ref;
+        if (!id) return;
+
+        const flight = flights.find((flight) => flight.id === id);
+        if (!flight) return;
+
+        console.log(flight);
+    };
+
     return (
         <MapProvider>
             <MapGL
@@ -47,7 +74,12 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
                 touchZoomRotate={true}
                 attributionControl={false}
                 fadeDuration={0}
-                interactiveLayerIds={[LayersIds.positionFill, LayersIds.labelsFill]}>
+                interactiveLayerIds={[LayersIds.positionFill, LayersIds.labelsFill]}
+                onLoad={onLoad}
+                onRemove={onRemove}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+                onClick={onClick}>
                 <Layers flights={flights} view={view} />
             </MapGL>
         </MapProvider>

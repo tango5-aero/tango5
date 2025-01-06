@@ -42,7 +42,7 @@ export function ScenarioUploadDialog() {
     const uploadScenario = () => {
         if (data)
             startTransition(async () => {
-                action(data);
+                action({ data, fileName });
                 setOpen(false);
             });
     };
@@ -64,13 +64,13 @@ export function ScenarioUploadDialog() {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>{'Scenario Upload'}</DialogTitle>
-                    <DialogDescription>{'New scenario from a JSON file'}</DialogDescription>
+                    <DialogDescription>{'Create a new scenario from a JSON file'}</DialogDescription>
                 </DialogHeader>
 
                 <Input
                     type="file"
-                    onChange={(e) => {
-                        const file = e.target.files?.item(0);
+                    onChange={({ target: { files } }) => {
+                        const file = files?.item(0);
                         if (file) updateFileContents(file);
                     }}
                 />
