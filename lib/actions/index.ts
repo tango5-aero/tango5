@@ -7,13 +7,7 @@ import { revalidateTag } from 'next/cache';
 
 type ActionState = { message: string };
 
-export async function createScenario(_prevState: ActionState, formData: FormData): Promise<ActionState> {
-    const data = formData.get('data');
-
-    if (!data) return { message: 'Internal error' };
-
-    if (typeof data !== 'string') return { message: 'The file must be UTF-8 encoded' };
-
+export async function createScenario(_prevState: ActionState, data: string): Promise<ActionState> {
     let json;
 
     try {

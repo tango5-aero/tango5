@@ -51,11 +51,11 @@ export const ScenarioDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => 
                 </DialogHeader>
 
                 <DialogFooter>
-                    <Button disabled={pending} onClick={deleteCurrentScenario}>
+                    <Button variant={'destructive'} disabled={pending} onClick={deleteCurrentScenario}>
                         {pending ? 'Deleting' : 'Delete'}
                     </Button>
                     <DialogClose asChild>
-                        <Button>{'Cancel'}</Button>
+                        <Button variant={'outline'}>{'Cancel'}</Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>
