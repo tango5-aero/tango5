@@ -1,6 +1,5 @@
 import { ScenarioMap } from '~/components/scenario-map';
 import { redirect } from 'next/navigation';
-import { scenarioSchema } from '~/lib/domain/scenario';
 import { getScenario } from '~/lib/db/queries';
 
 export default async function Page({ params }: { params: Promise<{ scenarioId: number }> }) {
@@ -12,8 +11,5 @@ export default async function Page({ params }: { params: Promise<{ scenarioId: n
     // TODO: redirect to 404 instead
     if (!scenario?.data) redirect('/');
 
-    // TODO: if data is corrupted, redirect to error page
-    const data = scenarioSchema.parse(JSON.parse(scenario.data));
-
-    return <ScenarioMap style={{ width: '100%', height: '100dvh' }} scenario={data} />;
+    return <ScenarioMap style={{ width: '100%', height: '100dvh' }} scenario={scenario.data} />;
 }

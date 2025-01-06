@@ -2,14 +2,13 @@
 
 import Link from 'next/link';
 import { ScenarioDeleteDialog } from '~/components/scenario-delete-dialog';
-import { type Scenario, scenarioSchema } from '~/lib/domain/scenario';
+import { type Scenario } from '~/lib/domain/scenario';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from './ui/data-table';
 import { PropsWithoutRef } from 'react';
 import { PlayIcon } from 'lucide-react';
-import type { Scenario as DBScenario } from '~/lib/db/schema';
 
-export const columns: ColumnDef<{ id: number; scenario: Scenario }>[] = [
+export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
     {
         accessorKey: 'id',
         header: () => <div className="text-right">ID</div>
@@ -78,11 +77,8 @@ export const columns: ColumnDef<{ id: number; scenario: Scenario }>[] = [
     }
 ];
 
-export const ScenarioTable = (props: PropsWithoutRef<{ scenarios: DBScenario[] }>) => {
-    const scenarios = props.scenarios.map((item) => ({
-        id: item.id,
-        scenario: scenarioSchema.parse(JSON.parse(item.data ?? ''))
-    }));
-
-    return <DataTable data={scenarios} columns={columns} initialState={{ columnVisibility: { scenario: false } }} />;
+export const ScenarioTable = (props: PropsWithoutRef<{ scenarios: { id: number; data: Scenario }[] }>) => {
+    return (
+        <DataTable data={props.scenarios} columns={columns} initialState={{ columnVisibility: { scenario: false } }} />
+    );
 };

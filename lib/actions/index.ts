@@ -20,7 +20,7 @@ export async function createScenario(_prevState: ActionState, data: string): Pro
 
     if (scenarioData.error) return { message: 'The file must have the correct JSON schema' };
 
-    const result = await writeScenario(data);
+    const result = await writeScenario(scenarioData.data);
 
     if (result.length === 0) return { message: `Internal database error` };
 
