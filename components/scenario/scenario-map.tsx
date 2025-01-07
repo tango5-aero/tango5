@@ -50,10 +50,11 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
         );
 
         const elapsed = firstRenderTime.current ? performance.now() - firstRenderTime.current : 0;
-
-        toast(
-            `Guessed ${correct.length} (out of ${props.scenario.pcds.length}) in ${selectedPairs.length} attempt(s) in ${formatMs(elapsed)}`
-        );
+        if (elapsed > 0) {
+            toast(
+                `Guessed ${correct.length} (out of ${props.scenario.pcds.length}) in ${selectedPairs.length} attempt(s) in ${formatMs(elapsed)}`
+            );
+        }
     }, [props.scenario.pcds, selectedPairs]);
 
     const flights = props.scenario.flights.map(
@@ -284,7 +285,7 @@ const LayersIds = {
 export function formatMs(millis: number): string {
     const minutes = Math.floor(millis / 60000);
     const seconds = (millis % 60000) / 1000;
-    return minutes > 0 ? minutes.toFixed(0) + 'm ' : '' + seconds.toFixed(0) + 's';
+    return (minutes > 0 ? minutes.toFixed(0) + 'm ' : '') + seconds.toFixed(0) + 's';
 }
 
 export { ScenarioMap, GeometryTypes };
