@@ -39,7 +39,7 @@ export function ScenarioUploadDialog() {
         if (pending) toast.info(`Creating new scenario from ${fileName}`);
     }, [fileName, pending]);
 
-    const uploadScenario = () => {
+    const uploadScenario = (data: string, fileName: string) => {
         if (data)
             startTransition(async () => {
                 action({ data, fileName });
@@ -76,7 +76,7 @@ export function ScenarioUploadDialog() {
                 />
 
                 <DialogFooter>
-                    <Button disabled={data === '' || pending} onClick={uploadScenario}>
+                    <Button disabled={data === '' || pending} onClick={() => uploadScenario(data, fileName)}>
                         {pending ? 'Loading' : 'Submit'}
                     </Button>
                     <DialogClose asChild>
