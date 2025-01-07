@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, type PropsWithChildren, CSSProperties } from 'react';
+import { useState, useEffect, type PropsWithChildren, CSSProperties, useRef } from 'react';
 import MapGL, { MapProvider, Layer, Source, useMap } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
 import { Flight } from '~/lib/domain/flight';
@@ -27,17 +27,20 @@ const onMouseLeave = (e: MapEvent) => {
     e.target.getCanvas().style.cursor = '';
 };
 
-type UserSelection = {
-    partial: string | null;
-    pairs: [string, string][];
-};
-
 const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario: Scenario }>) => {
     const [view, setView] = useState(props.scenario.view);
-    const [userSelection, setUserSelection] = useState<UserSelection>({ partial: null, pairs: [] });
+    const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
+    const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
+    const firstRenderTime = useRef<number | undefined>(undefined);
 
     useEffect(() => {
-        const correct = userSelection.pairs.filter(
+        if (typeof firstRenderTime.current === 'undefined') {
+            firstRenderTime.current = performance.now();
+        }
+    }, []);
+
+    useEffect(() => {
+        const correct = selectedPairs.filter(
             (pair) =>
                 props.scenario.pcds.filter(
                     (pcd) =>
@@ -46,10 +49,12 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
                 ).length !== 0
         );
 
+        const elapsed = firstRenderTime.current ? performance.now() - firstRenderTime.current : 0;
+
         toast(
-            `Guessed ${correct.length} (out of ${props.scenario.pcds.length}) in ${userSelection.pairs.length} attempt(s)`
+            `Guessed ${correct.length} (out of ${props.scenario.pcds.length}) in ${selectedPairs.length} attempt(s) in ${formatMs(elapsed)}`
         );
-    }, [props.scenario.pcds, userSelection.pairs, userSelection.pairs.length]);
+    }, [props.scenario.pcds, selectedPairs]);
 
     const flights = props.scenario.flights.map(
         (item) =>
@@ -74,31 +79,22 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
         const flight = flights.find((flight) => flight.id === id);
         if (!flight) return;
 
-        setUserSelection((previousSelection) => {
-            const newSelection: UserSelection = { ...previousSelection };
+        if (selectedFlight) {
+            // avoid duplicated pairs
+            const prevPair = selectedPairs.find(
+                (pair) =>
+                    (pair[0] === selectedFlight && pair[1] === flight.id) ||
+                    (pair[0] === flight.id && pair[1] === selectedFlight)
+            );
 
-            if (previousSelection.partial) {
-                newSelection.partial = null;
-
-                if (previousSelection.partial === flight.id) {
-                    return newSelection;
-                }
-
-                const prevPair = previousSelection.pairs.find(
-                    (pair) =>
-                        (pair[0] === previousSelection.partial && pair[1] === flight.id) ||
-                        (pair[0] === flight.id && pair[1] === previousSelection.partial)
-                );
-
-                if (!prevPair) {
-                    newSelection.pairs.push([previousSelection.partial, flight.id]);
-                }
-            } else {
-                newSelection.partial = flight.id;
+            if (!prevPair) {
+                setSelectedPairs((prev) => [...prev, [selectedFlight, flight.id]]);
             }
 
-            return newSelection;
-        });
+            setSelectedFlight(null);
+        } else {
+            setSelectedFlight(flight.id);
+        }
     };
 
     return (
@@ -126,7 +122,7 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onClick={onClick}>
-                <Layers flights={flights} selected={userSelection.partial} pairs={userSelection.pairs} view={view} />
+                <Layers flights={flights} selected={selectedFlight} pairs={selectedPairs} view={view} />
             </MapGL>
         </MapProvider>
     );
@@ -284,5 +280,11 @@ const LayersIds = {
     labelText: 'labels-text',
     labelAnchor: 'label-anchor'
 } as const;
+
+export function formatMs(millis: number): string {
+    const minutes = Math.floor(millis / 60000);
+    const seconds = (millis % 60000) / 1000;
+    return minutes > 0 ? minutes.toFixed(0) + 'm ' : '' + seconds.toFixed(0) + 's';
+}
 
 export { ScenarioMap, GeometryTypes };
