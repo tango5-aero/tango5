@@ -90,11 +90,7 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
                         (pair[0] === flight.id && pair[1] === previousSelection.partial)
                 );
 
-                if (prevPair) {
-                    newSelection.pairs = newSelection.pairs.filter(
-                        (pair) => pair[0] !== prevPair[0] && pair[1] !== prevPair[1]
-                    );
-                } else {
+                if (!prevPair) {
                     newSelection.pairs.push([previousSelection.partial, flight.id]);
                 }
             } else {
