@@ -1,7 +1,7 @@
 import { ScenarioUploadDialog } from '~/components/scenario/scenario-upload-dialog';
 import { ScenariosTable } from '~/components/scenario/scenario-table';
 import { getScenarios } from '~/lib/db/queries';
-import { ThemeToggle } from '../components/theme/theme-toggle';
+import { ThemeToggle } from '~/components/theme/theme-toggle';
 
 export default async function App() {
     const scenarios = await getScenarios();

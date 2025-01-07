@@ -21,7 +21,7 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
         header: () => <div className="text-right">Latitude</div>,
         cell: ({ row }) => {
             const scenario = row.getValue('data') as Scenario;
-            return <div className="text-right font-medium">{scenario.view.latitude}</div>;
+            return <div className="text-right font-medium">{scenario.view.latitude.toFixed(4)}</div>;
         }
     },
     {
@@ -29,7 +29,7 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
         header: () => <div className="text-right">Longitude</div>,
         cell: ({ row }) => {
             const scenario = row.getValue('data') as Scenario;
-            return <div className="text-right font-medium">{scenario.view.longitude}</div>;
+            return <div className="text-right font-medium">{scenario.view.longitude.toFixed(4)}</div>;
         }
     },
     {
@@ -38,7 +38,7 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
         cell: ({ row }) => {
             const scenario = row.getValue('data') as Scenario;
 
-            return <div className="text-right font-medium">{scenario.view.zoom}</div>;
+            return <div className="text-right font-medium">{scenario.view.zoom.toFixed(0)}</div>;
         }
     },
     {
