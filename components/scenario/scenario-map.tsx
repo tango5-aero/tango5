@@ -9,6 +9,7 @@ import { Scenario, View } from '~/lib/domain/scenario';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { MapEvent, MapMouseEvent } from 'mapbox-gl';
+import { toast } from 'sonner';
 
 const onLoad = (e: MapEvent) => {
     if (window) window.addEventListener('resize', () => e.target.resize());
@@ -34,6 +35,21 @@ type UserSelection = {
 const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario: Scenario }>) => {
     const [view, setView] = useState(props.scenario.view);
     const [userSelection, setUserSelection] = useState<UserSelection>({ partial: null, pairs: [] });
+
+    useEffect(() => {
+        const correct = userSelection.pairs.filter(
+            (pair) =>
+                props.scenario.pcds.filter(
+                    (pcd) =>
+                        (pcd.firstId === pair[0] && pcd.secondId === pair[1]) ||
+                        (pcd.firstId === pair[1] && pcd.secondId === pair[0])
+                ).length !== 0
+        );
+
+        toast(
+            `Guessed ${correct.length} (out of ${props.scenario.pcds.length}) in ${userSelection.pairs.length} attempt(s)`
+        );
+    }, [props.scenario.pcds, userSelection.pairs, userSelection.pairs.length]);
 
     const flights = props.scenario.flights.map(
         (item) =>
@@ -121,7 +137,13 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
 };
 
 const Layers = (
-    props: PropsWithChildren<{ flights: Flight[]; selected: string | null; pairs: [string, string][]; view: View }>
+    props: PropsWithChildren<{
+        flights: Flight[];
+
+        selected: string | null;
+        pairs: [string, string][];
+        view: View;
+    }>
 ) => {
     const { map: mapRef } = useMap();
 
