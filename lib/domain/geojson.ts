@@ -66,7 +66,8 @@ export function featureCollection(
     pairs: [string, string][],
     scalingFactor: number,
     project: ([lng, lat]: [number, number]) => [x: number, y: number],
-    unproject: ([x, y]: [number, number]) => [lng: number, lat: number]
+    unproject: ([x, y]: [number, number]) => [lng: number, lat: number],
+    showLabels: boolean
 ) {
     const collection: FeatureCollection<LineString | Polygon | Point, Props> = {
         type: 'FeatureCollection',
@@ -244,6 +245,8 @@ export function featureCollection(
             });
         }
     }
+
+    if (!showLabels) return collection;
 
     const maxMs = 500;
 

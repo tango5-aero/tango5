@@ -164,13 +164,28 @@ const Layers = (
 
         const scalingFactor = props.view.zoom ** 2;
 
+        const bounds = map.getBounds();
+
+        if (!bounds) return;
+
+        const onViewFlights = props.flights.filter(
+            (flight) =>
+                props.pairs.map((pair) => pair[0]).includes(flight.id) ||
+                props.pairs.map((pair) => pair[1]).includes(flight.id) ||
+                (bounds.getWest() < flight.longitudeDeg &&
+                    flight.longitudeDeg < bounds.getEast() &&
+                    bounds.getSouth() < flight.latitudeDeg &&
+                    flight.latitudeDeg < bounds.getNorth())
+        );
+
         const computedCollection = featureCollection(
-            props.flights,
+            onViewFlights,
             props.selected,
             props.pairs,
             scalingFactor,
             project,
-            unproject
+            unproject,
+            onViewFlights.length < 200
         );
 
         setCollection(computedCollection);
