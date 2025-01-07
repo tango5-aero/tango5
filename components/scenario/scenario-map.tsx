@@ -50,9 +50,10 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
         );
 
         const elapsed = firstRenderTime.current ? performance.now() - firstRenderTime.current : 0;
+
         if (elapsed > 0) {
             toast(
-                `Guessed ${correct.length} (out of ${props.scenario.pcds.length}) in ${selectedPairs.length} attempt(s) in ${formatMs(elapsed)}`
+                `Guessed ${correct.length} (out of ${props.scenario.pcds.length}) in ${selectedPairs.length} attempt${selectedPairs.length === 1 ? '' : 's'} in ${formatMs(elapsed)}`
             );
         }
     }, [props.scenario.pcds, selectedPairs]);
