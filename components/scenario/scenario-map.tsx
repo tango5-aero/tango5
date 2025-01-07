@@ -29,8 +29,10 @@ const onMouseLeave = (e: MapEvent) => {
 
 const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario: Scenario }>) => {
     const [view, setView] = useState(props.scenario.view);
+
     const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
+
     const firstRenderTime = useRef<number | undefined>(undefined);
 
     useEffect(() => {
@@ -82,15 +84,18 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
         if (!flight) return;
 
         if (selectedFlight) {
-            // avoid duplicated pairs
-            const prevPair = selectedPairs.find(
-                (pair) =>
-                    (pair[0] === selectedFlight && pair[1] === flight.id) ||
-                    (pair[0] === flight.id && pair[1] === selectedFlight)
-            );
+            // avoid selecting the same flight two times on the same pair
+            if (selectedFlight !== flight.id) {
+                // avoid duplicated pairs
+                const prevPair = selectedPairs.find(
+                    (pair) =>
+                        (pair[0] === selectedFlight && pair[1] === flight.id) ||
+                        (pair[0] === flight.id && pair[1] === selectedFlight)
+                );
 
-            if (!prevPair) {
-                setSelectedPairs((prev) => [...prev, [selectedFlight, flight.id]]);
+                if (!prevPair) {
+                    setSelectedPairs((prev) => [...prev, [selectedFlight, flight.id]]);
+                }
             }
 
             setSelectedFlight(null);
@@ -104,7 +109,7 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
             <MapGL
                 {...view}
                 id="map"
-                onMove={(evt) => setView(evt.viewState)}
+                onMove={(e) => setView(e.viewState)}
                 mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
                 maxBounds={props.scenario.boundaries as [number, number, number, number]}
                 style={props.style}
@@ -133,7 +138,6 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
 const Layers = (
     props: PropsWithChildren<{
         flights: Flight[];
-
         selected: string | null;
         pairs: [string, string][];
         view: View;
