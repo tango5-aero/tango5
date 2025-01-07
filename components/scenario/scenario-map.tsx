@@ -6,10 +6,10 @@ import type { FeatureCollection } from 'geojson';
 import { Flight } from '~/lib/domain/flight';
 import { featureCollection as featureCollection } from '~/lib/domain/geojson';
 import { Scenario, View } from '~/lib/domain/scenario';
-
-import 'mapbox-gl/dist/mapbox-gl.css';
 import { MapEvent, MapMouseEvent } from 'mapbox-gl';
 import { toast } from 'sonner';
+
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 const onLoad = (e: MapEvent) => {
     if (window) window.addEventListener('resize', () => e.target.resize());

@@ -6,7 +6,7 @@ import { type Scenario } from '~/lib/domain/scenario';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
 import { PropsWithoutRef } from 'react';
-import { PlayIcon } from 'lucide-react';
+import { Download, PlayIcon } from 'lucide-react';
 
 export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
     {
@@ -63,12 +63,19 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
         header: () => <div className="text-right">Actions</div>,
         cell: ({ row }) => {
             const id = row.getValue('id') as number;
+            const data = row.getValue('data') as Scenario;
 
             return (
                 <div className="flex flex-row gap-2">
                     <Link href={`/play/${id}`}>
                         <PlayIcon size={'1rem'} />
                     </Link>
+                    <a
+                        title={`Download scenario #${id}`}
+                        href={`data:application/json,${JSON.stringify(data)}`}
+                        download={`t5_scenario_${id}.json`}>
+                        <Download size={'1rem'} />
+                    </a>
                     <ScenarioDeleteDialog id={id} />
                 </div>
             );
