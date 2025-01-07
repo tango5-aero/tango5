@@ -5,35 +5,24 @@ import { Flight } from '~/lib/domain/flight';
 import { GeometryTypes } from '~/components/scenario/scenario-map';
 import { circle } from '@turf/turf';
 
-type Props = {
-    ref: string;
-} & (FlightLabel | FlightSpeed | FlightPositionProps | FlightLabelAnchorProps | LabelLink | FlightHaloProps);
-
-type FlightLabel = {
-    type: typeof GeometryTypes.label;
-};
-
-type LabelLink = {
-    type: typeof GeometryTypes.labelLink;
-};
-
-type FlightSpeed = {
-    type: typeof GeometryTypes.speedVector;
-};
-
-type FlightLabelAnchorProps = {
-    type: typeof GeometryTypes.labelText;
-    text: string;
-    fontSize: number;
-};
-
-type FlightPositionProps = {
-    type: typeof GeometryTypes.position;
-};
-
-type FlightHaloProps = {
-    type: typeof GeometryTypes.halo;
-};
+type Props =
+    | {
+          ref: string;
+          type:
+              | typeof GeometryTypes.position
+              | typeof GeometryTypes.speedVector
+              | typeof GeometryTypes.label
+              | typeof GeometryTypes.labelLink
+              | typeof GeometryTypes.halo
+              | typeof GeometryTypes.pcdLabel
+              | typeof GeometryTypes.pcdLink;
+      }
+    | {
+          ref: string;
+          type: typeof GeometryTypes.pcdText | typeof GeometryTypes.labelText;
+          text: string;
+          fontSize: number;
+      };
 
 export function measureTextBBox(text: string, fontSize: number): { height: number; width: number } {
     const canvas = document.createElement('canvas');
@@ -67,7 +56,8 @@ export function measureTextBBox(text: string, fontSize: number): { height: numbe
 
 export function featureCollection(
     flights: Flight[],
-    selectedFlightsIds: string[],
+    selected: string | null,
+    pairs: [string, string][],
     scalingFactor: number,
     project: ([lng, lat]: [number, number]) => [x: number, y: number],
     unproject: ([x, y]: [number, number]) => [lng: number, lat: number]
@@ -90,13 +80,13 @@ export function featureCollection(
         const coordinates = [expand(flightPoint2D, flightBoxSize, flightBoxSize).map((point) => unproject(point))];
 
         collection.features.push({
-            type: 'Feature' as const,
+            type: 'Feature',
             properties: {
                 ref: flight.id,
                 type: GeometryTypes.position
             },
             geometry: {
-                type: 'Polygon' as const,
+                type: 'Polygon',
                 coordinates
             }
         });
@@ -107,13 +97,13 @@ export function featureCollection(
 
         if (leadCoordinates !== undefined)
             collection.features.push({
-                type: 'Feature' as const,
+                type: 'Feature',
                 properties: {
                     ref: flight.id,
                     type: GeometryTypes.speedVector
                 },
                 geometry: {
-                    type: 'LineString' as const,
+                    type: 'LineString',
                     coordinates: [[flight.longitudeDeg, flight.latitudeDeg], leadCoordinates]
                 }
             });
@@ -136,7 +126,7 @@ export function featureCollection(
             distance
         });
 
-        if (selectedFlightsIds.includes(flight.id)) {
+        if (selected === flight.id) {
             collection.features.push(
                 circle([flight.longitudeDeg, flight.latitudeDeg], 5, {
                     steps: 20,
@@ -147,6 +137,105 @@ export function featureCollection(
                     }
                 })
             );
+        }
+    }
+
+    for (const pair of pairs) {
+        const flight = flights.find((flight) => flight.id === pair[0]);
+        const otherFlight = flights.find((flight) => flight.id === pair[1]);
+
+        if (flight && otherFlight) {
+            collection.features.push(
+                circle([flight.longitudeDeg, flight.latitudeDeg], 5, {
+                    steps: 20,
+                    units: 'nauticalmiles',
+                    properties: {
+                        ref: flight.id,
+                        type: GeometryTypes.halo
+                    }
+                })
+            );
+
+            collection.features.push(
+                circle([otherFlight.longitudeDeg, otherFlight.latitudeDeg], 5, {
+                    steps: 20,
+                    units: 'nauticalmiles',
+                    properties: {
+                        ref: otherFlight.id,
+                        type: GeometryTypes.halo
+                    }
+                })
+            );
+
+            const id = flight < otherFlight ? `${flight.id}-${otherFlight.id}` : `${otherFlight.id}-${flight.id}`;
+
+            collection.features.push({
+                type: 'Feature',
+                properties: {
+                    ref: id,
+                    type: GeometryTypes.pcdLink
+                },
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [
+                        [flight.longitudeDeg, flight.latitudeDeg],
+                        [otherFlight.longitudeDeg, otherFlight.latitudeDeg]
+                    ]
+                }
+            });
+
+            const measure = flight.measureDistanceTo(otherFlight);
+
+            if (!measure) continue;
+
+            const minimumDistanceText =
+                'minimumDistanceNM' in measure && 'timeToMinimumDistanceMs' in measure
+                    ? `\r\n${measure.minimumDistanceNM.toFixed(1)}NM ${formatMs(measure.timeToMinimumDistanceMs)}`
+                    : '';
+
+            const text = `${measure.currentDistanceNM.toFixed(1)}NM${minimumDistanceText}`;
+
+            const textSize = measureTextBBox(text, fontSize);
+
+            const width = Math.max(1, textSize.width / 1.5);
+            const height = Math.max(1, textSize.height / 1.5);
+
+            const labelCenter = [
+                (flight.longitudeDeg + otherFlight.longitudeDeg) / 2,
+                (flight.latitudeDeg + otherFlight.latitudeDeg) / 2
+            ] as [number, number];
+
+            const label = expand(labelCenter, width, height);
+
+            const coordinates = [label.map((point) => unproject(point))];
+
+            nonOverlapping.push(toBBox(label));
+
+            collection.features.push({
+                type: 'Feature',
+                properties: {
+                    ref: id,
+                    type: GeometryTypes.pcdLabel
+                },
+                geometry: {
+                    type: 'Polygon',
+                    coordinates
+                }
+            });
+
+            collection.features.push({
+                type: 'Feature',
+                properties: {
+                    ref: id,
+                    type: GeometryTypes.pcdText,
+                    text,
+                    fontSize
+                },
+                geometry: {
+                    type: 'Point',
+                    coordinates: labelCenter
+                }
+            });
         }
     }
 
@@ -170,13 +259,13 @@ export function featureCollection(
         const coordinates = [toPolygon(label.bbox).map((point) => unproject(point))];
 
         collection.features.push({
-            type: 'Feature' as const,
+            type: 'Feature',
             properties: {
                 ref,
                 type: GeometryTypes.label
             },
             geometry: {
-                type: 'Polygon' as const,
+                type: 'Polygon',
                 coordinates
             }
         });
@@ -184,7 +273,7 @@ export function featureCollection(
         const text = flight.label;
 
         collection.features.push({
-            type: 'Feature' as const,
+            type: 'Feature',
             properties: {
                 ref,
                 type: GeometryTypes.labelText,
@@ -192,7 +281,7 @@ export function featureCollection(
                 fontSize
             },
             geometry: {
-                type: 'Point' as const,
+                type: 'Point',
                 coordinates: labelCenter
             }
         });
@@ -202,17 +291,23 @@ export function featureCollection(
         const anchor = unproject(closestPointXY);
 
         collection.features.push({
-            type: 'Feature' as const,
+            type: 'Feature',
             properties: {
                 ref,
                 type: GeometryTypes.labelLink
             },
             geometry: {
-                type: 'LineString' as const,
+                type: 'LineString',
                 coordinates: [anchor, [flight.longitudeDeg, flight.latitudeDeg]]
             }
         });
     }
 
     return collection;
+}
+
+function formatMs(millis: number): string {
+    const minutes = Math.floor(millis / 60000);
+    const seconds = (millis % 60000) / 1000;
+    return minutes + ':' + (seconds < 10 ? '0' : '') + seconds.toFixed(0);
 }

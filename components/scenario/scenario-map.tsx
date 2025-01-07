@@ -26,9 +26,14 @@ const onMouseLeave = (e: MapEvent) => {
     e.target.getCanvas().style.cursor = '';
 };
 
+type UserSelection = {
+    partial: string | null;
+    pairs: [string, string][];
+};
+
 const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario: Scenario }>) => {
     const [view, setView] = useState(props.scenario.view);
-    const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const [userSelection, setUserSelection] = useState<UserSelection>({ partial: null, pairs: [] });
 
     const flights = props.scenario.flights.map(
         (item) =>
@@ -53,12 +58,34 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
         const flight = flights.find((flight) => flight.id === id);
         if (!flight) return;
 
-        setSelectedIds((selectedIds) => {
-            if (selectedIds.includes(flight.id)) {
-                return selectedIds.filter((id) => id !== flight.id);
+        setUserSelection((previousSelection) => {
+            const newSelection: UserSelection = { ...previousSelection };
+
+            if (previousSelection.partial) {
+                newSelection.partial = null;
+
+                if (previousSelection.partial === flight.id) {
+                    return newSelection;
+                }
+
+                const prevPair = previousSelection.pairs.find(
+                    (pair) =>
+                        (pair[0] === previousSelection.partial && pair[1] === flight.id) ||
+                        (pair[0] === flight.id && pair[1] === previousSelection.partial)
+                );
+
+                if (prevPair) {
+                    newSelection.pairs = newSelection.pairs.filter(
+                        (pair) => pair[0] !== prevPair[0] && pair[1] !== prevPair[1]
+                    );
+                } else {
+                    newSelection.pairs.push([previousSelection.partial, flight.id]);
+                }
             } else {
-                return [...selectedIds, flight.id];
+                newSelection.partial = flight.id;
             }
+
+            return newSelection;
         });
     };
 
@@ -81,19 +108,21 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
                 touchZoomRotate={true}
                 attributionControl={false}
                 fadeDuration={0}
-                interactiveLayerIds={[LayersIds.positionFill, LayersIds.labelsFill]}
+                interactiveLayerIds={[LayersIds.positionFill, LayersIds.labelFill]}
                 onLoad={onLoad}
                 onRemove={onRemove}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onClick={onClick}>
-                <Layers flights={flights} selectedIds={selectedIds} view={view} />
+                <Layers flights={flights} selected={userSelection.partial} pairs={userSelection.pairs} view={view} />
             </MapGL>
         </MapProvider>
     );
 };
 
-const Layers = (props: PropsWithChildren<{ flights: Flight[]; selectedIds: string[]; view: View }>) => {
+const Layers = (
+    props: PropsWithChildren<{ flights: Flight[]; selected: string | null; pairs: [string, string][]; view: View }>
+) => {
     const { map: mapRef } = useMap();
 
     const [collection, setCollection] = useState<FeatureCollection>({ type: 'FeatureCollection', features: [] });
@@ -117,14 +146,15 @@ const Layers = (props: PropsWithChildren<{ flights: Flight[]; selectedIds: strin
 
         const computedCollection = featureCollection(
             props.flights,
-            props.selectedIds,
+            props.selected,
+            props.pairs,
             scalingFactor,
             project,
             unproject
         );
 
         setCollection(computedCollection);
-    }, [props.flights, mapRef, props.view.zoom, props.selectedIds]);
+    }, [props.flights, mapRef, props.view.zoom, props.selected, props.pairs]);
 
     return (
         <Source id="flights-source" type="geojson" data={collection}>
@@ -159,13 +189,42 @@ const Layers = (props: PropsWithChildren<{ flights: Flight[]; selectedIds: strin
                 filter={['==', ['get', 'type'], GeometryTypes.position]}
             />
             <Layer
-                id={LayersIds.labelsFill}
+                id={LayersIds.pcdLine}
+                type="line"
+                paint={{ 'line-color': '#D45D08', 'line-dasharray': [6, 4] }}
+                filter={['==', ['get', 'type'], GeometryTypes.pcdLink]}
+                beforeId={LayersIds.positionFill}
+            />
+            <Layer
+                id={LayersIds.pcdLabelFill}
+                type="fill"
+                paint={{ 'fill-opacity': 0.3 }}
+                filter={['==', ['get', 'type'], GeometryTypes.pcdLabel]}
+            />
+            <Layer
+                id={LayersIds.pcdLabelText}
+                type="symbol"
+                filter={['==', ['get', 'type'], GeometryTypes.pcdText]}
+                layout={{
+                    'text-field': ['get', 'text'],
+                    'text-allow-overlap': true,
+                    'text-ignore-placement': true,
+                    'text-justify': 'left',
+                    'text-size': ['get', 'fontSize'],
+                    'text-rotation-alignment': 'viewport'
+                }}
+                paint={{
+                    'text-color': '#D45D08'
+                }}
+            />
+            <Layer
+                id={LayersIds.labelFill}
                 type="fill"
                 paint={{ 'fill-opacity': 0 }}
                 filter={['==', ['get', 'type'], GeometryTypes.label]}
             />
             <Layer
-                id={LayersIds.labelsText}
+                id={LayersIds.labelText}
                 type="symbol"
                 filter={['==', ['get', 'type'], GeometryTypes.labelText]}
                 layout={{
@@ -185,22 +244,26 @@ const Layers = (props: PropsWithChildren<{ flights: Flight[]; selectedIds: strin
 
 const GeometryTypes = {
     speedVector: 'speed',
-    labelLink: 'label-link',
     halo: 'halo',
     position: 'position',
+    pcdLabel: 'pcd-label',
+    pcdText: 'pcd-text',
+    pcdLink: 'pcd-link',
     label: 'label',
-    labelText: 'label-text'
+    labelText: 'label-text',
+    labelLink: 'label-link'
 } as const;
 
 const LayersIds = {
-    leadVector: 'lead-vector',
-    halo: 'halo',
     positionFill: 'position-fill',
     positionBorder: 'position-border',
-    trailsBorder: 'trails-border',
-    trajectoryFill: 'trajectory-fill',
-    labelsFill: 'labels-fill',
-    labelsText: 'labels-text',
+    leadVector: 'lead-vector',
+    halo: 'halo',
+    pcdLabelText: 'pcd-label-text',
+    pcdLabelFill: 'pcd-label-fill',
+    pcdLine: 'pcd-line',
+    labelFill: 'labels-fill',
+    labelText: 'labels-text',
     labelAnchor: 'label-anchor'
 } as const;
 
