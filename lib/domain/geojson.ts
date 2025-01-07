@@ -2,32 +2,37 @@ import type { FeatureCollection, LineString, Point, Polygon } from 'geojson';
 import { closestBorder, expand, toBBox, toPolygon } from './geometry';
 import { Movable, spread } from './spreader';
 import { Flight } from '~/lib/domain/flight';
-import { LayerTypes } from '~/components/scenario/scenario-map';
+import { GeometryTypes } from '~/components/scenario/scenario-map';
+import { circle } from '@turf/turf';
 
 type Props = {
     ref: string;
-} & (FlightLabel | FlightSpeed | FlightPositionProps | FlightLabelAnchorProps | LabelLink);
+} & (FlightLabel | FlightSpeed | FlightPositionProps | FlightLabelAnchorProps | LabelLink | FlightHaloProps);
 
 type FlightLabel = {
-    type: typeof LayerTypes.label;
+    type: typeof GeometryTypes.label;
 };
 
 type LabelLink = {
-    type: typeof LayerTypes.labelLink;
+    type: typeof GeometryTypes.labelLink;
 };
 
 type FlightSpeed = {
-    type: typeof LayerTypes.speedVector;
+    type: typeof GeometryTypes.speedVector;
 };
 
 type FlightLabelAnchorProps = {
-    type: typeof LayerTypes.labelText;
+    type: typeof GeometryTypes.labelText;
     text: string;
     fontSize: number;
 };
 
 type FlightPositionProps = {
-    type: typeof LayerTypes.position;
+    type: typeof GeometryTypes.position;
+};
+
+type FlightHaloProps = {
+    type: typeof GeometryTypes.halo;
 };
 
 export function measureTextBBox(text: string, fontSize: number): { height: number; width: number } {
@@ -60,12 +65,10 @@ export function measureTextBBox(text: string, fontSize: number): { height: numbe
     return { height, width };
 }
 
-const DEFAULT_FLIGHT_BOX_SIZE = 5; // px
-const FONT_BASE_SIZE = 16; // px
-
 export function featureCollection(
     flights: Flight[],
-    zoom: number,
+    selectedFlightsIds: string[],
+    scalingFactor: number,
     project: ([lng, lat]: [number, number]) => [x: number, y: number],
     unproject: ([x, y]: [number, number]) => [lng: number, lat: number]
 ) {
@@ -76,17 +79,12 @@ export function featureCollection(
 
     const nonOverlapping: [number, number, number, number][] = [];
 
-    const flightBoxSize = (zoom ** 2 * Math.max(DEFAULT_FLIGHT_BOX_SIZE, 1)) / 100;
-    const fontSize = (zoom ** 2 * FONT_BASE_SIZE) / 100;
+    const flightBoxSize = (scalingFactor * 5) / 100;
+    const fontSize = flightBoxSize * 4;
 
     const initialLabels: Movable[] = [];
 
     for (const flight of flights) {
-        // skip fligths without coordinates
-        if (flight.latitudeDeg === undefined || flight.longitudeDeg === undefined) {
-            continue;
-        }
-
         const flightPoint2D = project([flight.longitudeDeg, flight.latitudeDeg]);
         const flightPositionSquare = expand(flightPoint2D, flightBoxSize, flightBoxSize);
         const coordinates = [expand(flightPoint2D, flightBoxSize, flightBoxSize).map((point) => unproject(point))];
@@ -95,7 +93,7 @@ export function featureCollection(
             type: 'Feature' as const,
             properties: {
                 ref: flight.id,
-                type: LayerTypes.position
+                type: GeometryTypes.position
             },
             geometry: {
                 type: 'Polygon' as const,
@@ -112,7 +110,7 @@ export function featureCollection(
                 type: 'Feature' as const,
                 properties: {
                     ref: flight.id,
-                    type: LayerTypes.speedVector
+                    type: GeometryTypes.speedVector
                 },
                 geometry: {
                     type: 'LineString' as const,
@@ -137,6 +135,19 @@ export function featureCollection(
             track: (flight.trackDeg ?? 0) + 90,
             distance
         });
+
+        if (selectedFlightsIds.includes(flight.id)) {
+            collection.features.push(
+                circle([flight.longitudeDeg, flight.latitudeDeg], 5, {
+                    steps: 20,
+                    units: 'nauticalmiles',
+                    properties: {
+                        ref: flight.id,
+                        type: GeometryTypes.halo
+                    }
+                })
+            );
+        }
     }
 
     const maxMs = 500;
@@ -162,7 +173,7 @@ export function featureCollection(
             type: 'Feature' as const,
             properties: {
                 ref,
-                type: LayerTypes.label
+                type: GeometryTypes.label
             },
             geometry: {
                 type: 'Polygon' as const,
@@ -176,7 +187,7 @@ export function featureCollection(
             type: 'Feature' as const,
             properties: {
                 ref,
-                type: LayerTypes.labelText,
+                type: GeometryTypes.labelText,
                 text,
                 fontSize
             },
@@ -194,7 +205,7 @@ export function featureCollection(
             type: 'Feature' as const,
             properties: {
                 ref,
-                type: LayerTypes.labelLink
+                type: GeometryTypes.labelLink
             },
             geometry: {
                 type: 'LineString' as const,

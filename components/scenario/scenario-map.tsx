@@ -28,6 +28,7 @@ const onMouseLeave = (e: MapEvent) => {
 
 const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario: Scenario }>) => {
     const [view, setView] = useState(props.scenario.view);
+    const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
     const flights = props.scenario.flights.map(
         (item) =>
@@ -52,7 +53,13 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
         const flight = flights.find((flight) => flight.id === id);
         if (!flight) return;
 
-        console.log(flight);
+        setSelectedIds((selectedIds) => {
+            if (selectedIds.includes(flight.id)) {
+                return selectedIds.filter((id) => id !== flight.id);
+            } else {
+                return [...selectedIds, flight.id];
+            }
+        });
     };
 
     return (
@@ -80,13 +87,13 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onClick={onClick}>
-                <Layers flights={flights} view={view} />
+                <Layers flights={flights} selectedIds={selectedIds} view={view} />
             </MapGL>
         </MapProvider>
     );
 };
 
-const Layers = ({ flights, view }: PropsWithChildren<{ flights: Flight[]; view: View }>) => {
+const Layers = (props: PropsWithChildren<{ flights: Flight[]; selectedIds: string[]; view: View }>) => {
     const { map: mapRef } = useMap();
 
     const [collection, setCollection] = useState<FeatureCollection>({ type: 'FeatureCollection', features: [] });
@@ -106,8 +113,18 @@ const Layers = ({ flights, view }: PropsWithChildren<{ flights: Flight[]; view: 
             return [point.lng, point.lat] as [number, number];
         };
 
-        setCollection(featureCollection(flights, view.zoom, project, unproject));
-    }, [flights, mapRef, view.zoom]);
+        const scalingFactor = props.view.zoom ** 2;
+
+        const computedCollection = featureCollection(
+            props.flights,
+            props.selectedIds,
+            scalingFactor,
+            project,
+            unproject
+        );
+
+        setCollection(computedCollection);
+    }, [props.flights, mapRef, props.view.zoom, props.selectedIds]);
 
     return (
         <Source id="flights-source" type="geojson" data={collection}>
@@ -115,42 +132,42 @@ const Layers = ({ flights, view }: PropsWithChildren<{ flights: Flight[]; view: 
                 id={LayersIds.leadVector}
                 type="line"
                 paint={{ 'line-color': '#FFFFFF' }}
-                filter={['==', ['get', 'type'], LayerTypes.speedVector]}
+                filter={['==', ['get', 'type'], GeometryTypes.speedVector]}
             />
             <Layer
                 id={LayersIds.labelAnchor}
                 type="line"
                 paint={{ 'line-color': '#FFFFFF', 'line-opacity': 0.3 }}
-                filter={['==', ['get', 'type'], LayerTypes.labelLink]}
+                filter={['==', ['get', 'type'], GeometryTypes.labelLink]}
             />
             <Layer
                 id={LayersIds.halo}
                 type="line"
                 paint={{ 'line-color': '#FFFFFF' }}
-                filter={['==', ['get', 'type'], LayerTypes.halo]}
+                filter={['==', ['get', 'type'], GeometryTypes.halo]}
             />
             <Layer
                 id={LayersIds.positionFill}
                 type="fill"
                 paint={{ 'fill-color': '#FFFFFF' }}
-                filter={['==', ['get', 'type'], LayerTypes.position]}
+                filter={['==', ['get', 'type'], GeometryTypes.position]}
             />
             <Layer
                 id={LayersIds.positionBorder}
                 type="line"
                 paint={{ 'line-color': '#FFFFFF' }}
-                filter={['==', ['get', 'type'], LayerTypes.position]}
+                filter={['==', ['get', 'type'], GeometryTypes.position]}
             />
             <Layer
                 id={LayersIds.labelsFill}
                 type="fill"
                 paint={{ 'fill-opacity': 0 }}
-                filter={['==', ['get', 'type'], LayerTypes.label]}
+                filter={['==', ['get', 'type'], GeometryTypes.label]}
             />
             <Layer
                 id={LayersIds.labelsText}
                 type="symbol"
-                filter={['==', ['get', 'type'], LayerTypes.labelText]}
+                filter={['==', ['get', 'type'], GeometryTypes.labelText]}
                 layout={{
                     // TODO: upload fonts to MapBox studio
                     // 'text-font': ['DIN Pro Regular', 'B612 Regular','B612', 'JetBrains Mono', 'JetBrains Mono Regular', 'DIN Pro Regular'],
@@ -166,7 +183,7 @@ const Layers = ({ flights, view }: PropsWithChildren<{ flights: Flight[]; view: 
     );
 };
 
-const LayerTypes = {
+const GeometryTypes = {
     speedVector: 'speed',
     labelLink: 'label-link',
     halo: 'halo',
@@ -177,14 +194,14 @@ const LayerTypes = {
 
 const LayersIds = {
     leadVector: 'lead-vector',
-    labelAnchor: 'label-anchor',
     halo: 'halo',
     positionFill: 'position-fill',
     positionBorder: 'position-border',
     trailsBorder: 'trails-border',
     trajectoryFill: 'trajectory-fill',
     labelsFill: 'labels-fill',
-    labelsText: 'labels-text'
+    labelsText: 'labels-text',
+    labelAnchor: 'label-anchor'
 } as const;
 
-export { ScenarioMap, LayerTypes };
+export { ScenarioMap, GeometryTypes };
