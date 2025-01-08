@@ -10,7 +10,7 @@ import {
 } from '~/components/ui/sidebar';
 import { PropsWithChildren } from 'react';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '~/components/ui/sidebar';
-import { SignedIn, SignedOut, SignIn, UserButton } from '@clerk/nextjs';
+import { SignedIn, UserButton } from '@clerk/nextjs';
 import { Database, Dices, ThumbsUp, Users } from 'lucide-react';
 import Link from 'next/link';
 import { ThemeSetting } from '../../components/theme/theme-setting';
@@ -20,9 +20,6 @@ export default function DashBoardLayout({ children }: PropsWithChildren) {
         <SidebarProvider>
             <Sidebar variant="inset">
                 <SidebarHeader className="m-2">
-                    <SignedOut>
-                        <SignIn routing="hash" />
-                    </SignedOut>
                     <SignedIn>
                         <UserButton />
                     </SignedIn>
@@ -47,27 +44,29 @@ export default function DashBoardLayout({ children }: PropsWithChildren) {
                             </SidebarMenuItem>
                         </SidebarMenu>
                     </SidebarGroup>
-                    <SidebarGroup>
-                        <SidebarGroupLabel>{'Admin'}</SidebarGroupLabel>
-                        <SidebarMenu>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild tooltip={'scenarios'}>
-                                    <Link href={'/dashboard/scenarios'}>
-                                        <Database />
-                                        <span>{'Scenarios'}</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild tooltip={'users'}>
-                                    <Link href={'/dashboard/users'}>
-                                        <Users />
-                                        <span>{'Users'}</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                        </SidebarMenu>
-                    </SidebarGroup>
+                    <SignedIn>
+                        <SidebarGroup>
+                            <SidebarGroupLabel>{'Admin'}</SidebarGroupLabel>
+                            <SidebarMenu>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild tooltip={'scenarios'}>
+                                        <Link href={'/dashboard/scenarios'}>
+                                            <Database />
+                                            <span>{'Scenarios'}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild tooltip={'users'}>
+                                        <Link href={'/dashboard/users'}>
+                                            <Users />
+                                            <span>{'Users'}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            </SidebarMenu>
+                        </SidebarGroup>
+                    </SignedIn>
                 </SidebarContent>
                 <SidebarFooter>
                     <SidebarGroup>
