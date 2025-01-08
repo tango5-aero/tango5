@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, type PropsWithChildren, CSSProperties, useRef } from 'react';
+import { useState, useEffect, type PropsWithChildren, CSSProperties, useRef, useMemo } from 'react';
 import MapGL, { MapProvider, Layer, Source, useMap } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
 import { Flight } from '~/lib/domain/flight';
@@ -10,22 +10,6 @@ import { MapEvent, MapMouseEvent } from 'mapbox-gl';
 import { toast } from 'sonner';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
-
-const onLoad = (e: MapEvent) => {
-    if (window) window.addEventListener('resize', () => e.target.resize());
-    e.target.touchZoomRotate.disableRotation();
-};
-
-const onRemove = (e: MapEvent) => {
-    if (window) window.removeEventListener('resize', () => e.target.resize());
-};
-
-const onMouseEnter = (e: MapEvent) => {
-    e.target.getCanvas().style.cursor = 'pointer';
-};
-const onMouseLeave = (e: MapEvent) => {
-    e.target.getCanvas().style.cursor = '';
-};
 
 const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario: Scenario }>) => {
     const [view, setView] = useState(props.scenario.view);
@@ -60,20 +44,24 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
         }
     }, [props.scenario.pcds, selectedPairs]);
 
-    const flights = props.scenario.flights.map(
-        (item) =>
-            new Flight(
-                item.id,
-                item.latitudeDeg,
-                item.longitudeDeg,
-                item.callsign,
-                item.category,
-                item.groundSpeedKts,
-                item.trackDeg,
-                item.altitudeFt,
-                item.verticalSpeedFtpm,
-                item.selectedAltitudeFt
-            )
+    const flights = useMemo(
+        () =>
+            props.scenario.flights.map(
+                (item) =>
+                    new Flight(
+                        item.id,
+                        item.latitudeDeg,
+                        item.longitudeDeg,
+                        item.callsign,
+                        item.category,
+                        item.groundSpeedKts,
+                        item.trackDeg,
+                        item.altitudeFt,
+                        item.verticalSpeedFtpm,
+                        item.selectedAltitudeFt
+                    )
+            ),
+        [props.scenario.flights]
     );
 
     const onClick = (e: MapMouseEvent) => {
@@ -135,6 +123,22 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
     );
 };
 
+const onLoad = (e: MapEvent) => {
+    if (window) window.addEventListener('resize', () => e.target.resize());
+    e.target.touchZoomRotate.disableRotation();
+};
+
+const onRemove = (e: MapEvent) => {
+    if (window) window.removeEventListener('resize', () => e.target.resize());
+};
+
+const onMouseEnter = (e: MapEvent) => {
+    e.target.getCanvas().style.cursor = 'pointer';
+};
+const onMouseLeave = (e: MapEvent) => {
+    e.target.getCanvas().style.cursor = '';
+};
+
 const Layers = (
     props: PropsWithChildren<{
         flights: Flight[];
@@ -192,7 +196,7 @@ const Layers = (
     }, [props.flights, mapRef, props.view.zoom, props.selected, props.pairs]);
 
     return (
-        <Source id="flights-source" type="geojson" data={collection}>
+        <Source id="scenario-source" type="geojson" data={collection}>
             <Layer
                 id={LayersIds.leadVector}
                 type="line"
@@ -233,7 +237,7 @@ const Layers = (
             <Layer
                 id={LayersIds.pcdLabelFill}
                 type="fill"
-                paint={{ 'fill-opacity': 0.3 }}
+                paint={{ 'fill-opacity': 0 }}
                 filter={['==', ['get', 'type'], GeometryTypes.pcdLabel]}
             />
             <Layer

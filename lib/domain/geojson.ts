@@ -212,7 +212,7 @@ export function featureCollection(
                 (flight.latitudeDeg + otherFlight.latitudeDeg) / 2
             ] as [number, number];
 
-            const label = expand(labelCenter, width, height);
+            const label = expand(project(labelCenter), width, height);
 
             const coordinates = [label.map((point) => unproject(point))];
 
