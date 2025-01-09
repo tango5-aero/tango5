@@ -39,16 +39,13 @@ export const deleteScenario = async (id: number) => {
     return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
 };
 
-export const getOrInsertUser = async (id: string) => {
+export const getUser = async (id: string) => {
     const res = await db.query.UsersTable.findFirst({ where: (user, { eq }) => eq(user.id, id) });
-    return res || (await db.insert(UsersTable).values({ id }).returning()).at(0);
+    return res;
 };
 
-export const updateUser = async (user: User) => {
-    await db
-        .update(UsersTable)
-        .set({ firstName: user.firstName, lastName: user.lastName })
-        .where(eq(UsersTable.id, user.id));
+export const createOrUpdateUser = async (user: User) => {
+    await db.insert(UsersTable).values(user).onConflictDoUpdate({ target: UsersTable.id, set: user });
 };
 
 export const getUsers = async () => {

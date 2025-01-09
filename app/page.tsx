@@ -3,7 +3,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Button } from '~/components/ui/button';
-import { updateUser } from '~/lib/db/queries';
+import { createOrUpdateUser } from '~/lib/db/queries';
 import { User } from '~/lib/domain/user';
 
 export default async function Page() {
@@ -16,7 +16,7 @@ export default async function Page() {
             lastName: user.lastName
         };
 
-        updateUser(userData);
+        createOrUpdateUser(userData);
         redirect('/play/random');
     }
 
