@@ -1,10 +1,10 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
-const isAdminRoute = createRouteMatcher(['/backstage(.*)']);
+const isBackstageRoute = createRouteMatcher(['/backstage(.*)']);
 
 export default clerkMiddleware(async (auth, req) => {
-    if (isAdminRoute(req) && (await auth()).sessionClaims?.metadata?.role !== 'admin') {
+    if (isBackstageRoute(req) && (await auth()).sessionClaims?.metadata?.backstage !== true) {
         const url = new URL('/', req.url);
         return NextResponse.redirect(url);
     }

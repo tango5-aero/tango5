@@ -1,9 +1,9 @@
-import { checkRole } from '~/lib/roles';
 import { SignedIn, SignedOut, SignIn, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
+import { checkBackStageAccess } from '../lib/roles';
 
 export default async function Page() {
-    const isAdmin = await checkRole('admin');
+    const hasBackstageAccess = await checkBackStageAccess();
 
     return (
         <>
@@ -16,7 +16,7 @@ export default async function Page() {
                 <main className="flex h-svh flex-col items-center justify-center">
                     <UserButton />
                     <Link href="/play/random">Play random</Link>
-                    {isAdmin && <Link href="/backstage">Go to backstage</Link>}
+                    {hasBackstageAccess && <Link href="/backstage">Go to backstage</Link>}
                 </main>
             </SignedIn>
         </>

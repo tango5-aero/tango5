@@ -1,14 +1,12 @@
 export {};
 
-export type Roles = 'admin' | 'user';
-
 declare global {
     interface UserPublicMetadata {
-        role?: Roles;
+        backstage?: boolean;
     }
     interface CustomJwtSessionClaims {
         metadata: {
-            role?: Roles;
+            backstage?: boolean;
         };
     }
 }
