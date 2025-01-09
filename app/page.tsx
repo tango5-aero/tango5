@@ -1,24 +1,25 @@
-import { SignedIn, SignedOut, SignIn, UserButton } from '@clerk/nextjs';
+import { SignedOut, SignIn } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
 import Link from 'next/link';
-import { checkBackStageAccess } from '../lib/roles';
+import { redirect } from 'next/navigation';
+import { Button } from '~/components/ui/button';
 
 export default async function Page() {
-    const hasBackstageAccess = await checkBackStageAccess();
+    const { userId } = await auth();
+
+    if (userId) {
+        redirect('/play/random');
+    }
 
     return (
-        <>
+        <main className="flex h-screen flex-col items-center justify-center gap-6 p-6 md:p-10">
+            <h1 className="text-3xl">{'Welcome to Tango5'}</h1>
             <SignedOut>
-                <main className="flex h-svh items-center justify-center">
-                    <SignIn routing="hash" />
-                </main>
+                <SignIn routing="hash" />
             </SignedOut>
-            <SignedIn>
-                <main className="flex h-svh flex-col items-center justify-center">
-                    <UserButton />
-                    <Link href="/play/random">Play random</Link>
-                    {hasBackstageAccess && <Link href="/backstage">Go to backstage</Link>}
-                </main>
-            </SignedIn>
-        </>
+            <Button variant="outline">
+                <Link href="/play/random">Anonymous access</Link>
+            </Button>
+        </main>
     );
 }
