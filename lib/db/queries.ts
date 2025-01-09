@@ -40,7 +40,7 @@ export const deleteScenario = async (id: number) => {
 
 export const getOrInsertUser = async (id: string) => {
     const res = await db.query.UsersTable.findFirst({ where: (user, { eq }) => eq(user.id, id) });
-    return res || (await db.insert(UsersTable).values({ id }).returning()).find(() => true);
+    return res || (await db.insert(UsersTable).values({ id }).returning()).at(0);
 };
 
 export const getUsers = async () => {
