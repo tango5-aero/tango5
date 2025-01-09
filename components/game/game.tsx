@@ -1,12 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { GameFinishDialog } from './game-finish-dialog';
 import { ScenarioMap } from '../scenario/scenario-map';
 import { Scenario } from '~/lib/domain/scenario';
 import { toast } from 'sonner';
+import { Button } from '../ui/button';
+import { redirect } from 'next/navigation';
 
-const TIME_TO_FINISH_GAME = 5000;
+const TIME_TO_FINISH_GAME = 30000;
 
 const Game = ({ scenario }: { scenario: Scenario }) => {
     const [isFinish, setIsFinish] = useState(false);
@@ -58,7 +59,11 @@ const Game = ({ scenario }: { scenario: Scenario }) => {
 
     return (
         <>
-            <GameFinishDialog open={isFinish} score={score} />
+            {isFinish && (
+                <Button className="fixed bottom-3 right-16 z-10" onClick={() => redirect('/play/random')}>
+                    {'Next'}
+                </Button>
+            )}
             <ScenarioMap
                 style={{ width: '100%', height: '100dvh' }}
                 scenario={scenario}
