@@ -6,7 +6,5 @@ export const ScenariosTable = pgTable('scenarios', {
 });
 
 export const UsersTable = pgTable('users', {
-    id: text('id').primaryKey(),
-    firstName: text('firstName'),
-    lastName: text('lastName')
+    id: text('id').primaryKey()
 });
