@@ -1,6 +1,6 @@
 import { eq, sql } from 'drizzle-orm';
 import { db } from '.';
-import { ScenariosTable } from './schema';
+import { ScenariosTable, UsersTable } from './schema';
 import { Scenario, scenarioSchema } from '~/lib/domain/scenario';
 
 export const getScenarios = async () => {
@@ -36,4 +36,14 @@ export const writeScenario = async (scenario: Scenario) => {
 export const deleteScenario = async (id: number) => {
     const res = await db.delete(ScenariosTable).where(eq(ScenariosTable.id, id)).returning();
     return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
+};
+
+export const getOrInsertUser = async (id: string) => {
+    const res = await db.query.UsersTable.findFirst({ where: (user, { eq }) => eq(user.id, id) });
+    return res || (await db.insert(UsersTable).values({ id }).returning()).at(0);
+};
+
+export const getUsers = async () => {
+    const res = await db.query.UsersTable.findMany();
+    return res;
 };

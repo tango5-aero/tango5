@@ -1,8 +1,14 @@
-// Adapted from https://clerk.com/docs/quickstarts/nextjs#add-clerk-middleware-to-your-app
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 
-import { clerkMiddleware } from '@clerk/nextjs/server';
+const isBackstageRoute = createRouteMatcher(['/backstage(.*)']);
 
-export default clerkMiddleware();
+export default clerkMiddleware(async (auth, req) => {
+    if (isBackstageRoute(req) && (await auth()).sessionClaims?.metadata?.backstage !== true) {
+        const url = new URL('/', req.url);
+        return NextResponse.redirect(url);
+    }
+});
 
 export const config = {
     matcher: [

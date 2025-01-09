@@ -1,6 +1,5 @@
 import { SignedIn, SignedOut, SignIn, UserButton } from '@clerk/nextjs';
-import { Settings } from 'lucide-react';
-import Link from 'next/link';
+
 import { PropsWithChildren } from 'react';
 
 export default function DashBoardLayout({ children }: PropsWithChildren) {
@@ -15,9 +14,6 @@ export default function DashBoardLayout({ children }: PropsWithChildren) {
                 </SignedIn>
             </div>
 
-            <Link href={'/'} className="fixed bottom-4 right-4 z-10">
-                <Settings />
-            </Link>
             {children}
         </>
     );

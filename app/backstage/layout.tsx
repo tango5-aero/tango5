@@ -50,7 +50,7 @@ export default function DashBoardLayout({ children }: PropsWithChildren) {
                             <SidebarMenu>
                                 <SidebarMenuItem>
                                     <SidebarMenuButton asChild tooltip={'scenarios'}>
-                                        <Link href={'/dashboard/scenarios'}>
+                                        <Link href={'/backstage/scenarios'}>
                                             <Database />
                                             <span>{'Scenarios'}</span>
                                         </Link>
@@ -58,7 +58,7 @@ export default function DashBoardLayout({ children }: PropsWithChildren) {
                                 </SidebarMenuItem>
                                 <SidebarMenuItem>
                                     <SidebarMenuButton asChild tooltip={'users'}>
-                                        <Link href={'/dashboard/users'}>
+                                        <Link href={'/backstage/users'}>
                                             <Users />
                                             <span>{'Users'}</span>
                                         </Link>
