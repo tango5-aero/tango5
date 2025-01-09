@@ -7,7 +7,15 @@ import { PropsWithoutRef } from 'react';
 export const columns: ColumnDef<{ id: string }>[] = [
     {
         accessorKey: 'id',
-        header: () => <div className="text-right">ID</div>
+        header: () => <div className="text-center">id</div>
+    },
+    {
+        accessorKey: 'firstName',
+        header: () => <div className="text-left">First Name</div>
+    },
+    {
+        accessorKey: 'lastName',
+        header: () => <div className="text-left">Last Name</div>
     }
 ];
 

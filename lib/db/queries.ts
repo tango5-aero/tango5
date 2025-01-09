@@ -2,6 +2,7 @@ import { eq, sql } from 'drizzle-orm';
 import { db } from '.';
 import { ScenariosTable, UsersTable } from './schema';
 import { Scenario, scenarioSchema } from '~/lib/domain/scenario';
+import { User } from '~/lib/domain/user';
 
 export const getScenarios = async () => {
     const res = await db.query.ScenariosTable.findMany();
@@ -41,6 +42,13 @@ export const deleteScenario = async (id: number) => {
 export const getOrInsertUser = async (id: string) => {
     const res = await db.query.UsersTable.findFirst({ where: (user, { eq }) => eq(user.id, id) });
     return res || (await db.insert(UsersTable).values({ id }).returning()).at(0);
+};
+
+export const updateUser = async (user: User) => {
+    await db
+        .update(UsersTable)
+        .set({ firstName: user.firstName, lastName: user.lastName })
+        .where(eq(UsersTable.id, user.id));
 };
 
 export const getUsers = async () => {

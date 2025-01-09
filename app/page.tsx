@@ -1,13 +1,22 @@
 import { SignedOut, SignIn } from '@clerk/nextjs';
-import { auth } from '@clerk/nextjs/server';
+import { currentUser } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Button } from '~/components/ui/button';
+import { updateUser } from '~/lib/db/queries';
+import { User } from '~/lib/domain/user';
 
 export default async function Page() {
-    const { userId } = await auth();
+    const user = await currentUser();
 
-    if (userId) {
+    if (user) {
+        const userData: User = {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName
+        };
+
+        updateUser(userData);
         redirect('/play/random');
     }
 
