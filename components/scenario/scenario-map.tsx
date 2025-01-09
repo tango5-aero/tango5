@@ -126,6 +126,7 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
 const onLoad = (e: MapEvent) => {
     if (window) window.addEventListener('resize', () => e.target.resize());
     e.target.touchZoomRotate.disableRotation();
+    setTimeout(() => console.log('time limit!!!!!'), 5000);
 };
 
 const onRemove = (e: MapEvent) => {
