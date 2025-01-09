@@ -1,48 +1,26 @@
 'use client';
 
-import { useState, useEffect, type PropsWithChildren, CSSProperties, useRef, useMemo } from 'react';
+import { useState, useEffect, type PropsWithChildren, CSSProperties, useMemo } from 'react';
 import MapGL, { MapProvider, Layer, Source, useMap } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
 import { Flight } from '~/lib/domain/flight';
 import { featureCollection as featureCollection } from '~/lib/domain/geojson';
 import { Scenario, View } from '~/lib/domain/scenario';
 import { MapEvent, MapMouseEvent } from 'mapbox-gl';
-import { toast } from 'sonner';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario: Scenario }>) => {
+type ScenarioMapProps = {
+    style?: CSSProperties;
+    scenario: Scenario;
+    onSelectPair?: (pair: [string, string]) => void;
+    selectedPairs: [string, string][];
+};
+
+const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
     const [view, setView] = useState(props.scenario.view);
 
     const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
-    const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
-
-    const firstRenderTime = useRef<number | undefined>(undefined);
-
-    useEffect(() => {
-        if (typeof firstRenderTime.current === 'undefined') {
-            firstRenderTime.current = performance.now();
-        }
-    }, []);
-
-    useEffect(() => {
-        const correct = selectedPairs.filter(
-            (pair) =>
-                props.scenario.pcds.filter(
-                    (pcd) =>
-                        (pcd.firstId === pair[0] && pcd.secondId === pair[1]) ||
-                        (pcd.firstId === pair[1] && pcd.secondId === pair[0])
-                ).length !== 0
-        );
-
-        const elapsed = firstRenderTime.current ? performance.now() - firstRenderTime.current : 0;
-
-        if (Math.floor(elapsed / 1000) > 0) {
-            toast(
-                `Guessed ${correct.length} (out of ${props.scenario.pcds.length}) in ${selectedPairs.length} attempt${selectedPairs.length === 1 ? '' : 's'} in ${formatMs(elapsed)}`
-            );
-        }
-    }, [props.scenario.pcds, selectedPairs]);
 
     const flights = useMemo(
         () =>
@@ -74,16 +52,7 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
         if (selectedFlight) {
             // avoid selecting the same flight two times on the same pair
             if (selectedFlight !== flight.id) {
-                // avoid duplicated pairs
-                const prevPair = selectedPairs.find(
-                    (pair) =>
-                        (pair[0] === selectedFlight && pair[1] === flight.id) ||
-                        (pair[0] === flight.id && pair[1] === selectedFlight)
-                );
-
-                if (!prevPair) {
-                    setSelectedPairs((prev) => [...prev, [selectedFlight, flight.id]]);
-                }
+                props.onSelectPair?.([selectedFlight, flight.id]);
             }
 
             setSelectedFlight(null);
@@ -117,7 +86,7 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onClick={onClick}>
-                <Layers flights={flights} selected={selectedFlight} pairs={selectedPairs} view={view} />
+                <Layers flights={flights} selected={selectedFlight} pairs={props.selectedPairs} view={view} />
             </MapGL>
         </MapProvider>
     );
@@ -126,7 +95,6 @@ const ScenarioMap = (props: PropsWithChildren<{ style?: CSSProperties; scenario:
 const onLoad = (e: MapEvent) => {
     if (window) window.addEventListener('resize', () => e.target.resize());
     e.target.touchZoomRotate.disableRotation();
-    setTimeout(() => console.log('time limit!!!!!'), 5000);
 };
 
 const onRemove = (e: MapEvent) => {
@@ -306,11 +274,5 @@ const LayersIds = {
     labelText: 'labels-text',
     labelAnchor: 'label-anchor'
 } as const;
-
-export function formatMs(millis: number): string {
-    const minutes = Math.floor(millis / 60000);
-    const seconds = (millis % 60000) / 1000;
-    return (minutes > 0 ? minutes.toFixed(0) + 'm ' : '') + seconds.toFixed(0) + 's';
-}
 
 export { ScenarioMap, GeometryTypes };

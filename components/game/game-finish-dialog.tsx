@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation';
 
 const GameFinishDialog = ({ open, score }: { open: boolean; score: number }) => {
     return (
-        <Dialog open={open} onOpenChange={() => console.log('test dialog close')} modal={true}>
+        <Dialog open={open} modal={true}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>{'Game finish'}</DialogTitle>
