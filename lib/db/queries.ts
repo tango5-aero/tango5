@@ -44,8 +44,9 @@ export const getUser = async (id: string) => {
     return res;
 };
 
-export const createOrUpdateUser = async (user: User) => {
-    await db.insert(UsersTable).values(user).onConflictDoUpdate({ target: UsersTable.id, set: user });
+// Try to insert and quit silently if user already exists
+export const tryCreateUser = async (user: User) => {
+    await db.insert(UsersTable).values(user).onConflictDoNothing();
 };
 
 export const getUsers = async () => {

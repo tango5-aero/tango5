@@ -3,13 +3,13 @@ import { currentUser } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Button } from '~/components/ui/button';
-import { createOrUpdateUser } from '~/lib/db/queries';
+import { tryCreateUser } from '~/lib/db/queries';
 
 export default async function Page() {
     const user = await currentUser();
 
     if (user) {
-        createOrUpdateUser(user);
+        tryCreateUser(user);
         redirect('/play/random');
     }
 
