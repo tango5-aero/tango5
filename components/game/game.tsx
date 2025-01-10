@@ -10,7 +10,7 @@ import { redirect } from 'next/navigation';
 const TIME_TO_FINISH_GAME = 30000;
 
 const Game = ({ scenario }: { scenario: Scenario }) => {
-    const [isFinish, setIsFinish] = useState(false);
+    const [isFinished, setIsFinished] = useState(false);
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
     const [score, setScore] = useState(0);
 
@@ -21,7 +21,7 @@ const Game = ({ scenario }: { scenario: Scenario }) => {
             firstRenderTime.current = performance.now();
         }
         setTimeout(() => {
-            setIsFinish(true);
+            setIsFinished(true);
         }, TIME_TO_FINISH_GAME);
     }, []);
 
@@ -59,7 +59,7 @@ const Game = ({ scenario }: { scenario: Scenario }) => {
 
     return (
         <>
-            {isFinish && (
+            {isFinished && (
                 <Button className="fixed bottom-3 right-16 z-10" onClick={() => redirect('/play/random')}>
                     {'Next'}
                 </Button>
