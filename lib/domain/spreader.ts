@@ -98,7 +98,7 @@ export function spread(movables: Movable[], fixed: BBox[], timeout: number): Spr
         }
     }
 
-    console.log(`spread report: ${(performance.now() - time_init).toFixed(2)}ms`);
+    // console.log(`spread report: ${(performance.now() - time_init).toFixed(2)}ms`);
 
     return movables.map((movable) => ({
         ref: movable.ref,
