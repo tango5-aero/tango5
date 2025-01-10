@@ -52,6 +52,14 @@ const Game = (props: PropsWithoutRef<{ scenario: Scenario }>) => {
         }
     }, [isGameOver, props.scenario.pcds, selectedPairs]);
 
+    useEffect(() => {
+        // check if all pairs have been guessed
+        if (selectedPairs.length === props.scenario.pcds.length) {
+            setGameOver(true);
+            return;
+        }
+    }, [props.scenario.pcds.length, selectedPairs.length]);
+
     const selectFlight = (id: string) => {
         // if the game is over do not allow further interactions and remain game is over
         if (isGameOver) setReportOpen(true);
@@ -68,7 +76,7 @@ const Game = (props: PropsWithoutRef<{ scenario: Scenario }>) => {
         }
 
         // if there is no previous selection, just select current flight (we already know is part of a pcd pair)
-        if (!selectFlight) {
+        if (!selectedFlight) {
             setSelectedFlight(flight.id);
             return;
         }
@@ -86,7 +94,6 @@ const Game = (props: PropsWithoutRef<{ scenario: Scenario }>) => {
                 (selectedPair[0] === pair[0] && selectedPair[1] === pair[1]) ||
                 (selectedPair[0] === pair[1] && selectedPair[1] === pair[0])
         );
-
         if (alreadySelected) {
             return;
         }
@@ -101,9 +108,9 @@ const Game = (props: PropsWithoutRef<{ scenario: Scenario }>) => {
                 (pcd.firstId === pair[0] && pcd.secondId === pair[1]) ||
                 (pcd.firstId === pair[1] && pcd.secondId === pair[0])
         );
-
         if (!correct) {
             setGameOver(true);
+            return;
         }
     };
 
