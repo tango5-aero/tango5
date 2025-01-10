@@ -1,6 +1,6 @@
 import { eq, sql } from 'drizzle-orm';
 import { db } from '.';
-import { ScenariosTable, UsersTable } from './schema';
+import { ScenariosTable, UserGame, UserGameTable, UsersTable } from './schema';
 import { Scenario, scenarioSchema } from '~/lib/domain/scenario';
 import { User } from '~/lib/db/schema';
 
@@ -46,10 +46,14 @@ export const getUser = async (id: string) => {
 
 // Try to insert and quit silently if user already exists
 export const tryCreateUser = async (user: User) => {
-    await db.insert(UsersTable).values(user).onConflictDoNothing();
+    return await db.insert(UsersTable).values(user).onConflictDoNothing().returning();
 };
 
 export const getUsers = async () => {
     const res = await db.query.UsersTable.findMany();
     return res;
+};
+
+export const writeUserGame = async (userGame: UserGame) => {
+    return await db.insert(UserGameTable).values(userGame).onConflictDoNothing().returning();
 };

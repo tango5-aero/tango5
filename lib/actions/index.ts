@@ -1,9 +1,12 @@
 'use server';
 
-import { writeScenario } from '~/lib/db/queries';
+import { Duration } from 'luxon';
+import { currentUser } from '@clerk/nextjs/server';
+import { writeScenario, writeUserGame } from '~/lib/db/queries';
 import { scenarioSchema } from '~/lib/domain/scenario';
 import { deleteScenario as deleteDBScenario } from '~/lib/db/queries';
 import { revalidateTag } from 'next/cache';
+import { UserGame } from '../db/schema';
 
 type ActionState = { message: string; error: boolean };
 
@@ -46,4 +49,22 @@ export async function deleteScenario(_prevState: ActionState, id: number): Promi
 
 export default async function revalidateCacheTag(tag: string) {
     revalidateTag(tag);
+}
+
+export async function completeUserGame(scenarioId: number, playTimeMs: number, success: boolean) {
+    const user = await currentUser();
+
+    if (!user) {
+        return;
+    }
+
+    const playTime = Duration.fromMillis(playTimeMs).toString();
+    const userGame: UserGame = {
+        userId: user.id,
+        scenarioId,
+        playTime,
+        success
+    };
+
+    await writeUserGame(userGame);
 }
