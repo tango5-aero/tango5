@@ -17,31 +17,6 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
         accessorKey: 'data'
     },
     {
-        accessorKey: 'lat',
-        header: () => <div className="text-right">Latitude</div>,
-        cell: ({ row }) => {
-            const scenario = row.getValue('data') as Scenario;
-            return <div className="text-right font-medium">{scenario.view.latitude.toFixed(4)}</div>;
-        }
-    },
-    {
-        accessorKey: 'lon',
-        header: () => <div className="text-right">Longitude</div>,
-        cell: ({ row }) => {
-            const scenario = row.getValue('data') as Scenario;
-            return <div className="text-right font-medium">{scenario.view.longitude.toFixed(4)}</div>;
-        }
-    },
-    {
-        accessorKey: 'zoom',
-        header: () => <div className="text-right">Zoom</div>,
-        cell: ({ row }) => {
-            const scenario = row.getValue('data') as Scenario;
-
-            return <div className="text-right font-medium">{scenario.view.zoom.toFixed(0)}</div>;
-        }
-    },
-    {
         accessorKey: 'flights',
         header: () => <div className="text-right">Flights</div>,
         cell: ({ row }) => {

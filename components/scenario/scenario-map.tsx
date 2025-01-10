@@ -5,7 +5,7 @@ import MapGL, { MapProvider, Layer, Source, useMap } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
 import { Flight } from '~/lib/domain/flight';
 import { featureCollection as featureCollection } from '~/lib/domain/geojson';
-import { Scenario, View } from '~/lib/domain/scenario';
+import { Scenario } from '~/lib/domain/scenario';
 import { MapEvent, MapMouseEvent } from 'mapbox-gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -19,8 +19,6 @@ type ScenarioMapProps = {
 };
 
 const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
-    const [view, setView] = useState(props.scenario.view);
-
     const flights = useMemo(
         () =>
             props.scenario.flights.map(
@@ -49,41 +47,21 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
     return (
         <MapProvider>
             <MapGL
-                {...view}
                 id="map"
-                onMove={(e) => setView(e.viewState)}
                 mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-                maxBounds={props.scenario.boundaries as [number, number, number, number]}
+                initialViewState={{ bounds: props.scenario.boundaries as [number, number, number, number] }}
                 style={props.style}
                 mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
-                interactive={true}
-                maxPitch={0}
-                minPitch={0}
-                dragRotate={false}
-                pitchWithRotate={false}
-                touchPitch={false}
-                touchZoomRotate={true}
-                attributionControl={false}
+                interactive={false}
                 fadeDuration={0}
                 interactiveLayerIds={[LayersIds.positionFill, LayersIds.labelFill]}
-                onLoad={onLoad}
-                onRemove={onRemove}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onClick={onClick}>
-                <Layers flights={flights} selected={props.selectedFlight} pairs={props.selectedPairs} view={view} />
+                <Layers flights={flights} selected={props.selectedFlight} pairs={props.selectedPairs} />
             </MapGL>
         </MapProvider>
     );
-};
-
-const onLoad = (e: MapEvent) => {
-    if (window) window.addEventListener('resize', () => e.target.resize());
-    e.target.touchZoomRotate.disableRotation();
-};
-
-const onRemove = (e: MapEvent) => {
-    if (window) window.removeEventListener('resize', () => e.target.resize());
 };
 
 const onMouseEnter = (e: MapEvent) => {
@@ -98,7 +76,6 @@ const Layers = (
         flights: Flight[];
         selected: string | null;
         pairs: [string, string][];
-        view: View;
     }>
 ) => {
     const { map: mapRef } = useMap();
@@ -120,7 +97,9 @@ const Layers = (
             return [point.lng, point.lat] as [number, number];
         };
 
-        const scalingFactor = props.view.zoom ** 2;
+        const zoom = map.getZoom();
+
+        const scalingFactor = zoom ** 2;
 
         const bounds = map.getBounds();
 
@@ -147,7 +126,7 @@ const Layers = (
         );
 
         setCollection(computedCollection);
-    }, [props.flights, mapRef, props.view.zoom, props.selected, props.pairs]);
+    }, [props.flights, mapRef, props.selected, props.pairs]);
 
     return (
         <Source id="scenario-source" type="geojson" data={collection}>
