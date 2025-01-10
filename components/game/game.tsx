@@ -10,7 +10,7 @@ import { completeUserGame } from '~/lib/actions';
 
 const GAME_TIMEOUT_MS = 30_000;
 
-const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario }>) => {
+const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: string }>) => {
     // Game related state
     const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
@@ -64,8 +64,11 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario }>) => {
     }, [props.scenario.pcds.length, selectedPairs.length]);
 
     const selectFlight = (id: string) => {
-        // if the game is over do not allow further interactions and remain game is over
-        if (isGameOver) setReportOpen(true);
+        // if the game is over do not allow further interactions and open report again to hint the user
+        if (isGameOver) {
+            setReportOpen(true);
+            return;
+        }
 
         const flight = props.scenario.flights.find((flight) => flight.id === id);
 
@@ -101,7 +104,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario }>) => {
             return;
         }
 
-        // update user selection
+        // update user selection pairs and clear current flight selection
         setSelectedPairs([...selectedPairs, pair]);
         setSelectedFlight(null);
 
@@ -119,11 +122,11 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario }>) => {
 
     return (
         <>
-            <GameOver open={isReportOpen} setOpen={setReportOpen} text={report} />
+            <GameOver open={isReportOpen} setOpen={setReportOpen} text={report} nextUrl={props.nextUrl} />
             <Button
                 disabled={!isGameOver}
                 className="fixed bottom-3 right-16 z-10"
-                onClick={() => redirect('/play/random')}>
+                onClick={() => redirect(props.nextUrl)}>
                 {'Next'}
             </Button>
             <ScenarioMap
