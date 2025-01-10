@@ -2,7 +2,7 @@ import { eq, sql } from 'drizzle-orm';
 import { db } from '.';
 import { ScenariosTable, UsersTable } from './schema';
 import { Scenario, scenarioSchema } from '~/lib/domain/scenario';
-import { User } from '~/lib/domain/user';
+import { User } from '~/lib/db/schema';
 
 export const getScenarios = async () => {
     const res = await db.query.ScenariosTable.findMany();
