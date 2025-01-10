@@ -29,16 +29,12 @@ export type Flight = z.infer<typeof flightSchema>;
 
 export const pcdSchema = z.object({
     firstId: z.string(),
-    secondId: z.string(),
-    currentDist: z.number(),
-    minDist: z.number(),
-    timeToMinDistMs: z.number()
+    secondId: z.string()
 });
 
 export type Pcd = z.infer<typeof pcdSchema>;
 
 export const scenarioSchema = z.object({
-    view: viewSchema,
     boundaries: boundariesSchema,
     flights: flightSchema.array(),
     pcds: pcdSchema.array()
