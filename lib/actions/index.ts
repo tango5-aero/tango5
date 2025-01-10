@@ -6,7 +6,7 @@ import { writeScenario, writeUserGame } from '~/lib/db/queries';
 import { scenarioSchema } from '~/lib/domain/scenario';
 import { deleteScenario as deleteDBScenario } from '~/lib/db/queries';
 import { revalidateTag } from 'next/cache';
-import { UserGame } from '../db/schema';
+import { UserGame } from '~/lib/db/schema';
 
 type ActionState = { message: string; error: boolean };
 
