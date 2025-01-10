@@ -12,7 +12,7 @@ import { PropsWithoutRef } from 'react';
 import { redirect } from 'next/navigation';
 
 export const GameOver = (
-    props: PropsWithoutRef<{ text: string; open: boolean; setOpen: (state: boolean) => void }>
+    props: PropsWithoutRef<{ text: string; nextUrl: string; open: boolean; setOpen: (state: boolean) => void }>
 ) => {
     return (
         <Dialog open={props.open} onOpenChange={props.setOpen}>
@@ -23,7 +23,7 @@ export const GameOver = (
                 </DialogHeader>
 
                 <DialogFooter>
-                    <Button onClick={() => redirect('/play/random')}>{'Next'}</Button>
+                    <Button onClick={() => redirect(props.nextUrl)}>{'Next'}</Button>
                     <DialogClose asChild>
                         <Button variant="outline">{'Close'}</Button>
                     </DialogClose>

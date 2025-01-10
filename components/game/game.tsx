@@ -9,7 +9,7 @@ import { GameOver } from './game-over';
 
 const GAME_TIMEOUT_MS = 30_000;
 
-const Game = (props: PropsWithoutRef<{ scenario: Scenario }>) => {
+const Game = (props: PropsWithoutRef<{ scenario: Scenario; nextUrl: string }>) => {
     // Game related state
     const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
@@ -119,11 +119,11 @@ const Game = (props: PropsWithoutRef<{ scenario: Scenario }>) => {
 
     return (
         <>
-            <GameOver open={isReportOpen} setOpen={setReportOpen} text={report} />
+            <GameOver open={isReportOpen} setOpen={setReportOpen} text={report} nextUrl={props.nextUrl} />
             <Button
                 disabled={!isGameOver}
                 className="fixed bottom-3 right-16 z-10"
-                onClick={() => redirect('/play/random')}>
+                onClick={() => redirect(props.nextUrl)}>
                 {'Next'}
             </Button>
             <ScenarioMap
