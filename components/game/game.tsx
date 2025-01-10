@@ -6,10 +6,11 @@ import { Scenario } from '~/lib/domain/scenario';
 import { Button } from '~/components/ui/button';
 import { redirect } from 'next/navigation';
 import { GameOver } from './game-over';
+import { completeUserGame } from '~/lib/actions';
 
 const GAME_TIMEOUT_MS = 30_000;
 
-const Game = (props: PropsWithoutRef<{ scenario: Scenario }>) => {
+const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario }>) => {
     // Game related state
     const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
@@ -45,12 +46,14 @@ const Game = (props: PropsWithoutRef<{ scenario: Scenario }>) => {
 
             const elapsed = gameStartTimeMs.current ? performance.now() - gameStartTimeMs.current : 0;
 
+            completeUserGame(props.id, elapsed, correct.length === props.scenario.pcds.length);
+
             setReport(
                 `Guessed ${correct.length} correct PCDs out of ${props.scenario.pcds.length} in ${formatMs(elapsed)}`
             );
             setReportOpen(true);
         }
-    }, [isGameOver, props.scenario.pcds, selectedPairs]);
+    }, [isGameOver, props.id, props.scenario.pcds, selectedPairs]);
 
     useEffect(() => {
         // check if all pairs have been guessed
