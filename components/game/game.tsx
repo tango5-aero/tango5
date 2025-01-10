@@ -7,8 +7,9 @@ import { Button } from '~/components/ui/button';
 import { redirect } from 'next/navigation';
 import { GameOver } from './game-over';
 import { completeUserGame } from '~/lib/actions';
+import { GameCountdown } from './game-countdown';
 
-const GAME_TIMEOUT_MS = 30_000;
+export const GAME_TIMEOUT_MS = 30_000;
 
 const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: string }>) => {
     // Game related state
@@ -123,6 +124,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
     return (
         <>
             <GameOver open={isReportOpen} setOpen={setReportOpen} text={report} nextUrl={props.nextUrl} />
+            <GameCountdown disabled={isGameOver} />
             <Button
                 disabled={!isGameOver}
                 className="fixed bottom-3 right-16 z-10"
