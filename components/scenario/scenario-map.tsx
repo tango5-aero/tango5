@@ -13,14 +13,13 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 type ScenarioMapProps = {
     style?: CSSProperties;
     scenario: Scenario;
-    onSelectPair?: (pair: [string, string]) => void;
+    selectFlight: (id: string) => void;
+    selectedFlight: string | null;
     selectedPairs: [string, string][];
 };
 
 const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
     const [view, setView] = useState(props.scenario.view);
-
-    const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
 
     const flights = useMemo(
         () =>
@@ -44,21 +43,7 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
 
     const onClick = (e: MapMouseEvent) => {
         const id = e.features?.at(0)?.properties?.ref;
-        if (!id) return;
-
-        const flight = flights.find((flight) => flight.id === id);
-        if (!flight) return;
-
-        if (selectedFlight) {
-            // avoid selecting the same flight two times on the same pair
-            if (selectedFlight !== flight.id) {
-                props.onSelectPair?.([selectedFlight, flight.id]);
-            }
-
-            setSelectedFlight(null);
-        } else {
-            setSelectedFlight(flight.id);
-        }
+        if (id) props.selectFlight(id);
     };
 
     return (
@@ -86,7 +71,7 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onClick={onClick}>
-                <Layers flights={flights} selected={selectedFlight} pairs={props.selectedPairs} view={view} />
+                <Layers flights={flights} selected={props.selectedFlight} pairs={props.selectedPairs} view={view} />
             </MapGL>
         </MapProvider>
     );

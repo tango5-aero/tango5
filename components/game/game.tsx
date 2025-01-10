@@ -1,73 +1,126 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { ScenarioMap } from '../scenario/scenario-map';
+import { PropsWithoutRef, useEffect, useRef, useState } from 'react';
+import { ScenarioMap } from '~/components/scenario/scenario-map';
 import { Scenario } from '~/lib/domain/scenario';
-import { toast } from 'sonner';
-import { Button } from '../ui/button';
+import { Button } from '~/components/ui/button';
 import { redirect } from 'next/navigation';
+import { GameOver } from './game-over';
 
-const TIME_TO_FINISH_GAME = 30000;
+const GAME_TIMEOUT_MS = 30_000;
 
-const Game = ({ scenario }: { scenario: Scenario }) => {
-    const [isFinish, setIsFinish] = useState(false);
+const Game = (props: PropsWithoutRef<{ scenario: Scenario }>) => {
+    // Game related state
+    const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
-    const [score, setScore] = useState(0);
+    const [isGameOver, setGameOver] = useState(false);
+    const [report, setReport] = useState('');
+    const [isReportOpen, setReportOpen] = useState(false);
+    const gameStartTimeMs = useRef<number | undefined>(undefined);
 
-    const firstRenderTime = useRef<number | undefined>(undefined);
+    // required from effects clean up
+    const timeOutId = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
     useEffect(() => {
-        if (typeof firstRenderTime.current === 'undefined') {
-            firstRenderTime.current = performance.now();
+        if (typeof gameStartTimeMs.current === 'undefined') {
+            gameStartTimeMs.current = performance.now();
         }
-        setTimeout(() => {
-            setIsFinish(true);
-        }, TIME_TO_FINISH_GAME);
+
+        timeOutId.current = setTimeout(() => {
+            setGameOver(true);
+        }, GAME_TIMEOUT_MS);
+
+        return () => clearTimeout(timeOutId.current);
     }, []);
 
     useEffect(() => {
-        const correct = selectedPairs.filter(
-            (pair) =>
-                scenario.pcds.filter(
+        if (isGameOver) {
+            const correct = selectedPairs.filter((pair) =>
+                props.scenario.pcds.some(
                     (pcd) =>
                         (pcd.firstId === pair[0] && pcd.secondId === pair[1]) ||
                         (pcd.firstId === pair[1] && pcd.secondId === pair[0])
-                ).length !== 0
-        );
-
-        const elapsed = firstRenderTime.current ? performance.now() - firstRenderTime.current : 0;
-
-        if (Math.floor(elapsed / 1000) > 0) {
-            toast(
-                `Guessed ${correct.length} (out of ${scenario.pcds.length}) in ${selectedPairs.length} attempt${selectedPairs.length === 1 ? '' : 's'} in ${formatMs(elapsed)}`
+                )
             );
-        }
-    }, [scenario.pcds, selectedPairs]);
 
-    const handleSelectPair = (pair: [string, string]) => {
-        const prevPair = selectedPairs.find(
+            const elapsed = gameStartTimeMs.current ? performance.now() - gameStartTimeMs.current : 0;
+
+            setReport(
+                `Guessed ${correct.length} correct PCDs out of ${props.scenario.pcds.length} in ${formatMs(elapsed)}`
+            );
+            setReportOpen(true);
+        }
+    }, [isGameOver, props.scenario.pcds, selectedPairs]);
+
+    const selectFlight = (id: string) => {
+        // if the game is over do not allow further interactions and remain game is over
+        if (isGameOver) setReportOpen(true);
+
+        const flight = props.scenario.flights.find((flight) => flight.id === id);
+
+        // this should never happen, fail silently
+        if (!flight) return;
+
+        // if flight is not on any pair, is game over
+        if (!props.scenario.pcds.some(({ firstId, secondId }) => firstId === flight.id || secondId === flight.id)) {
+            setGameOver(true);
+            return;
+        }
+
+        // if there is no previous selection, just select current flight (we already know is part of a pcd pair)
+        if (!selectFlight) {
+            setSelectedFlight(flight.id);
+            return;
+        }
+
+        // avoid selecting the same flight two times on the same pair
+        if (selectedFlight === flight.id) {
+            return;
+        }
+
+        const pair = [selectedFlight, flight.id] as [string, string];
+
+        // ignore the pair if it was already selected
+        const alreadySelected = selectedPairs.find(
             (selectedPair) =>
                 (selectedPair[0] === pair[0] && selectedPair[1] === pair[1]) ||
                 (selectedPair[0] === pair[1] && selectedPair[1] === pair[0])
         );
 
-        if (!prevPair) {
-            setSelectedPairs([...selectedPairs, pair]);
-            setScore(score + 1);
+        if (alreadySelected) {
+            return;
+        }
+
+        // update user selection
+        setSelectedPairs([...selectedPairs, pair]);
+        setSelectedFlight(null);
+
+        // check if game should continue based on last player selection
+        const correct = props.scenario.pcds.some(
+            (pcd) =>
+                (pcd.firstId === pair[0] && pcd.secondId === pair[1]) ||
+                (pcd.firstId === pair[1] && pcd.secondId === pair[0])
+        );
+
+        if (!correct) {
+            setGameOver(true);
         }
     };
 
     return (
         <>
-            {isFinish && (
-                <Button className="fixed bottom-3 right-16 z-10" onClick={() => redirect('/play/random')}>
-                    {'Next'}
-                </Button>
-            )}
+            <GameOver open={isReportOpen} setOpen={setReportOpen} text={report} />
+            <Button
+                disabled={!isGameOver}
+                className="fixed bottom-3 right-16 z-10"
+                onClick={() => redirect('/play/random')}>
+                {'Next'}
+            </Button>
             <ScenarioMap
                 style={{ width: '100%', height: '100dvh' }}
-                scenario={scenario}
-                onSelectPair={handleSelectPair}
+                scenario={props.scenario}
+                selectFlight={selectFlight}
+                selectedFlight={selectedFlight}
                 selectedPairs={selectedPairs}
             />
         </>
