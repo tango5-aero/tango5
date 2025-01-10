@@ -61,8 +61,11 @@ const Game = (props: PropsWithoutRef<{ scenario: Scenario }>) => {
     }, [props.scenario.pcds.length, selectedPairs.length]);
 
     const selectFlight = (id: string) => {
-        // if the game is over do not allow further interactions and remain game is over
-        if (isGameOver) setReportOpen(true);
+        // if the game is over do not allow further interactions and open report again to hint the user
+        if (isGameOver) {
+            setReportOpen(true);
+            return;
+        }
 
         const flight = props.scenario.flights.find((flight) => flight.id === id);
 
@@ -98,7 +101,7 @@ const Game = (props: PropsWithoutRef<{ scenario: Scenario }>) => {
             return;
         }
 
-        // update user selection
+        // update user selection pairs and clear current flight selection
         setSelectedPairs([...selectedPairs, pair]);
         setSelectedFlight(null);
 
