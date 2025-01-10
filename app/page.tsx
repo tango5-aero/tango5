@@ -1,13 +1,15 @@
 import { SignedOut, SignIn } from '@clerk/nextjs';
-import { auth } from '@clerk/nextjs/server';
+import { currentUser } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Button } from '~/components/ui/button';
+import { tryCreateUser } from '~/lib/db/queries';
 
 export default async function Page() {
-    const { userId } = await auth();
+    const user = await currentUser();
 
-    if (userId) {
+    if (user) {
+        tryCreateUser(user);
         redirect('/play/random');
     }
 
