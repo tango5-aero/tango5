@@ -8,7 +8,6 @@ const GameCountdown = ({ disabled }: { disabled?: boolean }) => {
         const tid = setTimeout(() => {
             if (counter <= 0 || disabled) return;
             setCounter((prev) => prev - 1);
-            console.log('counter', counter);
         }, 1000);
 
         return () => clearTimeout(tid);
