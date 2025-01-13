@@ -6,6 +6,12 @@ import { Scenario } from '~/lib/domain/scenario';
 import { Button } from '~/components/ui/button';
 import { redirect } from 'next/navigation';
 import { completeUserGame } from '~/lib/actions';
+import posthog from 'posthog-js';
+
+const posthogEvents = {
+    gameStart: 'game_start',
+    gameFinish: 'game_finish'
+};
 
 const GAME_TIMEOUT_MS = 30_000;
 
@@ -23,6 +29,10 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
     useEffect(() => {
         if (typeof gameStartTimeMs.current === 'undefined') {
             gameStartTimeMs.current = performance.now();
+
+            posthog.capture(posthogEvents.gameStart, {
+                scenarioId: props.id
+            });
         }
 
         timeOutId.current = setTimeout(() => {
@@ -30,7 +40,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
         }, GAME_TIMEOUT_MS);
 
         return () => clearTimeout(timeOutId.current);
-    }, []);
+    }, [props.id]);
 
     useEffect(() => {
         if (isGameOver) {
@@ -43,8 +53,15 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
             );
 
             const elapsed = gameStartTimeMs.current ? performance.now() - gameStartTimeMs.current : 0;
+            const gameSuccess = correct.length === props.scenario.pcds.length;
 
-            completeUserGame(props.id, elapsed, correct.length === props.scenario.pcds.length);
+            completeUserGame(props.id, elapsed, gameSuccess);
+
+            posthog.capture(posthogEvents.gameFinish, {
+                scenarioId: props.id,
+                playTime: elapsed,
+                success: gameSuccess
+            });
         }
     }, [isGameOver, props.id, props.scenario.pcds, selectedPairs]);
 
