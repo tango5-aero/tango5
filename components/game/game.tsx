@@ -34,8 +34,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
             gameStartTimeMs.current = performance.now();
 
             posthog.capture(posthogEvents.gameStart, {
-                scenarioId: props.id,
-                startTime: gameStartTimeMs.current
+                scenarioId: props.id
             });
         }
 
