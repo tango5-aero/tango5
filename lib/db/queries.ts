@@ -3,6 +3,12 @@ import { db } from '.';
 import { ScenariosTable, UserGame, UserGameTable, UsersTable } from './schema';
 import { Scenario, scenarioSchema } from '~/lib/domain/scenario';
 import { User } from '~/lib/db/schema';
+import { PostHog } from 'posthog-node';
+import { posthogBackEvents } from '../constants';
+
+const client = new PostHog(process.env.NEXT_PUBLIC_POSTHOG_KEY ?? '', {
+    host: process.env.NEXT_PUBLIC_POSTHOG_HOST
+});
 
 export const getScenarios = async () => {
     const res = await db.query.ScenariosTable.findMany();
@@ -55,5 +61,14 @@ export const getUsers = async () => {
 };
 
 export const writeUserGame = async (userGame: UserGame) => {
+    const eventType = userGame.success ? posthogBackEvents.gameEndSuccess : posthogBackEvents.gameEndFailure;
+    client.capture({
+        distinctId: userGame.userId,
+        event: eventType,
+        properties: { ...userGame }
+    });
+
     return await db.insert(UserGameTable).values(userGame).onConflictDoNothing().returning();
 };
+
+await client.shutdown();
