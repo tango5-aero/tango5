@@ -8,7 +8,7 @@ import { deleteScenario as deleteDBScenario } from '~/lib/db/queries';
 import { revalidateTag } from 'next/cache';
 import { UserGame } from '~/lib/db/schema';
 import { PostHog } from 'posthog-node';
-import { posthogBackEvents } from '../constants';
+import { posthogEvents } from '../constants';
 
 type ActionState = { message: string; error: boolean };
 
@@ -72,7 +72,7 @@ export async function startUserGame(scenarioId: number, startTime: number) {
 
     client.capture({
         distinctId: userGame.userId,
-        event: posthogBackEvents.gameStart,
+        event: posthogEvents.gameStart,
         properties: { ...userGame }
     });
 }
@@ -94,7 +94,7 @@ export async function completeUserGame(scenarioId: number, playTimeMs: number, s
 
     await writeUserGame(userGame);
 
-    const eventType = userGame.success ? posthogBackEvents.gameEndSuccess : posthogBackEvents.gameEndFailure;
+    const eventType = userGame.success ? posthogEvents.gameEndSuccess : posthogEvents.gameEndFailure;
     client.capture({
         distinctId: userGame.userId,
         event: eventType,
