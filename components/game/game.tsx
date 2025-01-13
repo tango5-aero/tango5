@@ -6,7 +6,7 @@ import { Scenario } from '~/lib/domain/scenario';
 import { Button } from '~/components/ui/button';
 import { redirect } from 'next/navigation';
 import { GameOver } from './game-over';
-import { completeUserGame } from '~/lib/actions';
+import { completeUserGame, startUserGame } from '~/lib/actions';
 
 const GAME_TIMEOUT_MS = 30_000;
 
@@ -25,6 +25,8 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
     useEffect(() => {
         if (typeof gameStartTimeMs.current === 'undefined') {
             gameStartTimeMs.current = performance.now();
+
+            startUserGame(props.id, gameStartTimeMs.current);
         }
 
         timeOutId.current = setTimeout(() => {
@@ -32,7 +34,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
         }, GAME_TIMEOUT_MS);
 
         return () => clearTimeout(timeOutId.current);
-    }, []);
+    }, [props.id]);
 
     useEffect(() => {
         if (isGameOver) {

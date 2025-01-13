@@ -7,8 +7,14 @@ import { scenarioSchema } from '~/lib/domain/scenario';
 import { deleteScenario as deleteDBScenario } from '~/lib/db/queries';
 import { revalidateTag } from 'next/cache';
 import { UserGame } from '~/lib/db/schema';
+import { PostHog } from 'posthog-node';
+import { posthogBackEvents } from '../constants';
 
 type ActionState = { message: string; error: boolean };
+
+const client = new PostHog(process.env.NEXT_PUBLIC_POSTHOG_KEY ?? '', {
+    host: process.env.NEXT_PUBLIC_POSTHOG_HOST
+});
 
 export async function createScenario(
     _prevState: ActionState,
@@ -51,6 +57,26 @@ export default async function revalidateCacheTag(tag: string) {
     revalidateTag(tag);
 }
 
+export async function startUserGame(scenarioId: number, startTime: number) {
+    const user = await currentUser();
+
+    if (!user) {
+        return;
+    }
+
+    const userGame = {
+        userId: user.id,
+        scenarioId,
+        startTime
+    };
+
+    client.capture({
+        distinctId: userGame.userId,
+        event: posthogBackEvents.gameStart,
+        properties: { ...userGame }
+    });
+}
+
 export async function completeUserGame(scenarioId: number, playTimeMs: number, success: boolean) {
     const user = await currentUser();
 
@@ -67,4 +93,13 @@ export async function completeUserGame(scenarioId: number, playTimeMs: number, s
     };
 
     await writeUserGame(userGame);
+
+    const eventType = userGame.success ? posthogBackEvents.gameEndSuccess : posthogBackEvents.gameEndFailure;
+    client.capture({
+        distinctId: userGame.userId,
+        event: eventType,
+        properties: { ...userGame }
+    });
 }
+
+await client.shutdown();
