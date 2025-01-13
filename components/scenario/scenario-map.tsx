@@ -16,6 +16,7 @@ type ScenarioMapProps = {
     selectFlight: (id: string) => void;
     selectedFlight: string | null;
     selectedPairs: [string, string][];
+    isGameOver: boolean;
 };
 
 const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
@@ -58,7 +59,13 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onClick={onClick}>
-                <Layers flights={flights} selected={props.selectedFlight} pairs={props.selectedPairs} />
+                <Layers
+                    flights={flights}
+                    solutionPairs={props.scenario.pcds.map((pcd) => [pcd.firstId, pcd.secondId])}
+                    selectedFlight={props.selectedFlight}
+                    selectedPairs={props.selectedPairs}
+                    isGameOver={props.isGameOver}
+                />
             </MapGL>
         </MapProvider>
     );
@@ -71,13 +78,20 @@ const onMouseLeave = (e: MapEvent) => {
     e.target.getCanvas().style.cursor = '';
 };
 
-const Layers = (
-    props: PropsWithChildren<{
-        flights: Flight[];
-        selected: string | null;
-        pairs: [string, string][];
-    }>
-) => {
+type LayerProps = {
+    flights: Flight[];
+    solutionPairs: [string, string][];
+    selectedFlight: string | null;
+    selectedPairs: [string, string][];
+    isGameOver: boolean;
+};
+
+const colors = {
+    correct: '#779556',
+    fail: '#D45D08'
+};
+
+const Layers = (props: PropsWithChildren<LayerProps>) => {
     const { map: mapRef } = useMap();
 
     const [collection, setCollection] = useState<FeatureCollection>({ type: 'FeatureCollection', features: [] });
@@ -107,8 +121,8 @@ const Layers = (
 
         const onViewFlights = props.flights.filter(
             (flight) =>
-                props.pairs.map((pair) => pair[0]).includes(flight.id) ||
-                props.pairs.map((pair) => pair[1]).includes(flight.id) ||
+                props.selectedPairs.map((pair) => pair[0]).includes(flight.id) ||
+                props.selectedPairs.map((pair) => pair[1]).includes(flight.id) ||
                 (bounds.getWest() < flight.longitudeDeg &&
                     flight.longitudeDeg < bounds.getEast() &&
                     bounds.getSouth() < flight.latitudeDeg &&
@@ -117,16 +131,17 @@ const Layers = (
 
         const computedCollection = featureCollection(
             onViewFlights,
-            props.selected,
-            props.pairs,
+            props.selectedFlight,
+            props.selectedPairs,
+            props.solutionPairs,
+            props.isGameOver,
             scalingFactor,
             project,
-            unproject,
-            onViewFlights.length < 200
+            unproject
         );
 
         setCollection(computedCollection);
-    }, [props.flights, mapRef, props.selected, props.pairs]);
+    }, [props.flights, mapRef, props.selectedFlight, props.selectedPairs, props.solutionPairs, props.isGameOver]);
 
     return (
         <Source id="scenario-source" type="geojson" data={collection}>
@@ -145,7 +160,7 @@ const Layers = (
             <Layer
                 id={LayersIds.halo}
                 type="line"
-                paint={{ 'line-color': '#FFFFFF' }}
+                paint={{ 'line-color': ['case', ['boolean', ['get', 'correct'], true], colors.correct, colors.fail] }}
                 filter={['==', ['get', 'type'], GeometryTypes.halo]}
             />
             <Layer
@@ -163,7 +178,7 @@ const Layers = (
             <Layer
                 id={LayersIds.pcdLine}
                 type="line"
-                paint={{ 'line-color': '#D45D08', 'line-dasharray': [6, 4] }}
+                paint={{ 'line-color': ['case', ['boolean', ['get', 'correct'], true], colors.correct, colors.fail] }}
                 filter={['==', ['get', 'type'], GeometryTypes.pcdLink]}
                 beforeId={LayersIds.positionFill}
             />
@@ -185,9 +200,7 @@ const Layers = (
                     'text-size': ['get', 'fontSize'],
                     'text-rotation-alignment': 'viewport'
                 }}
-                paint={{
-                    'text-color': '#D45D08'
-                }}
+                paint={{ 'text-color': ['case', ['boolean', ['get', 'correct'], true], colors.correct, colors.fail] }}
             />
             <Layer
                 id={LayersIds.labelFill}

@@ -5,7 +5,6 @@ import { ScenarioMap } from '~/components/scenario/scenario-map';
 import { Scenario } from '~/lib/domain/scenario';
 import { Button } from '~/components/ui/button';
 import { redirect } from 'next/navigation';
-import { GameOver } from './game-over';
 import { completeUserGame } from '~/lib/actions';
 
 const GAME_TIMEOUT_MS = 30_000;
@@ -15,8 +14,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
     const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
     const [isGameOver, setGameOver] = useState(false);
-    const [report, setReport] = useState('');
-    const [isReportOpen, setReportOpen] = useState(false);
+
     const gameStartTimeMs = useRef<number | undefined>(undefined);
 
     // required from effects clean up
@@ -47,11 +45,6 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
             const elapsed = gameStartTimeMs.current ? performance.now() - gameStartTimeMs.current : 0;
 
             completeUserGame(props.id, elapsed, correct.length === props.scenario.pcds.length);
-
-            setReport(
-                `Guessed ${correct.length} correct PCDs out of ${props.scenario.pcds.length} in ${formatMs(elapsed)}`
-            );
-            setReportOpen(true);
         }
     }, [isGameOver, props.id, props.scenario.pcds, selectedPairs]);
 
@@ -66,7 +59,6 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
     const selectFlight = (id: string) => {
         // if the game is over do not allow further interactions and open report again to hint the user
         if (isGameOver) {
-            setReportOpen(true);
             return;
         }
 
@@ -75,20 +67,20 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
         // this should never happen, fail silently
         if (!flight) return;
 
-        // if flight is not on any pair, is game over
-        if (!props.scenario.pcds.some(({ firstId, secondId }) => firstId === flight.id || secondId === flight.id)) {
-            setGameOver(true);
-            return;
-        }
-
-        // if there is no previous selection, just select current flight (we already know is part of a pcd pair)
-        if (!selectedFlight) {
-            setSelectedFlight(flight.id);
-            return;
-        }
-
         // avoid selecting the same flight two times on the same pair
         if (selectedFlight === flight.id) {
+            return;
+        }
+
+        // if there is no previous selection, just select current flight
+        if (!selectedFlight) {
+            setSelectedFlight(flight.id);
+
+            // if flight is not on any pair, is game over
+            if (!props.scenario.pcds.some(({ firstId, secondId }) => firstId === flight.id || secondId === flight.id)) {
+                setGameOver(true);
+            }
+
             return;
         }
 
@@ -122,7 +114,6 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
 
     return (
         <>
-            <GameOver open={isReportOpen} setOpen={setReportOpen} text={report} nextUrl={props.nextUrl} />
             <Button
                 disabled={!isGameOver}
                 className="fixed bottom-3 right-16 z-10"
@@ -135,6 +126,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
                 selectFlight={selectFlight}
                 selectedFlight={selectedFlight}
                 selectedPairs={selectedPairs}
+                isGameOver={isGameOver}
             />
         </>
     );
