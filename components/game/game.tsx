@@ -10,8 +10,7 @@ import posthog from 'posthog-js';
 
 const posthogEvents = {
     gameStart: 'game_start',
-    gameEndFailure: 'game_end_failure',
-    gameEndSuccess: 'game_end_success'
+    gameFinish: 'game_finish'
 };
 
 const GAME_TIMEOUT_MS = 30_000;
@@ -58,9 +57,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
 
             completeUserGame(props.id, elapsed, gameSuccess);
 
-            const eventType = gameSuccess ? posthogEvents.gameEndSuccess : posthogEvents.gameEndFailure;
-
-            posthog.capture(eventType, {
+            posthog.capture(posthogEvents.gameFinish, {
                 scenarioId: props.id,
                 playTime: elapsed,
                 success: gameSuccess
