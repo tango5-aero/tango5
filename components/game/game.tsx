@@ -20,19 +20,10 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
     const [isReportOpen, setReportOpen] = useState(false);
     const gameStartTimeMs = useRef<number | undefined>(undefined);
 
-    // required from effects clean up
-    const timeOutId = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
     useEffect(() => {
         if (typeof gameStartTimeMs.current === 'undefined') {
             gameStartTimeMs.current = performance.now();
         }
-
-        timeOutId.current = setTimeout(() => {
-            setGameOver(true);
-        }, GAME_TIMEOUT_MS);
-
-        return () => clearTimeout(timeOutId.current);
     }, []);
 
     useEffect(() => {
@@ -124,7 +115,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
     return (
         <>
             <GameOver open={isReportOpen} setOpen={setReportOpen} text={report} nextUrl={props.nextUrl} />
-            <GameCountdown running={!isGameOver} />
+            <GameCountdown running={!isGameOver} onComplete={() => setGameOver(true)} />
             <Button
                 disabled={!isGameOver}
                 className="fixed bottom-3 right-16 z-10"
