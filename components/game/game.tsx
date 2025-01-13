@@ -6,7 +6,14 @@ import { Scenario } from '~/lib/domain/scenario';
 import { Button } from '~/components/ui/button';
 import { redirect } from 'next/navigation';
 import { GameOver } from './game-over';
-import { completeUserGame, startUserGame } from '~/lib/actions';
+import { completeUserGame } from '~/lib/actions';
+import posthog from 'posthog-js';
+
+const posthogEvents = {
+    gameStart: 'game_start',
+    gameEndFailure: 'game_end_failure',
+    gameEndSuccess: 'game_end_success'
+};
 
 const GAME_TIMEOUT_MS = 30_000;
 
@@ -26,7 +33,10 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
         if (typeof gameStartTimeMs.current === 'undefined') {
             gameStartTimeMs.current = performance.now();
 
-            startUserGame(props.id, gameStartTimeMs.current);
+            posthog.capture(posthogEvents.gameStart, {
+                scenarioId: props.id,
+                startTime: gameStartTimeMs.current
+            });
         }
 
         timeOutId.current = setTimeout(() => {
@@ -47,13 +57,22 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
             );
 
             const elapsed = gameStartTimeMs.current ? performance.now() - gameStartTimeMs.current : 0;
+            const gameSuccess = correct.length === props.scenario.pcds.length;
 
-            completeUserGame(props.id, elapsed, correct.length === props.scenario.pcds.length);
+            completeUserGame(props.id, elapsed, gameSuccess);
 
             setReport(
                 `Guessed ${correct.length} correct PCDs out of ${props.scenario.pcds.length} in ${formatMs(elapsed)}`
             );
             setReportOpen(true);
+
+            const eventType = gameSuccess ? posthogEvents.gameEndSuccess : posthogEvents.gameEndFailure;
+
+            posthog.capture(eventType, {
+                scenarioId: props.id,
+                playTime: elapsed,
+                success: gameSuccess
+            });
         }
     }, [isGameOver, props.id, props.scenario.pcds, selectedPairs]);
 
