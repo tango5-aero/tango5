@@ -1,22 +1,22 @@
-import { useEffect, useState } from 'react';
+import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { GAME_TIMEOUT_MS as initialCount } from './game';
 
+const renderTime = ({ remainingTime }: { remainingTime: number }) => {
+    return <div className="timer">{remainingTime}</div>;
+};
+
 const GameCountdown = ({ running }: { running: boolean }) => {
-    const [count, setCount] = useState(initialCount / 1000);
-
-    useEffect(() => {
-        if (!running || count <= 0) return;
-        const tid = setTimeout(() => {
-            setCount((prev) => prev - 1);
-        }, 1000);
-
-        return () => clearTimeout(tid);
-    }, [count, running]);
-
     return (
-        <div
-            className={`fixed right-16 top-5 z-10 flex items-center gap-1 rounded-md bg-white px-2.5 py-1 text-base shadow-md transition-all hover:scale-110 ${count < 10 ? 'text-red-500' : 'text-primary'} select-none`}>
-            {`${count} ${count > 1 ? 'secs' : 'sec'}`}
+        <div className={`fixed left-6 top-5 z-10 select-none text-lg text-secondary transition-all hover:scale-110`}>
+            <CountdownCircleTimer
+                isPlaying={running}
+                duration={initialCount / 1000}
+                colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+                size={60}
+                strokeWidth={5}
+                colorsTime={[30, 20, 10, 0]}>
+                {renderTime}
+            </CountdownCircleTimer>
         </div>
     );
 };

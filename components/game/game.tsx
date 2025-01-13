@@ -30,7 +30,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
 
         timeOutId.current = setTimeout(() => {
             setGameOver(true);
-        }, GAME_TIMEOUT_MS + 100);
+        }, GAME_TIMEOUT_MS);
 
         return () => clearTimeout(timeOutId.current);
     }, []);
