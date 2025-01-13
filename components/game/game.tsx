@@ -113,13 +113,12 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
     };
 
     return (
-        <>
-            <Button
-                disabled={!isGameOver}
-                className="fixed bottom-3 right-16 z-10"
-                onClick={() => redirect(props.nextUrl)}>
-                {'Next'}
-            </Button>
+        <main>
+            <div className="fixed left-4 top-4 z-10 flex">
+                <Button disabled={!isGameOver} onClick={() => redirect(props.nextUrl)}>
+                    {'Next'}
+                </Button>
+            </div>
             <ScenarioMap
                 style={{ width: '100%', height: '100dvh' }}
                 scenario={props.scenario}
@@ -128,7 +127,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
                 selectedPairs={selectedPairs}
                 isGameOver={isGameOver}
             />
-        </>
+        </main>
     );
 };
 
