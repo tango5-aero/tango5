@@ -30,7 +30,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
 
         timeOutId.current = setTimeout(() => {
             setGameOver(true);
-        }, GAME_TIMEOUT_MS);
+        }, GAME_TIMEOUT_MS + 100);
 
         return () => clearTimeout(timeOutId.current);
     }, []);
@@ -124,7 +124,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
     return (
         <>
             <GameOver open={isReportOpen} setOpen={setReportOpen} text={report} nextUrl={props.nextUrl} />
-            <GameCountdown disabled={isGameOver} />
+            <GameCountdown running={!isGameOver} />
             <Button
                 disabled={!isGameOver}
                 className="fixed bottom-3 right-16 z-10"
