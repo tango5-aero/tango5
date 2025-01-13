@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, type PropsWithChildren, CSSProperties, useMemo } from 'react';
+import { useState, useEffect, type PropsWithChildren, CSSProperties, useMemo, PropsWithoutRef } from 'react';
 import MapGL, { MapProvider, Layer, Source, useMap } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
 import { Flight } from '~/lib/domain/flight';
@@ -20,6 +20,8 @@ type ScenarioMapProps = {
 };
 
 const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
+    const [zoom, setZoom] = useState<number | undefined>(undefined);
+
     const flights = useMemo(
         () =>
             props.scenario.flights.map(
@@ -45,6 +47,14 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
         if (id) props.selectFlight(id);
     };
 
+    const onMouseEnter = (e: MapEvent) => {
+        e.target.getCanvas().style.cursor = 'pointer';
+    };
+
+    const onMouseLeave = (e: MapEvent) => {
+        e.target.getCanvas().style.cursor = '';
+    };
+
     return (
         <MapProvider>
             <MapGL
@@ -56,10 +66,14 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
                 interactive={false}
                 fadeDuration={0}
                 interactiveLayerIds={[LayersIds.positionFill, LayersIds.labelFill]}
+                onLoad={(e) => setZoom(e.target.getZoom())}
+                onZoomEnd={(e) => setZoom(e.viewState.zoom)}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onClick={onClick}>
+                <ResizeEffects bounds={props.scenario.boundaries} />
                 <Layers
+                    zoom={zoom}
                     flights={flights}
                     solutionPairs={props.scenario.pcds.map((pcd) => [pcd.firstId, pcd.secondId])}
                     selectedFlight={props.selectedFlight}
@@ -71,14 +85,31 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
     );
 };
 
-const onMouseEnter = (e: MapEvent) => {
-    e.target.getCanvas().style.cursor = 'pointer';
-};
-const onMouseLeave = (e: MapEvent) => {
-    e.target.getCanvas().style.cursor = '';
+const ResizeEffects = (props: PropsWithoutRef<{ bounds: number[] }>) => {
+    const { map: mapRef } = useMap();
+
+    useEffect(() => {
+        const map = mapRef?.getMap();
+
+        if (map) {
+            const fitBounds = () => map.fitBounds(props.bounds as [number, number, number, number]);
+            const resize = () => map.resize.bind(map);
+
+            window.addEventListener('resize', fitBounds);
+            window.addEventListener('resize', resize);
+
+            return () => {
+                window.removeEventListener('resize', fitBounds);
+                window.removeEventListener('resize', resize);
+            };
+        }
+    }, [mapRef, props.bounds]);
+
+    return null;
 };
 
 type LayerProps = {
+    zoom?: number;
     flights: Flight[];
     solutionPairs: [string, string][];
     selectedFlight: string | null;
@@ -99,7 +130,7 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
     useEffect(() => {
         const map = mapRef?.getMap();
 
-        if (!map) return;
+        if (!map || !props.zoom) return;
 
         const project = ([lng, lat]: [number, number]) => {
             const point = map.project([lng, lat]);
@@ -111,26 +142,10 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
             return [point.lng, point.lat] as [number, number];
         };
 
-        const zoom = map.getZoom();
-
-        const scalingFactor = zoom ** 2;
-
-        const bounds = map.getBounds();
-
-        if (!bounds) return;
-
-        const onViewFlights = props.flights.filter(
-            (flight) =>
-                props.selectedPairs.map((pair) => pair[0]).includes(flight.id) ||
-                props.selectedPairs.map((pair) => pair[1]).includes(flight.id) ||
-                (bounds.getWest() < flight.longitudeDeg &&
-                    flight.longitudeDeg < bounds.getEast() &&
-                    bounds.getSouth() < flight.latitudeDeg &&
-                    flight.latitudeDeg < bounds.getNorth())
-        );
+        const scalingFactor = props.zoom ** 2;
 
         const computedCollection = featureCollection(
-            onViewFlights,
+            props.flights,
             props.selectedFlight,
             props.selectedPairs,
             props.solutionPairs,
@@ -141,7 +156,15 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
         );
 
         setCollection(computedCollection);
-    }, [props.flights, mapRef, props.selectedFlight, props.selectedPairs, props.solutionPairs, props.isGameOver]);
+    }, [
+        props.flights,
+        props.zoom,
+        mapRef,
+        props.selectedFlight,
+        props.selectedPairs,
+        props.solutionPairs,
+        props.isGameOver
+    ]);
 
     return (
         <Source id="scenario-source" type="geojson" data={collection}>
