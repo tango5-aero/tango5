@@ -4,7 +4,7 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { GAME_TIMEOUT_MS as initialCount } from './game';
 
 const renderTime = ({ remainingTime }: { remainingTime: number }) => {
-    return <div className="select-none text-lg text-secondary">{remainingTime}</div>;
+    return <div className="select-none text-lg text-secondary dark:text-primary">{remainingTime}</div>;
 };
 
 const GameCountdown = ({ running, onComplete }: { running: boolean; onComplete: () => void }) => {
