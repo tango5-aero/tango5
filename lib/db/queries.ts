@@ -1,4 +1,4 @@
-import { eq, sql } from 'drizzle-orm';
+import { eq, inArray, sql } from 'drizzle-orm';
 import { db } from '.';
 import { ScenariosTable, UserGame, UserGameTable, UsersTable } from './schema';
 import { Scenario, scenarioSchema } from '~/lib/domain/scenario';
@@ -14,10 +14,14 @@ export const getScenario = async (id: number) => {
     return res ? { ...res, data: scenarioSchema.parse(JSON.parse(res.data)) } : res;
 };
 
-export const getRandom = async () => {
-    const res = await db
-        .select()
-        .from(ScenariosTable)
+export const getRandom = async (ids?: number[]) => {
+    const query = db.select().from(ScenariosTable);
+
+    if (ids) {
+        query.where(inArray(ScenariosTable.id, ids));
+    }
+
+    const res = await query
         .orderBy(sql`RANDOM()`)
         .limit(1)
         .execute();
@@ -56,4 +60,9 @@ export const getUsers = async () => {
 
 export const writeUserGame = async (userGame: UserGame) => {
     return await db.insert(UserGameTable).values(userGame).onConflictDoNothing().returning();
+};
+
+export const getUserGames = async (userId: string) => {
+    const res = await db.query.UserGameTable.findMany({ where: (usergame, { eq }) => eq(usergame.userId, userId) });
+    return res;
 };

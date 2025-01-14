@@ -1,16 +1,30 @@
 import { SignedOut, SignIn } from '@clerk/nextjs';
 import { currentUser } from '@clerk/nextjs/server';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { Button } from '~/components/ui/button';
-import { tryCreateUser } from '~/lib/db/queries';
+import { getRandom, getScenarios, getUserGames, tryCreateUser } from '~/lib/db/queries';
 
 export default async function Page() {
     const user = await currentUser();
 
     if (user) {
         tryCreateUser(user);
-        redirect('/play/random');
+
+        const userGameScenarios = new Set((await getUserGames(user.id)).map((ug) => ug.scenarioId));
+        const unplayedScenarios = (await getScenarios()).filter((s) => !userGameScenarios.has(s.id));
+
+        if (unplayedScenarios.length == 0) {
+            redirect('/end-game');
+        }
+
+        const scenario = await getRandom(unplayedScenarios.map((s) => s.id));
+
+        if (!scenario) {
+            notFound();
+        }
+
+        redirect(`/play/${scenario.id}`);
     }
 
     return (

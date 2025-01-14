@@ -23,4 +23,4 @@ export const UserGameTable = pgTable('usergame', {
 });
 
 export type User = InferSelectModel<typeof UsersTable>;
-export type UserGame = InferInsertModel<typeof UserGameTable>;
+export type UserGame = InferInsertModel<typeof UserGameTable> | InferSelectModel<typeof UserGameTable>;
