@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, type PropsWithChildren, CSSProperties, useMemo } from 'react';
+import { useState, useEffect, type PropsWithChildren, CSSProperties, useMemo, PropsWithoutRef } from 'react';
 import MapGL, { MapProvider, Layer, Source, useMap } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
 import { Flight } from '~/lib/domain/flight';
@@ -16,9 +16,12 @@ type ScenarioMapProps = {
     selectFlight: (id: string) => void;
     selectedFlight: string | null;
     selectedPairs: [string, string][];
+    isGameOver: boolean;
 };
 
 const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
+    const [zoom, setZoom] = useState<number | undefined>(undefined);
+
     const flights = useMemo(
         () =>
             props.scenario.flights.map(
@@ -44,6 +47,14 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
         if (id) props.selectFlight(id);
     };
 
+    const onMouseEnter = (e: MapEvent) => {
+        e.target.getCanvas().style.cursor = 'pointer';
+    };
+
+    const onMouseLeave = (e: MapEvent) => {
+        e.target.getCanvas().style.cursor = '';
+    };
+
     return (
         <MapProvider>
             <MapGL
@@ -55,29 +66,63 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
                 interactive={false}
                 fadeDuration={0}
                 interactiveLayerIds={[LayersIds.positionFill, LayersIds.labelFill]}
+                onLoad={(e) => setZoom(e.target.getZoom())}
+                onZoomEnd={(e) => setZoom(e.viewState.zoom)}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onClick={onClick}>
-                <Layers flights={flights} selected={props.selectedFlight} pairs={props.selectedPairs} />
+                <ResizeEffects bounds={props.scenario.boundaries} />
+                <Layers
+                    zoom={zoom}
+                    flights={flights}
+                    solutionPairs={props.scenario.pcds.map((pcd) => [pcd.firstId, pcd.secondId])}
+                    selectedFlight={props.selectedFlight}
+                    selectedPairs={props.selectedPairs}
+                    isGameOver={props.isGameOver}
+                />
             </MapGL>
         </MapProvider>
     );
 };
 
-const onMouseEnter = (e: MapEvent) => {
-    e.target.getCanvas().style.cursor = 'pointer';
-};
-const onMouseLeave = (e: MapEvent) => {
-    e.target.getCanvas().style.cursor = '';
+const ResizeEffects = (props: PropsWithoutRef<{ bounds: number[] }>) => {
+    const { map: mapRef } = useMap();
+
+    useEffect(() => {
+        const map = mapRef?.getMap();
+
+        if (map) {
+            const fitBounds = () => map.fitBounds(props.bounds as [number, number, number, number]);
+            const resize = () => map.resize.bind(map);
+
+            window.addEventListener('resize', fitBounds);
+            window.addEventListener('resize', resize);
+
+            return () => {
+                window.removeEventListener('resize', fitBounds);
+                window.removeEventListener('resize', resize);
+            };
+        }
+    }, [mapRef, props.bounds]);
+
+    return null;
 };
 
-const Layers = (
-    props: PropsWithChildren<{
-        flights: Flight[];
-        selected: string | null;
-        pairs: [string, string][];
-    }>
-) => {
+type LayerProps = {
+    zoom?: number;
+    flights: Flight[];
+    solutionPairs: [string, string][];
+    selectedFlight: string | null;
+    selectedPairs: [string, string][];
+    isGameOver: boolean;
+};
+
+const colors = {
+    correct: '#779556',
+    fail: '#D45D08'
+};
+
+const Layers = (props: PropsWithChildren<LayerProps>) => {
     const { map: mapRef } = useMap();
 
     const [collection, setCollection] = useState<FeatureCollection>({ type: 'FeatureCollection', features: [] });
@@ -85,7 +130,7 @@ const Layers = (
     useEffect(() => {
         const map = mapRef?.getMap();
 
-        if (!map) return;
+        if (!map || !props.zoom) return;
 
         const project = ([lng, lat]: [number, number]) => {
             const point = map.project([lng, lat]);
@@ -97,36 +142,29 @@ const Layers = (
             return [point.lng, point.lat] as [number, number];
         };
 
-        const zoom = map.getZoom();
-
-        const scalingFactor = zoom ** 2;
-
-        const bounds = map.getBounds();
-
-        if (!bounds) return;
-
-        const onViewFlights = props.flights.filter(
-            (flight) =>
-                props.pairs.map((pair) => pair[0]).includes(flight.id) ||
-                props.pairs.map((pair) => pair[1]).includes(flight.id) ||
-                (bounds.getWest() < flight.longitudeDeg &&
-                    flight.longitudeDeg < bounds.getEast() &&
-                    bounds.getSouth() < flight.latitudeDeg &&
-                    flight.latitudeDeg < bounds.getNorth())
-        );
+        const scalingFactor = props.zoom ** 2;
 
         const computedCollection = featureCollection(
-            onViewFlights,
-            props.selected,
-            props.pairs,
+            props.flights,
+            props.selectedFlight,
+            props.selectedPairs,
+            props.solutionPairs,
+            props.isGameOver,
             scalingFactor,
             project,
-            unproject,
-            onViewFlights.length < 200
+            unproject
         );
 
         setCollection(computedCollection);
-    }, [props.flights, mapRef, props.selected, props.pairs]);
+    }, [
+        props.flights,
+        props.zoom,
+        mapRef,
+        props.selectedFlight,
+        props.selectedPairs,
+        props.solutionPairs,
+        props.isGameOver
+    ]);
 
     return (
         <Source id="scenario-source" type="geojson" data={collection}>
@@ -145,7 +183,7 @@ const Layers = (
             <Layer
                 id={LayersIds.halo}
                 type="line"
-                paint={{ 'line-color': '#FFFFFF' }}
+                paint={{ 'line-color': ['case', ['boolean', ['get', 'correct'], true], colors.correct, colors.fail] }}
                 filter={['==', ['get', 'type'], GeometryTypes.halo]}
             />
             <Layer
@@ -163,7 +201,7 @@ const Layers = (
             <Layer
                 id={LayersIds.pcdLine}
                 type="line"
-                paint={{ 'line-color': '#D45D08', 'line-dasharray': [6, 4] }}
+                paint={{ 'line-color': ['case', ['boolean', ['get', 'correct'], true], colors.correct, colors.fail] }}
                 filter={['==', ['get', 'type'], GeometryTypes.pcdLink]}
                 beforeId={LayersIds.positionFill}
             />
@@ -185,9 +223,7 @@ const Layers = (
                     'text-size': ['get', 'fontSize'],
                     'text-rotation-alignment': 'viewport'
                 }}
-                paint={{
-                    'text-color': '#D45D08'
-                }}
+                paint={{ 'text-color': ['case', ['boolean', ['get', 'correct'], true], colors.correct, colors.fail] }}
             />
             <Layer
                 id={LayersIds.labelFill}

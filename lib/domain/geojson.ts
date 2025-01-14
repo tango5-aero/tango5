@@ -13,15 +13,25 @@ type Props =
               | typeof GeometryTypes.speedVector
               | typeof GeometryTypes.label
               | typeof GeometryTypes.labelLink
-              | typeof GeometryTypes.halo
-              | typeof GeometryTypes.pcdLabel
-              | typeof GeometryTypes.pcdLink;
+              | typeof GeometryTypes.pcdLabel;
       }
     | {
           ref: string;
-          type: typeof GeometryTypes.pcdText | typeof GeometryTypes.labelText;
+          type: typeof GeometryTypes.labelText;
           text: string;
           fontSize: number;
+      }
+    | {
+          ref: string;
+          type: typeof GeometryTypes.halo | typeof GeometryTypes.pcdLink;
+          correct: boolean;
+      }
+    | {
+          ref: string;
+          type: typeof GeometryTypes.pcdText;
+          text: string;
+          fontSize: number;
+          correct: boolean;
       };
 
 export function measureTextBBox(text: string, fontSize: number): { height: number; width: number } {
@@ -62,12 +72,13 @@ export function formatMs(millis: number): string {
 
 export function featureCollection(
     flights: Flight[],
-    selected: string | null,
-    pairs: [string, string][],
+    selectedFlight: string | null,
+    selectedPairs: [string, string][],
+    solutionPairs: [string, string][],
+    reveal: boolean,
     scalingFactor: number,
     project: ([lng, lat]: [number, number]) => [x: number, y: number],
-    unproject: ([x, y]: [number, number]) => [lng: number, lat: number],
-    showLabels: boolean
+    unproject: ([x, y]: [number, number]) => [lng: number, lat: number]
 ) {
     const collection: FeatureCollection<LineString | Polygon | Point, Props> = {
         type: 'FeatureCollection',
@@ -133,19 +144,22 @@ export function featureCollection(
             distance
         });
 
-        if (selected === flight.id) {
+        if (selectedFlight === flight.id) {
             collection.features.push(
                 circle([flight.longitudeDeg, flight.latitudeDeg], 5, {
                     steps: 20,
                     units: 'nauticalmiles',
                     properties: {
                         ref: flight.id,
-                        type: GeometryTypes.halo
+                        type: GeometryTypes.halo,
+                        correct: solutionPairs.some((pair) => pair.includes(flight.id))
                     }
                 })
             );
         }
     }
+
+    const pairs = reveal ? solutionPairs.concat(selectedPairs) : selectedPairs;
 
     for (const pair of pairs) {
         const flight = flights.find((flight) => flight.id === pair[0]);
@@ -158,7 +172,8 @@ export function featureCollection(
                     units: 'nauticalmiles',
                     properties: {
                         ref: flight.id,
-                        type: GeometryTypes.halo
+                        type: GeometryTypes.halo,
+                        correct: solutionPairs.some((pair) => pair.includes(flight.id))
                     }
                 })
             );
@@ -169,7 +184,8 @@ export function featureCollection(
                     units: 'nauticalmiles',
                     properties: {
                         ref: otherFlight.id,
-                        type: GeometryTypes.halo
+                        type: GeometryTypes.halo,
+                        correct: solutionPairs.some((pair) => pair.includes(otherFlight.id))
                     }
                 })
             );
@@ -180,7 +196,12 @@ export function featureCollection(
                 type: 'Feature',
                 properties: {
                     ref: id,
-                    type: GeometryTypes.pcdLink
+                    type: GeometryTypes.pcdLink,
+                    correct: solutionPairs.some(
+                        (pair) =>
+                            (pair[0] === flight.id && pair[1] === otherFlight.id) ||
+                            (pair[0] === otherFlight.id && pair[1] === flight.id)
+                    )
                 },
                 geometry: {
                     type: 'LineString',
@@ -236,7 +257,12 @@ export function featureCollection(
                     ref: id,
                     type: GeometryTypes.pcdText,
                     text,
-                    fontSize
+                    fontSize,
+                    correct: solutionPairs.some(
+                        (pair) =>
+                            (pair[0] === flight.id && pair[1] === otherFlight.id) ||
+                            (pair[0] === otherFlight.id && pair[1] === flight.id)
+                    )
                 },
                 geometry: {
                     type: 'Point',
@@ -245,8 +271,6 @@ export function featureCollection(
             });
         }
     }
-
-    if (!showLabels) return collection;
 
     const maxMs = 500;
 
