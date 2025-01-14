@@ -6,7 +6,7 @@ import { writeScenario, writeUserGame } from '~/lib/db/queries';
 import { scenarioSchema } from '~/lib/domain/scenario';
 import { getUserGames, deleteScenario as deleteDBScenario } from '~/lib/db/queries';
 import { revalidateTag } from 'next/cache';
-import { UserGame } from '~/lib/db/schema';
+import { UserGameInsert } from '~/lib/db/schema';
 
 type ActionState = { message: string; error: boolean };
 
@@ -64,7 +64,7 @@ export async function completeUserGame(scenarioId: number, playTimeMs: number, s
     }
 
     const playTime = Duration.fromMillis(playTimeMs).toString();
-    const userGame: UserGame = {
+    const userGame: UserGameInsert = {
         userId: user.id,
         scenarioId,
         playTime,
