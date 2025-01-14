@@ -1,8 +1,8 @@
 import '~/loadenv';
-import { drizzle } from 'drizzle-orm/vercel-postgres';
 import * as schema from './schema';
+import { neon } from '@neondatabase/serverless';
 import { neonConfig } from '@neondatabase/serverless';
-import { sql } from '@vercel/postgres';
+import { drizzle } from 'drizzle-orm/neon-http';
 
 if (process.env.VERCEL_ENV === 'development') {
     neonConfig.wsProxy = (host) => `${host}:54330/v1`;
@@ -10,5 +10,7 @@ if (process.env.VERCEL_ENV === 'development') {
     neonConfig.pipelineTLS = false;
     neonConfig.pipelineConnect = false;
 }
+
+const sql = neon(process.env.DATABASE_URL!);
 
 export const db = drizzle(sql, { schema });
