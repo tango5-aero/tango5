@@ -1,17 +1,32 @@
 services:
   postgres:
-    image: postgres
-    environment:
-      POSTGRES_PASSWORD: password
+    image: postgres:17
+    command: '-d 1'
+    volumes:
+      - db_data:/var/lib/postgresql/data
     ports:
-      - '54320:5432'
-  pg_proxy:
-    image: ghcr.io/neondatabase/wsproxy:latest
+      - '5432:5432'
     environment:
-      APPEND_PORT: 'postgres:5432'
-      ALLOW_ADDR_REGEX: '.*'
-      LOG_TRAFFIC: 'true'
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=main
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  neon-proxy:
+    image: ghcr.io/timowilhelm/local-neon-http-proxy:main
+    environment:
+      - PG_CONNECTION_STRING=postgres://postgres:postgres@postgres:5432/main
     ports:
-      - '54330:80'
+      - '4444:4444'
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+
+volumes:
+  db_data:
+
+
