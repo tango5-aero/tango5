@@ -6,6 +6,7 @@ import { Scenario } from '~/lib/domain/scenario';
 import { Button } from '~/components/ui/button';
 import { redirect } from 'next/navigation';
 import { completeUserGame } from '~/lib/actions';
+import { GameCountdown } from './game-countdown';
 import posthog from 'posthog-js';
 
 const posthogEvents = {
@@ -23,9 +24,6 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
 
     const gameStartTimeMs = useRef<number | undefined>(undefined);
 
-    // required from effects clean up
-    const timeOutId = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
     useEffect(() => {
         if (typeof gameStartTimeMs.current === 'undefined') {
             gameStartTimeMs.current = performance.now();
@@ -34,12 +32,6 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
                 scenarioId: props.id
             });
         }
-
-        timeOutId.current = setTimeout(() => {
-            setGameOver(true);
-        }, GAME_TIMEOUT_MS);
-
-        return () => clearTimeout(timeOutId.current);
     }, [props.id]);
 
     useEffect(() => {
@@ -131,11 +123,16 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
 
     return (
         <main>
-            <div className="fixed left-4 top-4 z-10 flex">
+            <div className="fixed left-24 top-8 z-10 flex">
                 <Button disabled={!isGameOver} onClick={() => redirect(props.nextUrl)}>
                     {'Next'}
                 </Button>
             </div>
+            <GameCountdown
+                initialCount={GAME_TIMEOUT_MS / 1000}
+                running={!isGameOver}
+                onComplete={() => setGameOver(true)}
+            />
             <ScenarioMap
                 style={{ width: '100%', height: '100dvh' }}
                 scenario={props.scenario}
