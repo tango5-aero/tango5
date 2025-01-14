@@ -24,7 +24,7 @@ export default async function Page() {
                 {unplayedScenarios.length === 0 ? (
                     <Link href="/play/random">Play random</Link>
                 ) : (
-                    <Link href="/play/random">Continue playing</Link>
+                    <Link href="/play">Continue playing</Link>
                 )}
             </Button>
         </main>
