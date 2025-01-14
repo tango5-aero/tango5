@@ -9,23 +9,28 @@ import {
 } from '~/components/ui/dialog';
 import { Button } from '~/components/ui/button';
 import { PropsWithoutRef } from 'react';
-import { redirect } from 'next/navigation';
 
-export const GameOver = (
-    props: PropsWithoutRef<{ text: string; nextUrl: string; open: boolean; setOpen: (state: boolean) => void }>
-) => {
+type GameDialogProps = {
+    title: string;
+    text: string;
+    onAccept: () => void;
+    open: boolean;
+    setOpen: (state: boolean) => void;
+};
+
+export const GameDialog = (props: PropsWithoutRef<GameDialogProps>) => {
     return (
         <Dialog open={props.open} onOpenChange={props.setOpen}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>{'Game is over'}</DialogTitle>
+                    <DialogTitle>{props.title}</DialogTitle>
                     <DialogDescription>{props.text}</DialogDescription>
                 </DialogHeader>
 
                 <DialogFooter>
-                    <Button onClick={() => redirect(props.nextUrl)}>{'Next'}</Button>
+                    <Button onClick={props.onAccept}>{'Accept'}</Button>
                     <DialogClose asChild>
-                        <Button variant="outline">{'Close'}</Button>
+                        <Button variant="outline">{'Cancel'}</Button>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>
