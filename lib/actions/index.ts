@@ -4,7 +4,7 @@ import { Duration } from 'luxon';
 import { currentUser } from '@clerk/nextjs/server';
 import { writeScenario, writeUserGame } from '~/lib/db/queries';
 import { scenarioSchema } from '~/lib/domain/scenario';
-import { deleteScenario as deleteDBScenario } from '~/lib/db/queries';
+import { getUserGames, deleteScenario as deleteDBScenario } from '~/lib/db/queries';
 import { revalidateTag } from 'next/cache';
 import { UserGame } from '~/lib/db/schema';
 
@@ -55,6 +55,11 @@ export async function completeUserGame(scenarioId: number, playTimeMs: number, s
     const user = await currentUser();
 
     if (!user) {
+        return;
+    }
+
+    const userGameScenarios = new Set((await getUserGames(user.id)).map((ug) => ug.scenarioId));
+    if (userGameScenarios.has(scenarioId)) {
         return;
     }
 
