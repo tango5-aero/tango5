@@ -6,7 +6,7 @@ import { Scenario } from '~/lib/domain/scenario';
 import { Button } from '~/components/ui/button';
 import { redirect } from 'next/navigation';
 import { completeUserGame } from '~/lib/actions';
-import posthog from 'posthog-js';
+import { usePostHog } from 'posthog-js/react';
 
 const posthogEvents = {
     gameStart: 'game_start',
@@ -26,6 +26,8 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
     // required from effects clean up
     const timeOutId = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
+    const posthog = usePostHog();
+
     useEffect(() => {
         if (typeof gameStartTimeMs.current === 'undefined') {
             gameStartTimeMs.current = performance.now();
@@ -40,7 +42,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
         }, GAME_TIMEOUT_MS);
 
         return () => clearTimeout(timeOutId.current);
-    }, [props.id]);
+    }, [posthog, props.id]);
 
     useEffect(() => {
         if (isGameOver) {
@@ -129,6 +131,11 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
         }
     };
 
+    const handleClick = () => {
+        console.log('click');
+        posthog.renderSurvey('019464cc-48c7-0000-5fb7-5ee99ea7739e', '#survey-1');
+    };
+
     return (
         <main>
             <div className="fixed left-4 top-4 z-10 flex">
@@ -136,6 +143,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
                     {'Next'}
                 </Button>
             </div>
+            <div id="survey-1" className="h-80" onClick={handleClick}></div>
             <ScenarioMap
                 style={{ width: '100%', height: '100dvh' }}
                 scenario={props.scenario}
