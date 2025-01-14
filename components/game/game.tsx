@@ -7,6 +7,7 @@ import { Button } from '~/components/ui/button';
 import { redirect } from 'next/navigation';
 import { completeUserGame } from '~/lib/actions';
 import { usePostHog } from 'posthog-js/react';
+import { GameCountdown } from './game-countdown';
 
 const posthogEvents = {
     gameStart: 'game_start',
@@ -23,9 +24,6 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
 
     const gameStartTimeMs = useRef<number | undefined>(undefined);
 
-    // required from effects clean up
-    const timeOutId = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
     const posthog = usePostHog();
 
     useEffect(() => {
@@ -36,13 +34,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
                 scenarioId: props.id
             });
         }
-
-        timeOutId.current = setTimeout(() => {
-            setGameOver(true);
-        }, GAME_TIMEOUT_MS);
-
-        return () => clearTimeout(timeOutId.current);
-    }, [posthog, props.id]);
+    }, [props.id, posthog]);
 
     useEffect(() => {
         if (isGameOver) {
@@ -65,7 +57,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
                 success: gameSuccess
             });
         }
-    }, [isGameOver, props.id, props.scenario.pcds, selectedPairs]);
+    }, [isGameOver, props.id, props.scenario.pcds, selectedPairs, posthog]);
 
     useEffect(() => {
         // check if all pairs have been guessed
@@ -138,12 +130,17 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
 
     return (
         <main>
-            <div className="fixed left-4 top-4 z-10 flex">
+            <div className="fixed left-24 top-8 z-10 flex">
                 <Button disabled={!isGameOver} onClick={() => redirect(props.nextUrl)}>
                     {'Next'}
                 </Button>
             </div>
             <div id="survey-1" className="h-80" onClick={handleClick}></div>
+            <GameCountdown
+                initialCount={GAME_TIMEOUT_MS / 1000}
+                running={!isGameOver}
+                onComplete={() => setGameOver(true)}
+            />
             <ScenarioMap
                 style={{ width: '100%', height: '100dvh' }}
                 scenario={props.scenario}
