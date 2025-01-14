@@ -14,7 +14,7 @@ const posthogEvents = {
     gameFinish: 'game_finish'
 };
 
-export const GAME_TIMEOUT_MS = 30_000;
+const GAME_TIMEOUT_MS = 30_000;
 
 const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: string }>) => {
     // Game related state
@@ -128,7 +128,11 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
                     {'Next'}
                 </Button>
             </div>
-            <GameCountdown running={!isGameOver} onComplete={() => setGameOver(true)} />
+            <GameCountdown
+                initialCount={GAME_TIMEOUT_MS / 1000}
+                running={!isGameOver}
+                onComplete={() => setGameOver(true)}
+            />
             <ScenarioMap
                 style={{ width: '100%', height: '100dvh' }}
                 scenario={props.scenario}
