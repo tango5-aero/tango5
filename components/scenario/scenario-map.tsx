@@ -107,9 +107,9 @@ const ScaleMap = (props: PropsWithoutRef<{ latitude: number }>) => {
         const proj1 = map.project([0, props.latitude]);
         const proj2 = map.project([point2.geometry.coordinates[0], point2.geometry.coordinates[1]]);
 
-        const distanceInPixels = proj1.x - proj2.x;
+        const distanceInPixels = Math.round(Math.abs(proj1.x - proj2.x));
 
-        setWidth(Math.round(Math.abs(distanceInPixels)));
+        setWidth(distanceInPixels);
     }, [props.latitude, mapRef]);
 
     if (!mapRef) return;
