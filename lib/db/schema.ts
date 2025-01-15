@@ -15,10 +15,10 @@ export type UserSelect = InferSelectModel<typeof UsersTable>;
 export const UserGamesTable = pgTable('usergames', {
     id: serial('id').primaryKey(),
     userId: text('user_id')
-        .references(() => UsersTable.id)
+        .references(() => UsersTable.id, { onDelete: 'cascade' })
         .notNull(),
     scenarioId: integer('scenario_id')
-        .references(() => ScenariosTable.id)
+        .references(() => ScenariosTable.id, { onDelete: 'cascade' })
         .notNull(),
     playTime: interval('play_time').notNull(),
     success: boolean('success').notNull()
