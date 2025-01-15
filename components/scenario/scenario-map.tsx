@@ -54,9 +54,11 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
     const onMouseLeave = (e: MapEvent) => {
         e.target.getCanvas().style.cursor = '';
     };
+    console.log('🚀 ~ ScenarioMap ~ boundaries:', props.scenario.boundaries);
 
     return (
         <MapProvider>
+            <ScaleMap latitude={props.scenario.boundaries[3]} zoom={zoom ?? 0} />
             <MapGL
                 id="map"
                 mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
@@ -82,6 +84,27 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
                 />
             </MapGL>
         </MapProvider>
+    );
+};
+
+const ScaleMap = (props: PropsWithoutRef<{ latitude: number; zoom: number }>) => {
+    const nauticalMilesPerPixel = (latitude: number, zoom: number) => {
+        const earthCircumference = 40075017; // in meters
+        const nauticalMilesPerMeter = 0.000539957; // conversion factor
+        const latitudeRadians = latitude * (Math.PI / 180);
+        const metersPerPixel = (earthCircumference * Math.cos(latitudeRadians)) / Math.pow(2, zoom + 8);
+        return metersPerPixel * nauticalMilesPerMeter;
+    };
+
+    console.log('🚀 ~ ScaleMap ~ zoom:', props.latitude, props.zoom, nauticalMilesPerPixel(props.latitude, props.zoom));
+
+    return (
+        <div
+            className={`fixed bottom-8 left-8 z-30 w-[${Math.round(5 / nauticalMilesPerPixel(props.latitude, props.zoom))}px]`}>
+            <div className="text-center">5NM</div>
+            <div className="h-[5px] w-full border-b-[1px] border-l-[1px] border-r-[1px] border-primary"></div>
+            <div className="h-1 w-full border-l-[1px] border-r-[1px] border-primary"></div>
+        </div>
     );
 };
 
