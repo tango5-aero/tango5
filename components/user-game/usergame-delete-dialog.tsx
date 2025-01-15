@@ -2,7 +2,6 @@
 
 import { PropsWithoutRef, startTransition, useActionState, useEffect, useState } from 'react';
 import { Button } from '~/components/ui/button';
-import revalidateCacheTag, { deleteUserGame } from '~/lib/actions';
 import {
     Dialog,
     DialogContent,
@@ -16,6 +15,7 @@ import { DialogClose } from '@radix-ui/react-dialog';
 import { Trash2Icon } from 'lucide-react';
 import { cacheTags } from '~/lib/constants';
 import { toast } from 'sonner';
+import revalidateCacheTag, { deleteUserGame } from '~/lib/actions';
 
 export const UserGameDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => {
     const [open, setOpen] = useState(false);
