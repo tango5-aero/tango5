@@ -9,6 +9,7 @@ import { Scenario } from '~/lib/domain/scenario';
 import { MapEvent, MapMouseEvent } from 'mapbox-gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { point, rhumbDestination, Units } from '@turf/turf';
 
 type ScenarioMapProps = {
     style?: CSSProperties;
@@ -54,11 +55,10 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
     const onMouseLeave = (e: MapEvent) => {
         e.target.getCanvas().style.cursor = '';
     };
-    console.log('🚀 ~ ScenarioMap ~ boundaries:', props.scenario.boundaries);
 
     return (
         <MapProvider>
-            <ScaleMap latitude={props.scenario.boundaries[3]} zoom={zoom ?? 0} />
+            <ScaleMap latitude={props.scenario.boundaries[3]} />
             <MapGL
                 id="map"
                 mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
@@ -87,20 +87,35 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
     );
 };
 
-const ScaleMap = (props: PropsWithoutRef<{ latitude: number; zoom: number }>) => {
-    const nauticalMilesPerPixel = (latitude: number, zoom: number) => {
-        const earthCircumference = 40075017; // in meters
-        const nauticalMilesPerMeter = 0.000539957; // conversion factor
-        const latitudeRadians = latitude * (Math.PI / 180);
-        const metersPerPixel = (earthCircumference * Math.cos(latitudeRadians)) / Math.pow(2, zoom + 8);
-        return metersPerPixel * nauticalMilesPerMeter;
-    };
+const ScaleMap = (props: PropsWithoutRef<{ latitude: number }>) => {
+    const { map: mapRef } = useMap();
+    const [width, setWidth] = useState(0);
 
-    console.log('🚀 ~ ScaleMap ~ zoom:', props.latitude, props.zoom, nauticalMilesPerPixel(props.latitude, props.zoom));
+    useEffect(() => {
+        const map = mapRef?.getMap();
+        if (!map) return;
+
+        const point1 = point([0, props.latitude]);
+        const distance = 5;
+        const bearing = 90;
+        const options: {
+            units?: Units;
+        } = { units: 'nauticalmiles' };
+
+        const point2 = rhumbDestination(point1, distance, bearing, options);
+
+        const proj1 = map.project([0, props.latitude]);
+        const proj2 = map.project([point2.geometry.coordinates[0], point2.geometry.coordinates[1]]);
+
+        const distanceInPixels = proj1.x - proj2.x;
+
+        setWidth(Math.round(Math.abs(distanceInPixels)));
+    }, [props.latitude, mapRef]);
+
+    if (!mapRef) return;
 
     return (
-        <div
-            className={`fixed bottom-8 left-8 z-30 w-[${Math.round(5 / nauticalMilesPerPixel(props.latitude, props.zoom))}px]`}>
+        <div className={`fixed bottom-8 left-8 z-30`} style={{ width: `${width}px` }}>
             <div className="text-center">5NM</div>
             <div className="h-[5px] w-full border-b-[1px] border-l-[1px] border-r-[1px] border-primary"></div>
             <div className="h-1 w-full border-l-[1px] border-r-[1px] border-primary"></div>
