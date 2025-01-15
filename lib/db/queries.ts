@@ -57,3 +57,7 @@ export const getUsers = async () => {
 export const writeUserGame = async (userGame: UserGame) => {
     return await db.insert(UserGameTable).values(userGame).onConflictDoNothing().returning();
 };
+
+export const deleteUserGames = async (userId: string) => {
+    return await db.delete(UserGameTable).where(eq(UserGameTable.userId, userId)).returning();
+};
