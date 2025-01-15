@@ -10,7 +10,8 @@ export default async function Page() {
 
     if (user) {
         tryCreateUser(user);
-        redirect('/play/random');
+
+        redirect('/play');
     }
 
     return (
