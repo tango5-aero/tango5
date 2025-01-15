@@ -2,9 +2,14 @@
 
 import { Duration } from 'luxon';
 import { currentUser } from '@clerk/nextjs/server';
-import { deleteUserGames, writeScenario, writeUserGame } from '~/lib/db/queries';
+import {
+    deleteUserGames,
+    writeScenario,
+    writeUserGame,
+    getUserGames,
+    deleteScenario as deleteDBScenario
+} from '~/lib/db/queries';
 import { scenarioSchema } from '~/lib/domain/scenario';
-import { getUserGames, deleteScenario as deleteDBScenario } from '~/lib/db/queries';
 import { revalidateTag } from 'next/cache';
 import { UserGameInsert } from '~/lib/db/schema';
 
