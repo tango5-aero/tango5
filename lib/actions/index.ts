@@ -2,7 +2,7 @@
 
 import { Duration } from 'luxon';
 import { currentUser } from '@clerk/nextjs/server';
-import { writeScenario, writeUserGame } from '~/lib/db/queries';
+import { deleteDBUserGame, writeScenario, writeUserGame } from '~/lib/db/queries';
 import { scenarioSchema } from '~/lib/domain/scenario';
 import { getUserGames, deleteScenario as deleteDBScenario } from '~/lib/db/queries';
 import { revalidateTag } from 'next/cache';
@@ -72,4 +72,14 @@ export async function completeUserGame(scenarioId: number, playTimeMs: number, s
     };
 
     await writeUserGame(userGame);
+}
+
+export async function deleteUserGame(_prevState: ActionState, id: number): Promise<ActionState> {
+    const res = await deleteDBUserGame(id);
+
+    if (res.length === 0) {
+        return { message: `UserGame #${id} not found`, error: true };
+    }
+
+    return { message: `UserGame #${id} deleted`, error: false };
 }
