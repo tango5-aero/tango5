@@ -95,7 +95,8 @@ const ScaleMap = (props: PropsWithoutRef<{ latitude: number }>) => {
         const map = mapRef?.getMap();
         if (!map) return;
 
-        const point1 = point([0, props.latitude]);
+        const coords1 = [0, props.latitude] as [number, number];
+        const point1 = point(coords1);
         const distance = 5;
         const bearing = 90;
         const options: {
@@ -104,7 +105,7 @@ const ScaleMap = (props: PropsWithoutRef<{ latitude: number }>) => {
 
         const point2 = rhumbDestination(point1, distance, bearing, options);
 
-        const proj1 = map.project([0, props.latitude]);
+        const proj1 = map.project(coords1);
         const proj2 = map.project([point2.geometry.coordinates[0], point2.geometry.coordinates[1]]);
 
         const distanceInPixels = Math.round(Math.abs(proj1.x - proj2.x));
