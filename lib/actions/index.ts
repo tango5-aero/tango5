@@ -80,7 +80,11 @@ export async function completeUserGame(scenarioId: number, playTimeMs: number, s
 }
 
 export async function resetUserProgress(_prevState: ActionState, userId: string): Promise<ActionState> {
-    await deleteUserGames(userId);
+    try {
+        await deleteUserGames(userId);
+    } catch {
+        return { message: `Error deleting games for user #${userId}`, error: true };
+    }
 
     return { message: `Games for user #${userId} deleted`, error: false };
 }
