@@ -1,5 +1,6 @@
 import { currentUser } from '@clerk/nextjs/server';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { Button } from '~/components/ui/button';
 import { UserGamesTable } from '~/components/users/usergames-table';
 import { getUnplayedScenarios, getUserGames } from '~/lib/db/queries';
@@ -13,6 +14,8 @@ export default async function Page() {
     if (user) {
         userGames = await getUserGames(user.id);
         unplayedScenarios = await getUnplayedScenarios(user.id);
+    } else {
+        redirect('/');
     }
 
     return (
