@@ -9,7 +9,7 @@ import { Scenario } from '~/lib/domain/scenario';
 import { MapEvent, MapMouseEvent } from 'mapbox-gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { point, rhumbDestination, Units } from '@turf/turf';
+import { destination, point, Units } from '@turf/turf';
 
 type ScenarioMapProps = {
     style?: CSSProperties;
@@ -103,7 +103,7 @@ const ScaleMap = (props: PropsWithoutRef<{ latitude: number }>) => {
             units?: Units;
         } = { units: 'nauticalmiles' };
 
-        const point2 = rhumbDestination(point1, distance, bearing, options);
+        const point2 = destination(point1, distance, bearing, options);
 
         const proj1 = map.project(coords1);
         const proj2 = map.project([point2.geometry.coordinates[0], point2.geometry.coordinates[1]]);
@@ -117,9 +117,9 @@ const ScaleMap = (props: PropsWithoutRef<{ latitude: number }>) => {
 
     return (
         <div className={`fixed bottom-8 left-8 z-30`} style={{ width: `${width}px` }}>
-            <div className="text-center">5NM</div>
-            <div className="h-[5px] w-full border-b-[1px] border-l-[1px] border-r-[1px] border-primary"></div>
-            <div className="h-1 w-full border-l-[1px] border-r-[1px] border-primary"></div>
+            <div className="text-center text-secondary dark:text-primary">5NM</div>
+            <div className="h-[5px] w-full border-b-[1px] border-l-[1px] border-r-[1px] dark:border-primary"></div>
+            <div className="h-1 w-full border-l-[1px] border-r-[1px] dark:border-primary"></div>
         </div>
     );
 };
