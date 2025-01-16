@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation';
 import { completeUserGame } from '~/lib/actions';
 import { GameCountdown } from './game-countdown';
 import posthog from 'posthog-js';
+import { GameProgress } from './game-progress';
 
 const posthogEvents = {
     gameStart: 'game_start',
@@ -21,6 +22,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
     const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
     const [isGameOver, setGameOver] = useState(false);
+    const [correctGame, setCorrectGame] = useState(false);
 
     const gameStartTimeMs = useRef<number | undefined>(undefined);
 
@@ -45,17 +47,17 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
             );
 
             const elapsed = gameStartTimeMs.current ? performance.now() - gameStartTimeMs.current : 0;
-            const gameSuccess = correct.length === props.scenario.pcds.length;
+            setCorrectGame(correct.length === props.scenario.pcds.length);
 
-            completeUserGame(props.id, elapsed, gameSuccess);
+            completeUserGame(props.id, elapsed, correctGame);
 
             posthog.capture(posthogEvents.gameFinish, {
                 scenarioId: props.id,
                 playTime: elapsed,
-                success: gameSuccess
+                success: correctGame
             });
         }
-    }, [isGameOver, props.id, props.scenario.pcds, selectedPairs]);
+    }, [isGameOver, props.id, props.scenario.pcds, selectedPairs, correctGame]);
 
     useEffect(() => {
         // check if all pairs have been guessed
@@ -105,10 +107,6 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
             return;
         }
 
-        // update user selection pairs and clear current flight selection
-        setSelectedPairs([...selectedPairs, pair]);
-        setSelectedFlight(null);
-
         // check if game should continue based on last player selection
         const correct = props.scenario.pcds.some(
             (pcd) =>
@@ -118,16 +116,26 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
         if (!correct) {
             setGameOver(true);
             return;
+        } else {
+            // update user selection pairs and clear current flight selection
+            setSelectedPairs([...selectedPairs, pair]);
+            setSelectedFlight(null);
         }
     };
 
     return (
         <main>
-            <div className="fixed left-24 top-8 z-10 flex">
+            <div className="fixed left-56 top-8 z-10 flex">
                 <Button disabled={!isGameOver} onClick={() => redirect(props.nextUrl)}>
                     {'Next'}
                 </Button>
             </div>
+            <GameProgress
+                total={props.scenario.pcds.length}
+                progress={selectedPairs.length}
+                isGameOver={isGameOver}
+                success={correctGame}
+            />
             <GameCountdown
                 initialCount={GAME_TIMEOUT_MS / 1000}
                 running={!isGameOver}
