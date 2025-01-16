@@ -22,7 +22,6 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
     const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
     const [isGameOver, setGameOver] = useState(false);
-    const [correctGame, setCorrectGame] = useState(false);
 
     const gameStartTimeMs = useRef<number | undefined>(undefined);
 
@@ -47,17 +46,17 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
             );
 
             const elapsed = gameStartTimeMs.current ? performance.now() - gameStartTimeMs.current : 0;
-            setCorrectGame(correct.length === props.scenario.pcds.length);
+            const gameSuccess = correct.length === props.scenario.pcds.length;
 
-            completeUserGame(props.id, elapsed, correctGame);
+            completeUserGame(props.id, elapsed, gameSuccess);
 
             posthog.capture(posthogEvents.gameFinish, {
                 scenarioId: props.id,
                 playTime: elapsed,
-                success: correctGame
+                success: gameSuccess
             });
         }
-    }, [isGameOver, props.id, props.scenario.pcds, selectedPairs, correctGame]);
+    }, [isGameOver, props.id, props.scenario.pcds, selectedPairs]);
 
     useEffect(() => {
         // check if all pairs have been guessed
