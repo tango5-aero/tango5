@@ -130,12 +130,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
                     {'Next'}
                 </Button>
             </div>
-            <GameProgress
-                total={props.scenario.pcds.length}
-                progress={selectedPairs.length}
-                isGameOver={isGameOver}
-                success={correctGame}
-            />
+            <GameProgress total={props.scenario.pcds.length} progress={selectedPairs.length} />
             <GameCountdown
                 initialCount={GAME_TIMEOUT_MS / 1000}
                 running={!isGameOver}

@@ -9,19 +9,12 @@ import Box from '@mui/material/Box';
 type GameProgressProps = {
     progress: number;
     total: number;
-    isGameOver: boolean;
-    success: boolean;
 };
 
 const GameProgress = (props: PropsWithoutRef<GameProgressProps>) => {
     return (
         <div className="fixed left-16 top-5 z-10 select-none text-lg text-secondary transition-all hover:scale-110 dark:text-primary">
-            <CircularProgressWithLabel
-                progress={props.progress}
-                total={props.total}
-                isGameOver={props.isGameOver}
-                success={props.success}
-            />
+            <CircularProgressWithLabel progress={props.progress} total={props.total} />
         </div>
     );
 };
@@ -31,13 +24,10 @@ function CircularProgressWithLabel(props: GameProgressProps) {
         <Box sx={{ position: 'relative', display: 'inline-flex' }}>
             <CircularProgress
                 variant="determinate"
-                color={props.isGameOver && !props.success ? 'error' : 'success'}
-                value={Math.round(
-                    100 * ((props.isGameOver && !props.success ? props.progress - 1 : props.progress) / props.total)
-                )}
+                color={'inherit'}
+                value={Math.round(100 * (props.progress / props.total))}
                 size="60px"
                 thickness={5}
-                {...props}
             />
             <Box
                 sx={{
@@ -55,7 +45,7 @@ function CircularProgressWithLabel(props: GameProgressProps) {
                     component="div"
                     sx={{
                         color: 'white'
-                    }}>{`${props.isGameOver && !props.success ? props.progress - 1 : props.progress}/${props.total}`}</Typography>
+                    }}>{`${props.progress}/${props.total}`}</Typography>
             </Box>
         </Box>
     );
