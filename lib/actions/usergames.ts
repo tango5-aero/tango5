@@ -3,7 +3,7 @@
 import { Duration } from 'luxon';
 import { currentUser } from '@clerk/nextjs/server';
 import { getUserGames } from '~/lib/db/queries';
-import { deleteDBUserGame, writeUserGame } from '~/lib/db/queries';
+import { deleteUserGame as deleteDBUserGame, writeUserGame, deleteUserGames } from '~/lib/db/queries';
 import { UserGameInsert } from '~/lib/db/schema';
 import { ActionState } from '.';
 
@@ -38,4 +38,14 @@ export async function deleteUserGame(_prevState: ActionState, id: number): Promi
     }
 
     return { message: `UserGame #${id} deleted`, error: false };
+}
+
+export async function resetUserProgress(_prevState: ActionState, userId: string): Promise<ActionState> {
+    try {
+        await deleteUserGames(userId);
+    } catch {
+        return { message: `Error deleting games for user #${userId}`, error: true };
+    }
+
+    return { message: `Games for user #${userId} deleted`, error: false };
 }

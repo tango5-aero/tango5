@@ -1,6 +1,6 @@
+import { eq } from 'drizzle-orm';
 import { db } from '~/lib/db';
 import { UserGameInsert, UserGamesTable } from '~/lib/db/schema';
-import { eq } from 'drizzle-orm';
 
 export const writeUserGame = async (userGame: UserGameInsert) => {
     return await db.insert(UserGamesTable).values(userGame).onConflictDoNothing().returning();
@@ -16,6 +16,10 @@ export const getUserGames = async (userId?: string) => {
     return await query.execute();
 };
 
-export const deleteDBUserGame = async (id: number) => {
+export const deleteUserGame = async (id: number) => {
     return await db.delete(UserGamesTable).where(eq(UserGamesTable.id, id)).returning();
+};
+
+export const deleteUserGames = async (userId: string) => {
+    return await db.delete(UserGamesTable).where(eq(UserGamesTable.userId, userId)).returning();
 };
