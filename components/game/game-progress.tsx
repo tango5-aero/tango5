@@ -32,7 +32,9 @@ function CircularProgressWithLabel(props: GameProgressProps) {
             <CircularProgress
                 variant="determinate"
                 color={props.isGameOver && !props.success ? 'error' : 'success'}
-                value={Math.round(100 * (props.progress / props.total))}
+                value={Math.round(
+                    100 * ((props.isGameOver && !props.success ? props.progress - 1 : props.progress) / props.total)
+                )}
                 size="60px"
                 thickness={5}
                 {...props}
@@ -51,7 +53,9 @@ function CircularProgressWithLabel(props: GameProgressProps) {
                 <Typography
                     className="select-none text-lg text-secondary dark:text-primary"
                     component="div"
-                    sx={{ color: 'white' }}>{`${props.progress}/${props.total}`}</Typography>
+                    sx={{
+                        color: 'white'
+                    }}>{`${props.isGameOver && !props.success ? props.progress - 1 : props.progress}/${props.total}`}</Typography>
             </Box>
         </Box>
     );
