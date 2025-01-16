@@ -111,13 +111,13 @@ const ScaleMap = (props: PropsWithoutRef<{ latitude: number }>) => {
         const distanceInPixels = Math.round(Math.abs(proj1.x - proj2.x));
 
         setWidth(distanceInPixels);
-    }, [props.latitude, mapRef]);
+    }, [props.latitude, mapRef, mapRef?.getMap().getZoom()]);
 
     if (!mapRef) return;
 
     return (
         <div className={`fixed bottom-8 left-8 z-30`} style={{ width: `${width}px` }}>
-            <div className="text-center text-secondary dark:text-primary">5NM</div>
+            <div className="text-center text-sm text-secondary dark:text-primary">5NM</div>
             <div className="h-[5px] w-full border-b-[1px] border-l-[1px] border-r-[1px] dark:border-primary"></div>
             <div className="h-1 w-full border-l-[1px] border-r-[1px] dark:border-primary"></div>
         </div>
