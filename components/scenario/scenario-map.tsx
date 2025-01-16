@@ -222,7 +222,7 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
             <Layer
                 id={LayersIds.halo}
                 type="line"
-                paint={{ 'line-color': ['case', ['boolean', ['get', 'correct'], true], colors.correct, colors.fail] }}
+                paint={{ 'line-color': '#FFFFFF' }}
                 filter={['==', ['get', 'type'], GeometryTypes.halo]}
             />
             <Layer

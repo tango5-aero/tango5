@@ -13,7 +13,9 @@ type Props =
               | typeof GeometryTypes.speedVector
               | typeof GeometryTypes.label
               | typeof GeometryTypes.labelLink
-              | typeof GeometryTypes.pcdLabel;
+              | typeof GeometryTypes.pcdLabel
+              | typeof GeometryTypes.halo
+              | typeof GeometryTypes.pcdLink;
       }
     | {
           ref: string;
@@ -23,8 +25,6 @@ type Props =
       }
     | {
           ref: string;
-          type: typeof GeometryTypes.halo | typeof GeometryTypes.pcdLink;
-          correct: boolean;
       }
     | {
           ref: string;
@@ -74,6 +74,7 @@ export function featureCollection(
     flights: Flight[],
     selectedFlight: string | null,
     selectedPairs: [string, string][],
+
     solutionPairs: [string, string][],
     reveal: boolean,
     scalingFactor: number,
@@ -166,42 +167,13 @@ export function featureCollection(
         const otherFlight = flights.find((flight) => flight.id === pair[1]);
 
         if (flight && otherFlight) {
-            collection.features.push(
-                circle([flight.longitudeDeg, flight.latitudeDeg], 5, {
-                    steps: 20,
-                    units: 'nauticalmiles',
-                    properties: {
-                        ref: flight.id,
-                        type: GeometryTypes.halo,
-                        correct: solutionPairs.some((pair) => pair.includes(flight.id))
-                    }
-                })
-            );
-
-            collection.features.push(
-                circle([otherFlight.longitudeDeg, otherFlight.latitudeDeg], 5, {
-                    steps: 20,
-                    units: 'nauticalmiles',
-                    properties: {
-                        ref: otherFlight.id,
-                        type: GeometryTypes.halo,
-                        correct: solutionPairs.some((pair) => pair.includes(otherFlight.id))
-                    }
-                })
-            );
-
             const id = flight < otherFlight ? `${flight.id}-${otherFlight.id}` : `${otherFlight.id}-${flight.id}`;
 
             collection.features.push({
                 type: 'Feature',
                 properties: {
                     ref: id,
-                    type: GeometryTypes.pcdLink,
-                    correct: solutionPairs.some(
-                        (pair) =>
-                            (pair[0] === flight.id && pair[1] === otherFlight.id) ||
-                            (pair[0] === otherFlight.id && pair[1] === flight.id)
-                    )
+                    type: GeometryTypes.pcdLink
                 },
                 geometry: {
                     type: 'LineString',
