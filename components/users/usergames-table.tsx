@@ -5,12 +5,17 @@ import { DataTable } from '~/components/ui/data-table';
 import { PropsWithoutRef } from 'react';
 import { UserGameDeleteDialog } from '~/components/user-game/usergame-delete-dialog';
 
-export type UserGameRow = {
+type UserGameRow = {
     id: number;
     userId: string;
     scenarioId: number;
     playTime: string;
     success: boolean;
+};
+
+type UserGamesTableProps = {
+    usergames: UserGameRow[];
+    allowDeleteGames: boolean;
 };
 
 export const userColumns: ColumnDef<UserGameRow>[] = [
@@ -66,8 +71,8 @@ export const adminColumns: ColumnDef<UserGameRow>[] = [
     }
 ];
 
-export const UserGamesTable = (props: PropsWithoutRef<{ usergames: UserGameRow[]; admin: boolean }>) => {
-    if (props.admin) {
+export const UserGamesTable = (props: PropsWithoutRef<UserGamesTableProps>) => {
+    if (props.allowDeleteGames) {
         return (
             <DataTable
                 data={props.usergames}
