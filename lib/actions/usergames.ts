@@ -41,8 +41,9 @@ export async function deleteUserGame(_prevState: ActionState, id: number): Promi
 }
 
 export async function resetUserProgress(_prevState: ActionState, userId: string): Promise<ActionState> {
-    const res = await deleteUserGames(userId);
-    if (res.length === 0) {
+    try {
+        await deleteUserGames(userId);
+    } catch {
         return { message: `Error deleting games for user #${userId}`, error: true };
     }
 
