@@ -5,6 +5,8 @@ import { Flight } from '~/lib/domain/flight';
 import { GeometryTypes } from '~/components/scenario/scenario-map';
 import { circle } from '@turf/turf';
 
+const MIN_DIS_THRESHOLD_NM = 9;
+
 type Props =
     | {
           ref: string;
@@ -13,9 +15,7 @@ type Props =
               | typeof GeometryTypes.speedVector
               | typeof GeometryTypes.label
               | typeof GeometryTypes.labelLink
-              | typeof GeometryTypes.pcdLabel
-              | typeof GeometryTypes.halo
-              | typeof GeometryTypes.pcdLink;
+              | typeof GeometryTypes.halo;
       }
     | {
           ref: string;
@@ -25,13 +25,16 @@ type Props =
       }
     | {
           ref: string;
+          type: typeof GeometryTypes.pcdLink | typeof GeometryTypes.pcdLabel;
+
+          isPcd: boolean;
       }
     | {
           ref: string;
           type: typeof GeometryTypes.pcdText;
           text: string;
           fontSize: number;
-          correct: boolean;
+          isPcd: boolean;
       };
 
 export function measureTextBBox(text: string, fontSize: number): { height: number; width: number } {
@@ -169,24 +172,15 @@ export function featureCollection(
         if (flight && otherFlight) {
             const id = flight < otherFlight ? `${flight.id}-${otherFlight.id}` : `${otherFlight.id}-${flight.id}`;
 
-            collection.features.push({
-                type: 'Feature',
-                properties: {
-                    ref: id,
-                    type: GeometryTypes.pcdLink
-                },
-                geometry: {
-                    type: 'LineString',
-                    coordinates: [
-                        [flight.longitudeDeg, flight.latitudeDeg],
-                        [otherFlight.longitudeDeg, otherFlight.latitudeDeg]
-                    ]
-                }
-            });
-
             const measure = flight.measureDistanceTo(otherFlight);
 
             if (!measure) continue;
+
+            console.log(measure);
+
+            const isPcd =
+                measure.currentDistanceNM <= MIN_DIS_THRESHOLD_NM ||
+                ('minimumDistanceNM' in measure ? measure.minimumDistanceNM <= MIN_DIS_THRESHOLD_NM : false);
 
             const minimumDistanceText =
                 'minimumDistanceNM' in measure && 'timeToMinimumDistanceMs' in measure
@@ -215,7 +209,24 @@ export function featureCollection(
                 type: 'Feature',
                 properties: {
                     ref: id,
-                    type: GeometryTypes.pcdLabel
+                    type: GeometryTypes.pcdLink,
+                    isPcd
+                },
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [
+                        [flight.longitudeDeg, flight.latitudeDeg],
+                        [otherFlight.longitudeDeg, otherFlight.latitudeDeg]
+                    ]
+                }
+            });
+
+            collection.features.push({
+                type: 'Feature',
+                properties: {
+                    ref: id,
+                    type: GeometryTypes.pcdLabel,
+                    isPcd
                 },
                 geometry: {
                     type: 'Polygon',
@@ -230,11 +241,7 @@ export function featureCollection(
                     type: GeometryTypes.pcdText,
                     text,
                     fontSize,
-                    correct: solutionPairs.some(
-                        (pair) =>
-                            (pair[0] === flight.id && pair[1] === otherFlight.id) ||
-                            (pair[0] === otherFlight.id && pair[1] === flight.id)
-                    )
+                    isPcd
                 },
                 geometry: {
                     type: 'Point',
