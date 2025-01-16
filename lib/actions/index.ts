@@ -2,11 +2,16 @@
 
 import { Duration } from 'luxon';
 import { currentUser } from '@clerk/nextjs/server';
-import { writeScenario, writeUserGame } from '~/lib/db/queries';
+import {
+    deleteUserGames,
+    writeScenario,
+    writeUserGame,
+    getUserGames,
+    deleteScenario as deleteDBScenario
+} from '~/lib/db/queries';
 import { scenarioSchema } from '~/lib/domain/scenario';
-import { deleteScenario as deleteDBScenario } from '~/lib/db/queries';
 import { revalidateTag } from 'next/cache';
-import { UserGame } from '~/lib/db/schema';
+import { UserGameInsert } from '~/lib/db/schema';
 
 type ActionState = { message: string; error: boolean };
 
@@ -58,8 +63,13 @@ export async function completeUserGame(scenarioId: number, playTimeMs: number, s
         return;
     }
 
+    const userGameScenarios = new Set((await getUserGames(user.id)).map((ug) => ug.scenarioId));
+    if (userGameScenarios.has(scenarioId)) {
+        return;
+    }
+
     const playTime = Duration.fromMillis(playTimeMs).toString();
-    const userGame: UserGame = {
+    const userGame: UserGameInsert = {
         userId: user.id,
         scenarioId,
         playTime,
@@ -67,4 +77,14 @@ export async function completeUserGame(scenarioId: number, playTimeMs: number, s
     };
 
     await writeUserGame(userGame);
+}
+
+export async function resetUserProgress(_prevState: ActionState, userId: string): Promise<ActionState> {
+    try {
+        await deleteUserGames(userId);
+    } catch {
+        return { message: `Error deleting games for user #${userId}`, error: true };
+    }
+
+    return { message: `Games for user #${userId} deleted`, error: false };
 }

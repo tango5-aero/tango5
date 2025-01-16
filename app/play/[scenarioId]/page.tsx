@@ -10,5 +10,5 @@ export default async function Page({ params }: { params: Promise<{ scenarioId: n
 
     if (!scenario?.data) notFound();
 
-    return <Game id={id} scenario={scenario.data} nextUrl={'/play/random'} />;
+    return <Game id={id} scenario={scenario.data} nextUrl={'/play'} />;
 }
