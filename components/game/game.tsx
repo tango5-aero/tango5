@@ -103,17 +103,6 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
         // update user selection pairs and clear current flight selection
         setSelectedPairs([...selectedPairs, pair]);
         setSelectedFlight(null);
-
-        // check if game should continue based on last player selection
-        const correct = props.scenario.pcds.some(
-            (pcd) =>
-                (pcd.firstId === pair[0] && pcd.secondId === pair[1]) ||
-                (pcd.firstId === pair[1] && pcd.secondId === pair[0])
-        );
-        if (!correct) {
-            setGameOver(true);
-            return;
-        }
     };
 
     return (

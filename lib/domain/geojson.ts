@@ -192,14 +192,28 @@ export function featureCollection(
             const textSize = measureTextBBox(text, fontSize);
 
             const width = Math.max(1, textSize.width / 1.5);
-            const height = Math.max(1, textSize.height / 1.5);
+            const height = Math.max(1, textSize.height / 1.25);
 
-            const labelCenter = [
-                (flight.longitudeDeg + otherFlight.longitudeDeg) / 2,
-                (flight.latitudeDeg + otherFlight.latitudeDeg) / 2
-            ] as [number, number];
+            const flightViewSpace = project([flight.longitudeDeg, flight.latitudeDeg]);
+            const otherFlightViewSpace = project([otherFlight.longitudeDeg, otherFlight.latitudeDeg]);
 
-            const label = expand(project(labelCenter), width, height);
+            const flightsMidPoint = [
+                (flightViewSpace[0] + otherFlightViewSpace[0]) / 2,
+                (flightViewSpace[1] + otherFlightViewSpace[1]) / 2
+            ];
+
+            const ratio =
+                flightsMidPoint[1] !== 0
+                    ? (flightViewSpace[0] - otherFlightViewSpace[0]) / (flightViewSpace[1] - otherFlightViewSpace[1])
+                    : -1;
+
+            const labelCenter = (
+                ratio > 0
+                    ? [flightsMidPoint[0] + width, flightsMidPoint[1] - height]
+                    : [flightsMidPoint[0] - width, flightsMidPoint[1] - height]
+            ) as [number, number];
+
+            const label = expand(labelCenter, width, height);
 
             const coordinates = [label.map((point) => unproject(point))];
 
@@ -245,7 +259,7 @@ export function featureCollection(
                 },
                 geometry: {
                     type: 'Point',
-                    coordinates: labelCenter
+                    coordinates: unproject(labelCenter)
                 }
             });
         }
