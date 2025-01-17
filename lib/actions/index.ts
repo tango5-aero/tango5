@@ -1,4 +1,4 @@
-import revalidateCacheTag from './actions';
+import revalidateCacheTag from './cache';
 
 export * from './scenarios';
 export * from './usergames';
