@@ -1,7 +1,7 @@
 name: Bug Report
 description: File a bug report.
 title: "[Bug]: "
-labels: ["duplicate", "good first issue", "help wanted", "invalid", "rockstar", "wontfix"]
+labels: ["bug"]
 projects: ["Tango5 development"]
 body:
   - type: markdown
