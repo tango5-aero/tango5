@@ -23,13 +23,11 @@ const sql = neon(connectionString);
 
 export const db = drizzle(sql, { schema });
 
-const { UsersTable, ScenariosTable, UserGamesTable } = schema;
-
 const times = ['00:00:05.184', '00:00:10.368', '00:00:12.552', '00:00:24.736', '00:00:26.920', '00:00:30.000'];
 
 async function main() {
-    await reset(db, { UsersTable, ScenariosTable, UserGamesTable });
-    await seed(db, { UsersTable, ScenariosTable, UserGamesTable }).refine((f) => ({
+    await reset(db, { schema });
+    await seed(db, { schema }).refine((f) => ({
         UsersTable: {
             count: 5
         },
