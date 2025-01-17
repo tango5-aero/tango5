@@ -5,6 +5,8 @@ import { Flight } from '~/lib/domain/flight';
 import { GeometryTypes } from '~/components/scenario/scenario-map';
 import { circle } from '@turf/turf';
 
+const MIN_DIS_THRESHOLD_NM = 9;
+
 type Props =
     | {
           ref: string;
@@ -13,7 +15,7 @@ type Props =
               | typeof GeometryTypes.speedVector
               | typeof GeometryTypes.label
               | typeof GeometryTypes.labelLink
-              | typeof GeometryTypes.pcdLabel;
+              | typeof GeometryTypes.halo;
       }
     | {
           ref: string;
@@ -23,15 +25,16 @@ type Props =
       }
     | {
           ref: string;
-          type: typeof GeometryTypes.halo | typeof GeometryTypes.pcdLink;
-          correct: boolean;
+          type: typeof GeometryTypes.pcdLink | typeof GeometryTypes.pcdLabel;
+
+          isPcd: boolean;
       }
     | {
           ref: string;
           type: typeof GeometryTypes.pcdText;
           text: string;
           fontSize: number;
-          correct: boolean;
+          isPcd: boolean;
       };
 
 export function measureTextBBox(text: string, fontSize: number): { height: number; width: number } {
@@ -74,6 +77,7 @@ export function featureCollection(
     flights: Flight[],
     selectedFlight: string | null,
     selectedPairs: [string, string][],
+
     solutionPairs: [string, string][],
     reveal: boolean,
     scalingFactor: number,
@@ -166,55 +170,17 @@ export function featureCollection(
         const otherFlight = flights.find((flight) => flight.id === pair[1]);
 
         if (flight && otherFlight) {
-            collection.features.push(
-                circle([flight.longitudeDeg, flight.latitudeDeg], 5, {
-                    steps: 20,
-                    units: 'nauticalmiles',
-                    properties: {
-                        ref: flight.id,
-                        type: GeometryTypes.halo,
-                        correct: solutionPairs.some((pair) => pair.includes(flight.id))
-                    }
-                })
-            );
-
-            collection.features.push(
-                circle([otherFlight.longitudeDeg, otherFlight.latitudeDeg], 5, {
-                    steps: 20,
-                    units: 'nauticalmiles',
-                    properties: {
-                        ref: otherFlight.id,
-                        type: GeometryTypes.halo,
-                        correct: solutionPairs.some((pair) => pair.includes(otherFlight.id))
-                    }
-                })
-            );
-
             const id = flight < otherFlight ? `${flight.id}-${otherFlight.id}` : `${otherFlight.id}-${flight.id}`;
-
-            collection.features.push({
-                type: 'Feature',
-                properties: {
-                    ref: id,
-                    type: GeometryTypes.pcdLink,
-                    correct: solutionPairs.some(
-                        (pair) =>
-                            (pair[0] === flight.id && pair[1] === otherFlight.id) ||
-                            (pair[0] === otherFlight.id && pair[1] === flight.id)
-                    )
-                },
-                geometry: {
-                    type: 'LineString',
-                    coordinates: [
-                        [flight.longitudeDeg, flight.latitudeDeg],
-                        [otherFlight.longitudeDeg, otherFlight.latitudeDeg]
-                    ]
-                }
-            });
 
             const measure = flight.measureDistanceTo(otherFlight);
 
             if (!measure) continue;
+
+            console.log(measure);
+
+            const isPcd =
+                measure.currentDistanceNM <= MIN_DIS_THRESHOLD_NM ||
+                ('minimumDistanceNM' in measure ? measure.minimumDistanceNM <= MIN_DIS_THRESHOLD_NM : false);
 
             const minimumDistanceText =
                 'minimumDistanceNM' in measure && 'timeToMinimumDistanceMs' in measure
@@ -226,14 +192,28 @@ export function featureCollection(
             const textSize = measureTextBBox(text, fontSize);
 
             const width = Math.max(1, textSize.width / 1.5);
-            const height = Math.max(1, textSize.height / 1.5);
+            const height = Math.max(1, textSize.height / 1.25);
 
-            const labelCenter = [
-                (flight.longitudeDeg + otherFlight.longitudeDeg) / 2,
-                (flight.latitudeDeg + otherFlight.latitudeDeg) / 2
-            ] as [number, number];
+            const flightViewSpace = project([flight.longitudeDeg, flight.latitudeDeg]);
+            const otherFlightViewSpace = project([otherFlight.longitudeDeg, otherFlight.latitudeDeg]);
 
-            const label = expand(project(labelCenter), width, height);
+            const flightsMidPoint = [
+                (flightViewSpace[0] + otherFlightViewSpace[0]) / 2,
+                (flightViewSpace[1] + otherFlightViewSpace[1]) / 2
+            ];
+
+            const ratio =
+                flightsMidPoint[1] !== 0
+                    ? (flightViewSpace[0] - otherFlightViewSpace[0]) / (flightViewSpace[1] - otherFlightViewSpace[1])
+                    : -1;
+
+            const labelCenter = (
+                ratio > 0
+                    ? [flightsMidPoint[0] + width, flightsMidPoint[1] - height]
+                    : [flightsMidPoint[0] - width, flightsMidPoint[1] - height]
+            ) as [number, number];
+
+            const label = expand(labelCenter, width, height);
 
             const coordinates = [label.map((point) => unproject(point))];
 
@@ -243,7 +223,24 @@ export function featureCollection(
                 type: 'Feature',
                 properties: {
                     ref: id,
-                    type: GeometryTypes.pcdLabel
+                    type: GeometryTypes.pcdLink,
+                    isPcd
+                },
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [
+                        [flight.longitudeDeg, flight.latitudeDeg],
+                        [otherFlight.longitudeDeg, otherFlight.latitudeDeg]
+                    ]
+                }
+            });
+
+            collection.features.push({
+                type: 'Feature',
+                properties: {
+                    ref: id,
+                    type: GeometryTypes.pcdLabel,
+                    isPcd
                 },
                 geometry: {
                     type: 'Polygon',
@@ -258,15 +255,11 @@ export function featureCollection(
                     type: GeometryTypes.pcdText,
                     text,
                     fontSize,
-                    correct: solutionPairs.some(
-                        (pair) =>
-                            (pair[0] === flight.id && pair[1] === otherFlight.id) ||
-                            (pair[0] === otherFlight.id && pair[1] === flight.id)
-                    )
+                    isPcd
                 },
                 geometry: {
                     type: 'Point',
-                    coordinates: labelCenter
+                    coordinates: unproject(labelCenter)
                 }
             });
         }
