@@ -1,8 +1,9 @@
 name: Task
 description: Create a new specific piece of work.
 title: "[Task]: "
-labels: ["duplicate", "good first issue", "help wanted", "invalid", "rockstar", "wontfix", "question"]
+labels: ["task"]
 projects: ["Tango5 development"]
+type: task
 body:
   - type: textarea
     id: what-needs-to-be-done

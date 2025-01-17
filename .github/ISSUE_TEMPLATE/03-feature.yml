@@ -1,8 +1,9 @@
 name: Feature
 description: A request, idea or new functionality.
 title: "[Feature]: "
-labels: ["duplicate", "good first issue", "help wanted", "invalid", "rockstar", "wontfix", "question"]
+labels: ["feature"]
 projects: ["Tango5 development"]
+type: feature
 body:
   - type: textarea
     id: feature description
