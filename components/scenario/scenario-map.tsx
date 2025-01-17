@@ -158,11 +158,6 @@ type LayerProps = {
     isGameOver: boolean;
 };
 
-const colors = {
-    correct: '#779556',
-    fail: '#D45D08'
-};
-
 const Layers = (props: PropsWithChildren<LayerProps>) => {
     const { map: mapRef } = useMap();
 
@@ -224,7 +219,7 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
             <Layer
                 id={LayersIds.halo}
                 type="line"
-                paint={{ 'line-color': ['case', ['boolean', ['get', 'correct'], true], colors.correct, colors.fail] }}
+                paint={{ 'line-color': '#FFFFFF' }}
                 filter={['==', ['get', 'type'], GeometryTypes.halo]}
             />
             <Layer
@@ -242,14 +237,20 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
             <Layer
                 id={LayersIds.pcdLine}
                 type="line"
-                paint={{ 'line-color': ['case', ['boolean', ['get', 'correct'], true], colors.correct, colors.fail] }}
+                paint={{
+                    'line-color': ['case', ['boolean', ['get', 'isPcd'], true], '#D45D08', '#841212'],
+                    'line-dasharray': ['case', ['boolean', ['get', 'isPcd'], true], [1], [6, 4]]
+                }}
                 filter={['==', ['get', 'type'], GeometryTypes.pcdLink]}
                 beforeId={LayersIds.positionFill}
             />
             <Layer
                 id={LayersIds.pcdLabelFill}
                 type="fill"
-                paint={{ 'fill-opacity': 0 }}
+                paint={{
+                    'fill-opacity': 1,
+                    'fill-color': ['case', ['boolean', ['get', 'isPcd'], true], '#8BA863', '#841212']
+                }}
                 filter={['==', ['get', 'type'], GeometryTypes.pcdLabel]}
             />
             <Layer
@@ -264,7 +265,7 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
                     'text-size': ['get', 'fontSize'],
                     'text-rotation-alignment': 'viewport'
                 }}
-                paint={{ 'text-color': ['case', ['boolean', ['get', 'correct'], true], colors.correct, colors.fail] }}
+                paint={{ 'text-color': ['case', ['boolean', ['get', 'isPcd'], true], '#13151A', '#C9CDD0'] }}
             />
             <Layer
                 id={LayersIds.labelFill}
