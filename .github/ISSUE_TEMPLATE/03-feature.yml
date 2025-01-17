@@ -2,7 +2,7 @@ name: Feature
 description: A request, idea or new functionality.
 title: "[Feature]: "
 labels: []
-projects: ["Tango5 development"]
+projects: ["tango5-aero/1"]
 type: feature
 body:
   - type: textarea
