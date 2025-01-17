@@ -2,7 +2,7 @@ import { reset, seed } from 'drizzle-seed';
 import { neon, neonConfig } from '@neondatabase/serverless';
 import ws from 'ws';
 import { drizzle } from 'drizzle-orm/neon-http';
-import * as schema from './schema';
+import * as schema from '../schema';
 import sc1 from './scenarios-seed/scenario1.json';
 import sc2 from './scenarios-seed/scenario2.json';
 import sc3 from './scenarios-seed/scenario3.json';
@@ -23,11 +23,13 @@ const sql = neon(connectionString);
 
 export const db = drizzle(sql, { schema });
 
-const { UsersTable, ScenariosTable } = schema;
+const { UsersTable, ScenariosTable, UserGamesTable } = schema;
+
+const times = ['00:00:05.184', '00:00:10.368', '00:00:12.552', '00:00:24.736', '00:00:26.920', '00:00:30.000'];
 
 async function main() {
-    await reset(db, { UsersTable, ScenariosTable });
-    await seed(db, { UsersTable, ScenariosTable }).refine((f) => ({
+    await reset(db, { UsersTable, ScenariosTable, UserGamesTable });
+    await seed(db, { UsersTable, ScenariosTable, UserGamesTable }).refine((f) => ({
         UsersTable: {
             count: 5
         },
@@ -38,6 +40,24 @@ async function main() {
                     isUnique: true,
                     values: [JSON.stringify(sc1), JSON.stringify(sc2), JSON.stringify(sc3)]
                 })
+            }
+        },
+        UserGamesTable: {
+            count: 10,
+            columns: {
+                playTime: f.valuesFromArray({
+                    values: times
+                }),
+                success: f.weightedRandom([
+                    {
+                        weight: 0.2,
+                        value: f.default({ defaultValue: false })
+                    },
+                    {
+                        weight: 0.8,
+                        value: f.default({ defaultValue: true })
+                    }
+                ])
             }
         }
     }));
