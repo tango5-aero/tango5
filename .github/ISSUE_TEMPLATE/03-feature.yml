@@ -1,7 +1,7 @@
 name: Feature
 description: A request, idea or new functionality.
 title: "[Feature]: "
-labels: ["feature"]
+labels: []
 projects: ["Tango5 development"]
 type: feature
 body:
