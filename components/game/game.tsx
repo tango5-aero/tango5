@@ -107,9 +107,9 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
 
     return (
         <main>
-            <div className="fixed left-24 top-8 z-10 flex">
+            <div className="fixed bottom-12 right-24 z-10 flex">
                 <Button disabled={!isGameOver} onClick={() => redirect(props.nextUrl)}>
-                    {'Next'}
+                    {'NEXT'}
                 </Button>
             </div>
             <GameCountdown
