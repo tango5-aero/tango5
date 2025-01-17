@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation';
 import { completeUserGame } from '~/lib/actions';
 import { GameCountdown } from './game-countdown';
 import posthog from 'posthog-js';
+import { GameProgress } from './game-progress';
 
 const posthogEvents = {
     gameStart: 'game_start',
@@ -112,6 +113,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
                     {'NEXT'}
                 </Button>
             </div>
+            <GameProgress total={props.scenario.pcds.length} progress={selectedPairs.length} />
             <GameCountdown
                 initialCount={GAME_TIMEOUT_MS / 1000}
                 running={!isGameOver}

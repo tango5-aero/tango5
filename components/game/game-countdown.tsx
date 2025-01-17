@@ -15,7 +15,7 @@ const renderTime = ({ remainingTime }: { remainingTime: number }) => {
 
 const GameCountdown = (props: PropsWithoutRef<GameCountdownProps>) => {
     return (
-        <div className="fixed left-6 top-5 z-10 transition-all hover:scale-110">
+        <div className="fixed left-36 top-5 z-10 transition-all hover:scale-110">
             <CountdownCircleTimer
                 isPlaying={props.running}
                 duration={props.initialCount}
