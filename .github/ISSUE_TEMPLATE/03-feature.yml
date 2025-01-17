@@ -6,7 +6,7 @@ projects: ["Tango5 development"]
 type: feature
 body:
   - type: textarea
-    id: feature description
+    id: feature-description
     attributes:
       label: What needs to be done?
       description: What is the required change?
