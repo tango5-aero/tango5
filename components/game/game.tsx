@@ -66,7 +66,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
     }, [props.scenario.pcds.length, selectedPairs.length]);
 
     const selectFlight = (id: string) => {
-        // if the game is over do not allow further interactions and open report again to hint the user
+        // if the game is over do not allow further interactions
         if (isGameOver) {
             return;
         }
@@ -76,20 +76,15 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
         // this should never happen, fail silently
         if (!flight) return;
 
-        // avoid selecting the same flight two times on the same pair
-        if (selectedFlight === flight.id) {
-            return;
-        }
-
         // if there is no previous selection, just select current flight
         if (!selectedFlight) {
             setSelectedFlight(flight.id);
+            return;
+        }
 
-            // if flight is not on any pair, is game over
-            if (!props.scenario.pcds.some(({ firstId, secondId }) => firstId === flight.id || secondId === flight.id)) {
-                setGameOver(true);
-            }
-
+        // deselect the flight if it was already selected
+        if (selectedFlight === flight.id) {
+            setSelectedFlight(null);
             return;
         }
 
@@ -108,17 +103,6 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
         // update user selection pairs and clear current flight selection
         setSelectedPairs([...selectedPairs, pair]);
         setSelectedFlight(null);
-
-        // check if game should continue based on last player selection
-        const correct = props.scenario.pcds.some(
-            (pcd) =>
-                (pcd.firstId === pair[0] && pcd.secondId === pair[1]) ||
-                (pcd.firstId === pair[1] && pcd.secondId === pair[0])
-        );
-        if (!correct) {
-            setGameOver(true);
-            return;
-        }
     };
 
     return (
