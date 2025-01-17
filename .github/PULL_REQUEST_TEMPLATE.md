@@ -39,3 +39,13 @@ Checklist:
 
 - [ ] 📚 kept the **docs** updated
 - [ ] 📕 described the **changes** in this PR description
+
+## Related issues
+
+<!-- List of issues resolved/canceled as a result of this PR
+resolves #
+fixes #
+closes #
+-->
+
+resolves #ID
