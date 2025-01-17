@@ -9,14 +9,9 @@ import sc3 from './scenarios-seed/scenario3.json';
 
 const connectionString = 'postgres://postgres:postgres@db.localtest.me:5432/main';
 
-neonConfig.fetchEndpoint = (host) => {
-    const [protocol, port] = host === 'db.localtest.me' ? ['http', 4444] : ['https', 443];
-    return `${protocol}://${host}:${port}/sql`;
-};
-const connectionStringUrl = new URL(connectionString);
-neonConfig.useSecureWebSocket = connectionStringUrl.hostname !== 'db.localtest.me';
-neonConfig.wsProxy = (host) => (host === 'db.localtest.me' ? `${host}:4444/v2` : `${host}/v2`);
-
+neonConfig.fetchEndpoint = `http://postgres:postgres@db.localtest.me:4444/sql`;
+neonConfig.useSecureWebSocket = false;
+neonConfig.wsProxy = `postgres://postgres:postgres@db.localtest.me:4444/v2`;
 neonConfig.webSocketConstructor = ws;
 
 const sql = neon(connectionString);
