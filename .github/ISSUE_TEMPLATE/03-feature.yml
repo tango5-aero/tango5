@@ -1,0 +1,15 @@
+name: Feature
+description: A request, idea or new functionality.
+title: "[Feature]: "
+labels: []
+projects: ["Tango5 development"]
+type: feature
+body:
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: What needs to be done?
+      description: What is the required change?
+      value: "Description of the idea or new functionality"
+    validations:
+      required: true
