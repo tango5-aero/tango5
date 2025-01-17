@@ -1,7 +1,7 @@
 name: Task
 description: Create a new specific piece of work.
 title: "[Task]: "
-labels: ["task"]
+labels: []
 projects: ["Tango5 development"]
 type: task
 body:
