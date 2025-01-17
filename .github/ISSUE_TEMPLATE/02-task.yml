@@ -3,6 +3,7 @@ description: Create a new specific piece of work.
 title: "[Task]: "
 labels: ["task"]
 projects: ["Tango5 development"]
+type: task
 body:
   - type: textarea
     id: what-needs-to-be-done

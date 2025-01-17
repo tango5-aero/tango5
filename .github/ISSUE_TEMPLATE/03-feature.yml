@@ -3,6 +3,7 @@ description: A request, idea or new functionality.
 title: "[Feature]: "
 labels: ["feature"]
 projects: ["Tango5 development"]
+type: feature
 body:
   - type: textarea
     id: feature description

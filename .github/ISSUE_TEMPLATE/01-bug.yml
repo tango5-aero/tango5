@@ -3,6 +3,7 @@ description: File a bug report.
 title: "[Bug]: "
 labels: ["bug"]
 projects: ["Tango5 development"]
+type: bug
 body:
   - type: markdown
     attributes:
