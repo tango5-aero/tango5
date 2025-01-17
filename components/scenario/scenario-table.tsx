@@ -35,13 +35,13 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
     },
     {
         accessorKey: 'actions',
-        header: () => <div className="text-right">Actions</div>,
+        header: () => <div className="text-center">Actions</div>,
         cell: ({ row }) => {
             const id = row.getValue('id') as number;
             const data = row.getValue('data') as Scenario;
 
             return (
-                <div className="flex flex-row gap-2">
+                <div className="flex flex-row justify-center gap-2">
                     <Link href={`/play/${id}`}>
                         <PlayIcon size={'1rem'} />
                     </Link>

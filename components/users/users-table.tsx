@@ -12,11 +12,15 @@ export const columns: ColumnDef<{ id: string }>[] = [
     },
     {
         accessorKey: 'actions',
-        header: () => <div className="text-right">Actions</div>,
+        header: () => <div className="text-center">Actions</div>,
         cell: ({ row }) => {
             const id = row.getValue('id') as string;
 
-            return <UserWipeProgressDialog id={id} />;
+            return (
+                <div className="flex justify-center">
+                    <UserWipeProgressDialog id={id} />{' '}
+                </div>
+            );
         }
     }
 ];

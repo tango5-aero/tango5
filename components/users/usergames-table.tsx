@@ -41,15 +41,18 @@ export const adminColumns: ColumnDef<UserGameRow>[] = [
     },
     {
         accessorKey: 'userId',
-        header: () => <div className="text-center">User ID</div>
+        header: () => <div className="text-center">User ID</div>,
+        cell: ({ row }) => <div className="text-right">{row.original.userId}</div>
     },
     {
         accessorKey: 'scenarioId',
-        header: () => <div className="text-center">Scenario ID</div>
+        header: () => <div className="text-center">Scenario ID</div>,
+        cell: ({ row }) => <div className="text-right">{row.original.scenarioId}</div>
     },
     {
         accessorKey: 'playTime',
-        header: () => <div className="text-center">Play Time</div>
+        header: () => <div className="text-center">Play Time</div>,
+        cell: ({ row }) => <div className="text-right">{row.original.playTime}</div>
     },
     {
         accessorKey: 'success',
@@ -72,17 +75,11 @@ export const adminColumns: ColumnDef<UserGameRow>[] = [
 ];
 
 export const UserGamesTable = (props: PropsWithoutRef<UserGamesTableProps>) => {
-    if (props.allowDeleteGames) {
-        return (
-            <DataTable
-                data={props.usergames}
-                columns={adminColumns}
-                initialState={{ columnVisibility: { data: false } }}
-            />
-        );
-    }
-
     return (
-        <DataTable data={props.usergames} columns={userColumns} initialState={{ columnVisibility: { data: false } }} />
+        <DataTable
+            data={props.usergames}
+            columns={props.allowDeleteGames ? adminColumns : userColumns}
+            initialState={{ columnVisibility: { data: false } }}
+        />
     );
 };

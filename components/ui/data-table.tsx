@@ -1,8 +1,16 @@
 'use client';
 
-import { ColumnDef, flexRender, getCoreRowModel, InitialTableState, useReactTable } from '@tanstack/react-table';
+import {
+    ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    InitialTableState,
+    useReactTable,
+    getPaginationRowModel
+} from '@tanstack/react-table';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { DataTablePagination } from './data-table-pag';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -15,11 +23,12 @@ export function DataTable<TData, TValue>({ columns, data, initialState }: DataTa
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
-        initialState
+        initialState,
+        getPaginationRowModel: getPaginationRowModel()
     });
 
     return (
-        <div className="rounded-md border">
+        <div className="divide-y rounded-md border">
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
@@ -56,6 +65,7 @@ export function DataTable<TData, TValue>({ columns, data, initialState }: DataTa
                     )}
                 </TableBody>
             </Table>
+            <DataTablePagination table={table} />
         </div>
     );
 }

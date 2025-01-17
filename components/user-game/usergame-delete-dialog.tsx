@@ -24,7 +24,6 @@ export const UserGameDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => 
     useEffect(() => {
         if (state.message && state.error) toast.error(state.message);
         if (state.message && !state.error) toast.success(state.message);
-        revalidateCacheTag(cacheTags.userGames);
     }, [state]);
 
     useEffect(() => {
@@ -35,6 +34,7 @@ export const UserGameDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => 
         startTransition(async () => {
             action(props.id);
             setOpen(false);
+            revalidateCacheTag(cacheTags.userGames);
         });
     };
 

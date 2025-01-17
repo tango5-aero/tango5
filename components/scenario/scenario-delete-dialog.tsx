@@ -24,7 +24,6 @@ export const ScenarioDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => 
     useEffect(() => {
         if (state.message && state.error) toast.error(state.message);
         if (state.message && !state.error) toast.success(state.message);
-        revalidateCacheTag(cacheTags.scenarios);
     }, [state]);
 
     useEffect(() => {
@@ -35,6 +34,7 @@ export const ScenarioDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => 
         startTransition(async () => {
             action(props.id);
             setOpen(false);
+            revalidateCacheTag(cacheTags.scenarios);
         });
     };
 
