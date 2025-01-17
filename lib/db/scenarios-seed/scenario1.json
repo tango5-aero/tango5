@@ -1,0 +1,102 @@
+{
+    "boundaries": [-81, 36.2, -74, 39],
+    "flights": [
+        {
+            "id": "1daac8eb6d7f931585048ffd54f47416",
+            "callsign": "AAL1357",
+            "category": "B738",
+            "latitudeDeg": 37.45408433585845,
+            "longitudeDeg": -75.91795134339073,
+            "groundSpeedKts": 557,
+            "trackDeg": 31,
+            "altitudeFt": 31008,
+            "verticalSpeedFtpm": 64,
+            "selectedAltitudeFt": 31008
+        },
+        {
+            "id": "45ef496161c68e2979ea2b8d817ea2df",
+            "callsign": "JBU2086",
+            "category": "A320",
+            "latitudeDeg": 37.436325570364374,
+            "longitudeDeg": -76.0977970405263,
+            "groundSpeedKts": 552,
+            "trackDeg": 32,
+            "altitudeFt": 30975,
+            "verticalSpeedFtpm": 0,
+            "selectedAltitudeFt": 31008
+        },
+        {
+            "id": "184ae47c40fdf218b45d8508f4140e0b",
+            "callsign": "THY2AY",
+            "category": "B789",
+            "latitudeDeg": 36.9877121988808,
+            "longitudeDeg": -78.6223730993273,
+            "groundSpeedKts": 620,
+            "trackDeg": 49,
+            "altitudeFt": 35000,
+            "verticalSpeedFtpm": 0,
+            "selectedAltitudeFt": 35008
+        },
+        {
+            "id": "d231f2dc651ad7868f62e2d87515bbcf",
+            "callsign": "SWG645",
+            "category": "B38M",
+            "latitudeDeg": 38.44844532608965,
+            "longitudeDeg": -75.37133345244919,
+            "groundSpeedKts": 563,
+            "trackDeg": 25,
+            "altitudeFt": 31000,
+            "verticalSpeedFtpm": -64,
+            "selectedAltitudeFt": 31008
+        },
+        {
+            "id": "46fe9d179ecf8d9e045e9b5a5623f569",
+            "callsign": "TAI570",
+            "category": "A320",
+            "latitudeDeg": 38.678101104589786,
+            "longitudeDeg": -75.04139259219157,
+            "groundSpeedKts": 548,
+            "trackDeg": 24,
+            "altitudeFt": 33123,
+            "verticalSpeedFtpm": -576,
+            "selectedAltitudeFt": 32992
+        },
+        {
+            "id": "77c517660fb73a5967c58aff2b92a14a",
+            "callsign": "SWA2749",
+            "category": "B737",
+            "latitudeDeg": 38.30288546817426,
+            "longitudeDeg": -77.90323817133186,
+            "groundSpeedKts": 319,
+            "trackDeg": 217,
+            "altitudeFt": 40000,
+            "verticalSpeedFtpm": 2304,
+            "selectedAltitudeFt": 40000
+        },
+        {
+            "id": "9bf748cfd875b742fc6b40a48bd2b124",
+            "callsign": "IBE6402",
+            "category": "A359",
+            "latitudeDeg": 38.24729688426442,
+            "longitudeDeg": -79.19792419946235,
+            "groundSpeedKts": 615,
+            "trackDeg": 41,
+            "altitudeFt": 39000,
+            "verticalSpeedFtpm": 0,
+            "selectedAltitudeFt": 39008
+        },
+        {
+            "id": "6d9d8e6bf8f8077efc2ec69d51269f1d",
+            "callsign": "FTH938",
+            "category": "C750",
+            "latitudeDeg": 38.44667970662627,
+            "longitudeDeg": -78.92590945837415,
+            "groundSpeedKts": 422,
+            "trackDeg": 200,
+            "altitudeFt": 43008,
+            "verticalSpeedFtpm": 128,
+            "selectedAltitudeFt": 43008
+        }
+    ],
+    "pcds": [{ "firstId": "1daac8eb6d7f931585048ffd54f47416", "secondId": "45ef496161c68e2979ea2b8d817ea2df" }]
+}
