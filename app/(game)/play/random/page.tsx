@@ -7,5 +7,5 @@ export default async function Page() {
 
     if (!scenario) notFound();
 
-    return <Game id={scenario.id} scenario={scenario.data} nextUrl={'/random'} />;
+    return <Game id={scenario.id} scenario={scenario.data} nextUrl={'/play/random'} />;
 }
