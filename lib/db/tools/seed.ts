@@ -1,35 +1,23 @@
 import { reset, seed } from 'drizzle-seed';
-import { neon, neonConfig } from '@neondatabase/serverless';
-import ws from 'ws';
-import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from '../schema';
 import sc1 from './scenarios-seed/scenario1.json';
 import sc2 from './scenarios-seed/scenario2.json';
 import sc3 from './scenarios-seed/scenario3.json';
 import { scenarioSchema } from '../../../lib/domain/scenario';
-
-const connectionString = 'postgres://postgres:postgres@db.localtest.me:5432/main';
-
-neonConfig.fetchEndpoint = `http://postgres:postgres@db.localtest.me:4444/sql`;
-neonConfig.useSecureWebSocket = false;
-neonConfig.wsProxy = `postgres://postgres:postgres@db.localtest.me:4444/v2`;
-neonConfig.webSocketConstructor = ws;
-
-const sql = neon(connectionString);
+import { db } from '..';
+console.log('🚀 ~ db:', db);
 
 const times = ['00:00:05.184', '00:00:10.368', '00:00:12.552', '00:00:24.736', '00:00:26.920', '00:00:30.000'];
 
 async function main() {
-    const db = drizzle(sql, { schema });
-
     console.log('📇 Resetting database...');
-    await reset(db, { schema });
+    await reset(db, schema);
     console.log('🗑️  Database reset');
 
     console.log('-----------------------------------');
 
     console.log('🌱 Seeding database...');
-    await seed(db, { schema }).refine((f) => ({
+    await seed(db, schema).refine((f) => ({
         UsersTable: {
             count: 5
         },
