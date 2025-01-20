@@ -10,19 +10,21 @@ type GameCountdownProps = {
 };
 
 const renderTime = ({ remainingTime }: { remainingTime: number }) => {
-    return <div className="select-none text-lg text-secondary dark:text-primary">{remainingTime}</div>;
+    return <div className="select-none text-2xl font-bold text-secondary dark:text-foreground">{remainingTime}</div>;
 };
 
 const GameCountdown = (props: PropsWithoutRef<GameCountdownProps>) => {
     return (
-        <div className="fixed left-36 top-5 z-10 transition-all hover:scale-110">
+        <div className="fixed left-36 top-5 z-10 flex items-center justify-center transition-all hover:scale-110">
+            <div className="fixed size-[54px] rounded-full bg-primary-foreground dark:bg-primary"></div>
             <CountdownCircleTimer
                 isPlaying={props.running}
                 duration={props.initialCount}
-                colors={['#004777', '#F7B801', '#A30000', '#A30000']}
+                colors="#fff"
+                trailColor="#fff"
                 size={60}
-                strokeWidth={5}
-                colorsTime={[30, 20, 10, 0]}
+                strokeWidth={6}
+                trailStrokeWidth={2}
                 onComplete={props.onComplete}>
                 {renderTime}
             </CountdownCircleTimer>
