@@ -6,6 +6,7 @@ import * as schema from '../schema';
 import sc1 from './scenarios-seed/scenario1.json';
 import sc2 from './scenarios-seed/scenario2.json';
 import sc3 from './scenarios-seed/scenario3.json';
+import { scenarioSchema } from '~/lib/domain/scenario';
 
 const connectionString = 'postgres://postgres:postgres@db.localtest.me:5432/main';
 
@@ -16,11 +17,10 @@ neonConfig.webSocketConstructor = ws;
 
 const sql = neon(connectionString);
 
-export const db = drizzle(sql, { schema });
-
 const times = ['00:00:05.184', '00:00:10.368', '00:00:12.552', '00:00:24.736', '00:00:26.920', '00:00:30.000'];
 
 async function main() {
+    const db = drizzle(sql, { schema });
     await reset(db, { schema });
     await seed(db, { schema }).refine((f) => ({
         UsersTable: {
@@ -31,7 +31,11 @@ async function main() {
             columns: {
                 data: f.valuesFromArray({
                     isUnique: true,
-                    values: [JSON.stringify(sc1), JSON.stringify(sc2), JSON.stringify(sc3)]
+                    values: [
+                        JSON.stringify(scenarioSchema.parse(sc1)),
+                        JSON.stringify(scenarioSchema.parse(sc2)),
+                        JSON.stringify(scenarioSchema.parse(sc3))
+                    ]
                 })
             }
         },
