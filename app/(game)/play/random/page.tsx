@@ -1,9 +1,11 @@
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
+import { Game } from '~/components/game/game';
 import { getRandom } from '~/lib/db/queries';
 
 export default async function Page() {
     const scenario = await getRandom();
 
     if (!scenario) notFound();
-    redirect(`/play/${scenario.id}`);
+
+    return <Game id={scenario.id} scenario={scenario.data} nextUrl={'/random'} />;
 }

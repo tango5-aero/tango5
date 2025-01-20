@@ -21,5 +21,5 @@ export default async function Page() {
         redirect(`/play/${scenario.id}`);
     }
 
-    notFound();
+    redirect('/play/random');
 }
