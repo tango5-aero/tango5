@@ -15,6 +15,7 @@ export default async function Page() {
 
     const userGames = await getUserGames(user.id);
 
+    // if the user hasn't played any scenarios start playing inmediately
     if (userGames.length === 0) {
         redirect('/play');
     }
