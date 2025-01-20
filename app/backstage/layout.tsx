@@ -11,7 +11,7 @@ import {
 import { PropsWithChildren } from 'react';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '~/components/ui/sidebar';
 import { SignedIn, UserButton } from '@clerk/nextjs';
-import { Database, Dices, ThumbsUp, Users, Gamepad2 } from 'lucide-react';
+import { Database, Dices, Users, Gamepad2, Play, List } from 'lucide-react';
 import Link from 'next/link';
 import { ThemeSetting } from '../../components/theme/theme-setting';
 
@@ -26,9 +26,15 @@ export default function DashBoardLayout({ children }: PropsWithChildren) {
                 </SidebarHeader>
                 <SidebarContent>
                     <SidebarGroup>
-                        <SidebarGroupLabel>{'Play'}</SidebarGroupLabel>
+                        <SidebarGroupLabel>{'User'}</SidebarGroupLabel>
                         <SidebarMenu>
                             <SidebarMenuItem>
+                                <SidebarMenuButton asChild tooltip={'scenarios'}>
+                                    <Link href={'/play'}>
+                                        <Play />
+                                        <span>{'Continue'}</span>
+                                    </Link>
+                                </SidebarMenuButton>
                                 <SidebarMenuButton asChild tooltip={'scenarios'}>
                                     <Link href={'/play/random'}>
                                         <Dices />
@@ -36,9 +42,9 @@ export default function DashBoardLayout({ children }: PropsWithChildren) {
                                     </Link>
                                 </SidebarMenuButton>
                                 <SidebarMenuButton asChild tooltip={'scenarios'}>
-                                    <Link href={'/play/random'}>
-                                        <ThumbsUp />
-                                        <span>{'Popular'}</span>
+                                    <Link href={'/games'}>
+                                        <Gamepad2 />
+                                        <span>{'Games'}</span>
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
@@ -67,7 +73,7 @@ export default function DashBoardLayout({ children }: PropsWithChildren) {
                                 <SidebarMenuItem>
                                     <SidebarMenuButton asChild tooltip={'games'}>
                                         <Link href={'/backstage/games'}>
-                                            <Gamepad2 />
+                                            <List />
                                             <span>{'Games'}</span>
                                         </Link>
                                     </SidebarMenuButton>
