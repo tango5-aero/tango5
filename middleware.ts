@@ -1,6 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
+const isUserRegisteredRoute = createRouteMatcher(['/games(.*)', '/play(.*)']);
 const isBackstageRoute = createRouteMatcher(['/backstage(.*)']);
 
 export default clerkMiddleware(async (auth, req) => {
@@ -8,6 +9,8 @@ export default clerkMiddleware(async (auth, req) => {
         const url = new URL('/', req.url);
         return NextResponse.redirect(url);
     }
+
+    if (isUserRegisteredRoute(req)) await auth.protect();
 });
 
 export const config = {
