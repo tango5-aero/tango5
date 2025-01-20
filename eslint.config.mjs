@@ -9,6 +9,15 @@ const compat = new FlatCompat({
     baseDirectory: __dirname
 });
 
-const eslintConfig = [...compat.extends('next/core-web-vitals', 'next/typescript', 'prettier')];
+const eslintConfig = [
+    ...compat.config({
+        extends: ['next/core-web-vitals', 'next/typescript', 'prettier', 'plugin:drizzle/recommended'],
+        rules: {
+            'drizzle/enforce-delete-with-where': ['error', { drizzleObjectName: 'db' }],
+            'drizzle/enforce-update-with-where': ['error', { drizzleObjectName: 'db' }]
+        },
+        plugins: ['drizzle']
+    })
+];
 
 export default eslintConfig;
