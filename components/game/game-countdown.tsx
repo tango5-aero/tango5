@@ -16,13 +16,13 @@ const renderTime = ({ remainingTime }: { remainingTime: number }) => {
 const GameCountdown = (props: PropsWithoutRef<GameCountdownProps>) => {
     return (
         <div className="fixed left-36 top-5 z-10 flex items-center justify-center transition-all hover:scale-110">
-            <div className="fixed size-[54px] rounded-full bg-primary-foreground dark:bg-primary"></div>
+            <div className="fixed size-[58px] rounded-full bg-primary-foreground dark:bg-primary"></div>
             <CountdownCircleTimer
                 isPlaying={props.running}
                 duration={props.initialCount}
                 colors="#fff"
                 trailColor="#fff"
-                size={60}
+                size={64}
                 strokeWidth={6}
                 trailStrokeWidth={2}
                 onComplete={props.onComplete}>
