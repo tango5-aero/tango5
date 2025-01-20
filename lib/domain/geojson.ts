@@ -180,7 +180,6 @@ export function featureCollection(
                 flight.verticalIntersect(otherFlight);
 
             const text = `${currentDistanceNM.toFixed(1)}NM\n${pcd.minimumDistanceNM.toFixed(1)}NM ${formatMs(pcd.timeToMinimumDistanceMs)}`;
-            // const text = `${pcd.minimumDistanceNM.toFixed(1)}NM`
 
             const textSize = measureTextBBox(text, fontSize);
 
