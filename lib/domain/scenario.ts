@@ -14,15 +14,15 @@ export type Boundaries = z.infer<typeof boundariesSchema>;
 
 export const flightSchema = z.object({
     id: z.string(),
-    callsign: z.string().optional(),
-    category: z.string().optional(),
+    callsign: z.string(),
+    category: z.string(),
     latitudeDeg: z.number(),
     longitudeDeg: z.number(),
-    groundSpeedKts: z.number().optional(),
-    trackDeg: z.number().optional(),
-    altitudeFt: z.number().optional(),
-    verticalSpeedFtpm: z.number().optional(),
-    selectedAltitudeFt: z.number().optional()
+    altitudeFt: z.number(),
+    groundSpeedKts: z.number(),
+    trackDeg: z.number(),
+    verticalSpeedFtpm: z.number(),
+    selectedAltitudeFt: z.number()
 });
 
 export type Flight = z.infer<typeof flightSchema>;
