@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "drizzle": "drizzle-kit",
-        "seed": "tsx ./lib/db/tools/seed.ts",
+        "seed": "NODE_ENV=development tsx ./lib/db/tools/seed.ts",
         "dev": "next dev --turbopack",
         "build": "next build && drizzle-kit migrate",
         "start": "next start",
