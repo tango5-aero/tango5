@@ -43,7 +43,7 @@ export const UserResetAction = (props: PropsWithoutRef<{ id: string }>) => {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant={'outline'}>{'Start over'}</Button>
+                <Button variant={'destructive'}>{'Start over'}</Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
