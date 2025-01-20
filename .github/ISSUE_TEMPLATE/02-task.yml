@@ -2,7 +2,7 @@ name: Task
 description: Create a new specific piece of work.
 title: "[Task]: "
 labels: []
-projects: ["Tango5 development"]
+projects: ["tango5-aero/1"]
 type: task
 body:
   - type: textarea

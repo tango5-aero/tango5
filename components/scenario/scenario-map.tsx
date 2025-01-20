@@ -31,11 +31,11 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
                         item.id,
                         item.latitudeDeg,
                         item.longitudeDeg,
+                        item.altitudeFt,
                         item.callsign,
                         item.category,
                         item.groundSpeedKts,
                         item.trackDeg,
-                        item.altitudeFt,
                         item.verticalSpeedFtpm,
                         item.selectedAltitudeFt
                     )
@@ -91,6 +91,8 @@ const ScaleMap = (props: PropsWithoutRef<{ latitude: number }>) => {
     const { map: mapRef } = useMap();
     const [width, setWidth] = useState(0);
 
+    const zoom = mapRef?.getMap().getZoom();
+
     useEffect(() => {
         const map = mapRef?.getMap();
         if (!map) return;
@@ -111,7 +113,7 @@ const ScaleMap = (props: PropsWithoutRef<{ latitude: number }>) => {
         const distanceInPixels = Math.round(Math.abs(proj1.x - proj2.x));
 
         setWidth(distanceInPixels);
-    }, [props.latitude, mapRef, mapRef?.getMap().getZoom()]);
+    }, [props.latitude, mapRef, zoom]);
 
     if (!mapRef) return;
 
