@@ -22,12 +22,8 @@ export default async function Page() {
             <h3 className="text-xl">{'Return later to access new scenarios'}</h3>
             <UserGamesTable usergames={userGames} allowDeleteGames={false} />
             <div className="flex flex-row gap-2">
-                <Button variant="outline">
-                    {unplayedScenarios.length === 0 ? (
-                        <Link href="/play/random">Play random</Link>
-                    ) : (
-                        <Link href="/play">Continue playing</Link>
-                    )}
+                <Button disabled={unplayedScenarios.length === 0} variant="outline">
+                    <Link href="/play">Continue</Link>
                 </Button>
                 <UserResetAction id={user.id} />
             </div>
