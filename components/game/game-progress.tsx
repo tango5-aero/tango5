@@ -17,14 +17,7 @@ const GameProgress = (props: PropsWithoutRef<GameProgressProps>) => {
 };
 
 function CircularProgressWithLabel(props: GameProgressProps) {
-    return (
-        <CircleCountdown
-            size={60}
-            strokeWidth={2}
-            percentage={(props.progress / props.total) * 100}
-            label={`${props.progress}/${props.total}`}
-        />
-    );
+    return <CircleCountdown size={60} strokeWidth={2} label={`${props.progress}/${props.total}`} />;
 }
 
 export { GameProgress };

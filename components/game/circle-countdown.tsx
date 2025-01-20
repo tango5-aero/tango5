@@ -3,7 +3,6 @@ import { PropsWithoutRef } from 'react';
 type CircleCountdownProps = {
     size: number;
     strokeWidth: number;
-    percentage: number;
     label: string;
 };
 
