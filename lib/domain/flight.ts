@@ -6,13 +6,13 @@ export class Flight {
         public readonly id: string,
         public readonly latitudeDeg: number,
         public readonly longitudeDeg: number,
-        public readonly callsign?: string,
-        public readonly category?: string,
-        public readonly groundSpeedKts?: number,
-        public readonly trackDeg?: number,
-        public readonly altitudeFt?: number,
-        public readonly verticalSpeedFtpm?: number,
-        public readonly selectedAltitudeFt?: number
+        public readonly altitudeFt: number,
+        public readonly callsign: string,
+        public readonly category: string,
+        public readonly groundSpeedKts: number,
+        public readonly trackDeg: number,
+        public readonly verticalSpeedFtpm: number,
+        public readonly selectedAltitudeFt: number
     ) {}
 
     /**
@@ -21,8 +21,6 @@ export class Flight {
     public distanceToNM(other: Flight | Point, deltaTimeMs = 0) {
         const thisPositionIn = this.positionIn(deltaTimeMs);
         const otherPositionIn = other instanceof Flight ? other.positionIn(deltaTimeMs) : other;
-
-        if (!thisPositionIn || !otherPositionIn) return;
 
         return distance(thisPositionIn, otherPositionIn, {
             units: 'nauticalmiles'
@@ -33,14 +31,6 @@ export class Flight {
      * This method calculates the position of this flight in a given time assuming constant velocity
      */
     public positionIn(timeMs: number) {
-        if (
-            this.longitudeDeg === undefined ||
-            this.latitudeDeg === undefined ||
-            this.groundSpeedKts === undefined ||
-            this.trackDeg === undefined
-        )
-            return;
-
         const distanceNM = (this.groundSpeedKts * timeMs) / 3600_000;
         const currentPoint = point([this.longitudeDeg, this.latitudeDeg]);
 
@@ -81,54 +71,41 @@ export class Flight {
      * Measure distance to another flight
      * note1: the minimum and maximum look ahead times are given by `minTimeMs` and `maxTimeMs` respectively
      */
-    public measureDistanceTo(
+    public minimizeDistanceTo(
         that: Flight,
-        minTimeMs = 1_000,
+        deltaTimeMs = 1_000,
         maxTimeMs = 10 * 60 * 1_000
-    ):
-        | { currentDistanceNM: number }
-        | {
-              currentDistanceNM: number;
-              minimumDistanceNM: number;
-              timeToMinimumDistanceMs: number;
-              isFirstAtCrossing: boolean;
-          }
-        | undefined {
-        if (0 >= minTimeMs || minTimeMs >= maxTimeMs) return;
-
+    ): {
+        minimumDistanceNM: number;
+        timeToMinimumDistanceMs: number;
+        isFirstAtCrossing: boolean;
+    } {
         const currentDistanceNM = this.distanceToNM(that);
 
-        if (currentDistanceNM === undefined) return;
-
         let previousDistanceNM = currentDistanceNM;
-
-        let timeMs = minTimeMs;
+        let timeMs = deltaTimeMs;
         let distanceNM = this.distanceToNM(that, timeMs);
-
-        if (distanceNM === undefined) return;
 
         while (previousDistanceNM > distanceNM && timeMs <= maxTimeMs) {
             previousDistanceNM = distanceNM;
-            timeMs += minTimeMs;
+            timeMs += deltaTimeMs;
             distanceNM = this.distanceToNM(that, timeMs);
-            if (distanceNM === undefined) return;
         }
 
-        if (timeMs > maxTimeMs) return { currentDistanceNM };
+        if (timeMs > maxTimeMs)
+            return {
+                minimumDistanceNM: previousDistanceNM,
+                timeToMinimumDistanceMs: maxTimeMs,
+                isFirstAtCrossing: false
+            };
+        if (timeMs === deltaTimeMs)
+            return { minimumDistanceNM: currentDistanceNM, timeToMinimumDistanceMs: 0, isFirstAtCrossing: false };
 
         const minimumDistanceNM = previousDistanceNM;
-
-        if (
-            minimumDistanceNM === currentDistanceNM ||
-            this.groundSpeedKts === undefined ||
-            that.groundSpeedKts === undefined
-        )
-            return { currentDistanceNM };
-
-        const timeToMinimumDistanceMs = timeMs - minTimeMs;
+        const timeToMinimumDistanceMs = timeMs - deltaTimeMs;
 
         // compute where the crossings are and the minimum time it takes for both to reach any of them
-        const crossings = this.crossingsWithFlight(that, minTimeMs, maxTimeMs);
+        const crossings = this.crossingsWithFlight(that, deltaTimeMs, maxTimeMs);
 
         const thisMinDistanceToCrossingNM = crossings.reduce(
             (minDistanceNM, crossing) => Math.min(minDistanceNM, this.distanceToNM(crossing) ?? Infinity),
@@ -145,11 +122,24 @@ export class Flight {
             thatMinDistanceToCrossingNM * that.groundSpeedKts < thisMinDistanceToCrossingNM * this.groundSpeedKts;
 
         return {
-            currentDistanceNM,
             minimumDistanceNM,
             timeToMinimumDistanceMs,
             isFirstAtCrossing
         };
+    }
+
+    public verticalIntersect(that: Flight) {
+        if (Math.abs(this.altitudeFt - that.altitudeFt) <= 500) return true;
+
+        if (this.altitudeFt > that.altitudeFt && this.selectedAltitudeFt < that.altitudeFt) return true;
+
+        if (this.altitudeFt < that.altitudeFt && this.selectedAltitudeFt > that.altitudeFt) return true;
+
+        if (that.altitudeFt > this.altitudeFt && that.selectedAltitudeFt < this.altitudeFt) return true;
+
+        if (that.altitudeFt < this.altitudeFt && that.selectedAltitudeFt > this.altitudeFt) return true;
+
+        return false;
     }
 
     get identificationDisplay() {

@@ -31,11 +31,11 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
                         item.id,
                         item.latitudeDeg,
                         item.longitudeDeg,
+                        item.altitudeFt,
                         item.callsign,
                         item.category,
                         item.groundSpeedKts,
                         item.trackDeg,
-                        item.altitudeFt,
                         item.verticalSpeedFtpm,
                         item.selectedAltitudeFt
                     )

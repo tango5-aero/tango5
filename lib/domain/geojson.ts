@@ -26,7 +26,6 @@ type Props =
     | {
           ref: string;
           type: typeof GeometryTypes.pcdLink | typeof GeometryTypes.pcdLabel;
-
           isPcd: boolean;
       }
     | {
@@ -172,22 +171,16 @@ export function featureCollection(
         if (flight && otherFlight) {
             const id = flight < otherFlight ? `${flight.id}-${otherFlight.id}` : `${otherFlight.id}-${flight.id}`;
 
-            const measure = flight.measureDistanceTo(otherFlight);
+            const pcd = flight.minimizeDistanceTo(otherFlight);
 
-            if (!measure) continue;
-
-            console.log(measure);
+            const currentDistanceNM = flight.distanceToNM(otherFlight);
 
             const isPcd =
-                measure.currentDistanceNM <= MIN_DIS_THRESHOLD_NM ||
-                ('minimumDistanceNM' in measure ? measure.minimumDistanceNM <= MIN_DIS_THRESHOLD_NM : false);
+                (currentDistanceNM <= MIN_DIS_THRESHOLD_NM || pcd.minimumDistanceNM <= MIN_DIS_THRESHOLD_NM) &&
+                flight.verticalIntersect(otherFlight);
 
-            const minimumDistanceText =
-                'minimumDistanceNM' in measure && 'timeToMinimumDistanceMs' in measure
-                    ? `\r\n${measure.minimumDistanceNM.toFixed(1)}NM ${formatMs(measure.timeToMinimumDistanceMs)}`
-                    : '';
-
-            const text = `${measure.currentDistanceNM.toFixed(1)}NM${minimumDistanceText}`;
+            const text = `${currentDistanceNM.toFixed(1)}NM\n${pcd.minimumDistanceNM.toFixed(1)}NM ${formatMs(pcd.timeToMinimumDistanceMs)}`;
+            // const text = `${pcd.minimumDistanceNM.toFixed(1)}NM`
 
             const textSize = measureTextBBox(text, fontSize);
 
