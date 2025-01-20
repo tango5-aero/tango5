@@ -20,7 +20,7 @@ function CircularProgressWithLabel(props: GameProgressProps) {
     return (
         <CircleCountdown
             size={60}
-            strokeWidth={5}
+            strokeWidth={2}
             percentage={(props.progress / props.total) * 100}
             label={`${props.progress}/${props.total}`}
         />
