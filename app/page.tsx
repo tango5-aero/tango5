@@ -8,7 +8,7 @@ export default async function Page() {
 
     if (user) {
         tryCreateUser(user);
-        redirect('/progress');
+        redirect('/games');
     }
 
     return (

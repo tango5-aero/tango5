@@ -9,13 +9,13 @@ export default async function Page() {
         const unplayedScenarios = await getUnplayedScenarios(user.id);
 
         if (unplayedScenarios.length == 0) {
-            redirect('/progress');
+            redirect('/games');
         }
 
         const scenario = await getRandom(unplayedScenarios.map((s) => s.id));
 
         if (!scenario) {
-            redirect('/progress');
+            redirect('/games');
         }
 
         redirect(`/play/${scenario.id}`);
