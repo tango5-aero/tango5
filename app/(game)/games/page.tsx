@@ -1,19 +1,19 @@
 import { currentUser } from '@clerk/nextjs/server';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { Button } from '~/components/ui/button';
 import { UserGamesTable } from '~/components/users/usergames-table';
 import { getUnplayedScenarios, getUserGames } from '~/lib/db/queries';
-import { ScenarioSelect, UserGameSelect } from '~/lib/db/schema';
 
 export default async function Page() {
     const user = await currentUser();
 
-    let userGames: UserGameSelect[] = [];
-    let unplayedScenarios: ScenarioSelect[] = [];
-    if (user) {
-        userGames = await getUserGames(user.id);
-        unplayedScenarios = await getUnplayedScenarios(user.id);
+    if (!user) {
+        redirect('/');
     }
+
+    const userGames = await getUserGames(user.id);
+    const unplayedScenarios = await getUnplayedScenarios(user.id);
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center gap-6 p-6 md:p-10">
