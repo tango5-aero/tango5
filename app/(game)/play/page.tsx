@@ -1,5 +1,5 @@
 import { getRandom, getUnplayedScenarios } from '~/lib/db/queries';
-import { notFound, redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { currentUser } from '@clerk/nextjs/server';
 
 export default async function Page() {
@@ -9,17 +9,17 @@ export default async function Page() {
         const unplayedScenarios = await getUnplayedScenarios(user.id);
 
         if (unplayedScenarios.length == 0) {
-            redirect('/games');
+            redirect('/progress');
         }
 
         const scenario = await getRandom(unplayedScenarios.map((s) => s.id));
 
         if (!scenario) {
-            notFound();
+            redirect('/progress');
         }
 
         redirect(`/play/${scenario.id}`);
     }
 
-    redirect('/play/random');
+    redirect('/');
 }
