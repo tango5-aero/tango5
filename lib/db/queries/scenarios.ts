@@ -1,7 +1,8 @@
-import { eq, inArray, notInArray, sql } from 'drizzle-orm';
+import { count, eq, inArray, notInArray, sql } from 'drizzle-orm';
 import { Scenario, scenarioSchema } from '~/lib/domain/scenario';
 import { db } from '~/lib/db';
 import { ScenariosTable, UserGamesTable } from '~/lib/db/schema';
+import { TableObject } from '.';
 
 export const getScenarios = async () => {
     const res = await db.query.ScenariosTable.findMany();
@@ -54,4 +55,17 @@ export const writeScenario = async (scenario: Scenario) => {
 export const deleteScenario = async (id: number) => {
     const res = await db.delete(ScenariosTable).where(eq(ScenariosTable.id, id)).returning();
     return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
+};
+
+export const getScenariosPage = async (pageIndex: number, pageSize: number): Promise<TableObject> => {
+    try {
+        const total = await db.select({ value: count() }).from(ScenariosTable);
+        const values = await db.select().from(ScenariosTable).limit(pageSize).offset(pageIndex);
+        return {
+            count: total[0]?.value,
+            values
+        };
+    } catch {
+        return { count: 0, values: [] };
+    }
 };

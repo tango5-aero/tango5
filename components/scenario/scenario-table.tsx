@@ -5,8 +5,10 @@ import { ScenarioDeleteDialog } from '~/components/scenario/scenario-delete-dial
 import { type Scenario } from '~/lib/domain/scenario';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
-import { PropsWithoutRef } from 'react';
 import { Download, PlayIcon } from 'lucide-react';
+import { getScenariosPage } from '~/lib/db/queries';
+import { usePagination } from '~/hooks/use-pagination';
+import { useTableApi } from '~/hooks/use-table-api';
 
 export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
     {
@@ -58,6 +60,20 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
     }
 ];
 
-export const ScenariosTable = (props: PropsWithoutRef<{ scenarios: { id: number; data: Scenario }[] }>) => {
-    return <DataTable data={props.scenarios} columns={columns} initialState={{ columnVisibility: { data: false } }} />;
+export const ScenariosTable = () => {
+    const { pagination, onPaginationChange, limit, offset } = usePagination();
+
+    const { data, rowCount, loading } = useTableApi(getScenariosPage, limit, offset);
+
+    return (
+        <DataTable
+            data={data as { id: number; data: Scenario }[]}
+            rowCount={rowCount}
+            loading={loading}
+            onPaginationChange={onPaginationChange}
+            pagination={pagination}
+            columns={columns}
+            initialState={{ columnVisibility: { data: false } }}
+        />
+    );
 };

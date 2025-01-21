@@ -1,5 +1,7 @@
+import { count } from 'drizzle-orm';
 import { db } from '~/lib/db';
 import { UserSelect, UsersTable } from '~/lib/db/schema';
+import { TableObject } from '.';
 
 export const getUser = async (id: string) => {
     const res = await db.query.UsersTable.findFirst({ where: (user, { eq }) => eq(user.id, id) });
@@ -14,4 +16,17 @@ export const tryCreateUser = async (user: UserSelect) => {
 export const getUsers = async () => {
     const res = await db.query.UsersTable.findMany();
     return res;
+};
+
+export const getUsersPage = async (pageIndex: number, pageSize: number): Promise<TableObject> => {
+    try {
+        const total = await db.select({ value: count() }).from(UsersTable);
+        const values = await db.select().from(UsersTable).limit(pageSize).offset(pageIndex);
+        return {
+            count: total[0]?.value,
+            values
+        };
+    } catch {
+        return { count: 0, values: [] };
+    }
 };

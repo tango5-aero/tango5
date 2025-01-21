@@ -2,8 +2,8 @@
 
 import { ActionState } from '.';
 import { scenarioSchema } from '~/lib/domain/scenario';
-import { writeScenario } from '~/lib/db/queries';
-import { deleteScenario as deleteDBScenario } from '~/lib/db/queries';
+import { TableObject, writeScenario } from '~/lib/db/queries';
+import { deleteScenario as deleteDBScenario, getScenariosPage as getDBScenariosPage } from '~/lib/db/queries';
 
 export async function createScenario(
     _prevState: ActionState,
@@ -40,4 +40,8 @@ export async function deleteScenario(_prevState: ActionState, id: number): Promi
     }
 
     return { message: `Scenario #${id} deleted`, error: false };
+}
+
+export async function getScenariosPage(pageIndex: number, pageSize: number): Promise<TableObject> {
+    return await getDBScenariosPage(pageIndex, pageSize);
 }
