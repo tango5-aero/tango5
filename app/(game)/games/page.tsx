@@ -2,7 +2,6 @@ import { currentUser } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Button } from '~/components/ui/button';
-import { UserResetAction } from '~/components/user/user-reset-action';
 import { UserGamesTable } from '~/components/users/usergames-table';
 import { getUnplayedScenarios, getUserGames } from '~/lib/db/queries';
 
@@ -39,7 +38,6 @@ export default async function Page() {
                 <Button disabled={unplayedScenarios.length === 0} variant="outline">
                     <Link href="/play">Continue</Link>
                 </Button>
-                <UserResetAction id={user.id} />
             </div>
         </main>
     );

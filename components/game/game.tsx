@@ -108,8 +108,12 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
 
     return (
         <main>
-            <div className="fixed bottom-12 right-24 z-10 flex">
-                <Button disabled={!isGameOver} onClick={() => redirect(props.nextUrl)}>
+            <div className="fixed bottom-12 right-24 z-10">
+                <Button
+                    disabled={!isGameOver}
+                    onClick={() => redirect(props.nextUrl)}
+                    variant="default_map"
+                    size="default_map">
                     {'NEXT'}
                 </Button>
             </div>
