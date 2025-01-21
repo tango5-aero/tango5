@@ -8,6 +8,12 @@ module.exports = {
     ],
     theme: {
         extend: {
+            fontFamily: {
+                B612: ['B612'],
+                Barlow: ['Barlow'],
+                BarlowLight: ['BarlowLight'],
+                BarlowBold: ['BarlowBold']
+            },
             borderRadius: {
                 lg: 'var(--radius)',
                 md: 'calc(var(--radius) - 2px)',
@@ -43,6 +49,10 @@ module.exports = {
                 destructive: {
                     DEFAULT: 'hsl(var(--destructive))',
                     foreground: 'hsl(var(--destructive-foreground))'
+                },
+                map: {
+                    DEFAULT: 'hsl(var(--primary--map))',
+                    foreground: 'hsl(var(--primary-foreground--map))'
                 },
                 border: 'hsl(var(--border))',
                 input: 'hsl(var(--input))',
