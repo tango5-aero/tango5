@@ -11,11 +11,19 @@ import {
 import { PropsWithChildren } from 'react';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '~/components/ui/sidebar';
 import { SignedIn, UserButton } from '@clerk/nextjs';
-import { Database, Users, Gamepad2, Play, List } from 'lucide-react';
+import { Database, Users, Gamepad2, Play, List, PocketKnife } from 'lucide-react';
 import Link from 'next/link';
 import { ThemeSetting } from '~/components/theme/theme-setting';
+import { currentUser } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 
-export default function DashBoardLayout({ children }: PropsWithChildren) {
+export default async function DashBoardLayout({ children }: PropsWithChildren) {
+    const user = await currentUser();
+
+    if (!user) {
+        redirect('/');
+    }
+
     return (
         <SidebarProvider>
             <Sidebar variant="inset">
@@ -29,13 +37,14 @@ export default function DashBoardLayout({ children }: PropsWithChildren) {
                         <SidebarGroupLabel>{'User'}</SidebarGroupLabel>
                         <SidebarMenu>
                             <SidebarMenuItem>
-                                <SidebarMenuButton asChild tooltip={'scenarios'}>
+                                <SidebarMenuButton asChild tooltip={'play'}>
                                     <Link href={'/play'}>
                                         <Play />
                                         <span>{'Continue'}</span>
                                     </Link>
                                 </SidebarMenuButton>
-                                <SidebarMenuButton asChild tooltip={'scenarios'}>
+
+                                <SidebarMenuButton asChild tooltip={'games'}>
                                     <Link href={'/games'}>
                                         <Gamepad2 />
                                         <span>{'Games'}</span>
@@ -48,6 +57,15 @@ export default function DashBoardLayout({ children }: PropsWithChildren) {
                         <SidebarGroup>
                             <SidebarGroupLabel>{'Admin'}</SidebarGroupLabel>
                             <SidebarMenu>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild tooltip={'actions'}>
+                                        <Link href={'/backstage/actions'}>
+                                            <PocketKnife />
+                                            <span>{'Tools'}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+
                                 <SidebarMenuItem>
                                     <SidebarMenuButton asChild tooltip={'scenarios'}>
                                         <Link href={'/backstage/scenarios'}>
