@@ -1,5 +1,5 @@
 import { eq, inArray, notInArray, sql } from 'drizzle-orm';
-import { Scenario, scenarioSchema } from '~/lib/domain/scenario';
+import { Scenario, scenarioSchema } from '~/lib/domain/validators';
 import { db } from '~/lib/db';
 import { ScenariosTable, UserGamesTable } from '~/lib/db/schema';
 

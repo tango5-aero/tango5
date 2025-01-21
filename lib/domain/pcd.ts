@@ -1,5 +1,8 @@
 import { Flight } from './flight';
 
+const CONFLICT_DIST_THRESHOLD_NM = 5;
+const MONITOR_DIST_THRESHOLD_NM = 9;
+
 export class Pcd {
     constructor(
         public readonly firstFlight: Flight,
@@ -10,6 +13,18 @@ export class Pcd {
 
     get description() {
         return `${this.minDistanceNM.toFixed(1)}NM ${formatMs(this.timeToMinDistanceMs)}`;
+    }
+
+    get isConflict() {
+        return this.minDistanceNM <= CONFLICT_DIST_THRESHOLD_NM;
+    }
+
+    get isMonitor() {
+        return !this.isConflict && this.minDistanceNM <= MONITOR_DIST_THRESHOLD_NM;
+    }
+
+    get isSafe() {
+        return !this.isMonitor;
     }
 }
 

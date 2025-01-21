@@ -3,18 +3,17 @@
 import { useState, useEffect, type PropsWithChildren, CSSProperties, useMemo, PropsWithoutRef } from 'react';
 import MapGL, { MapProvider, Layer, Source, useMap } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
-import { Flight } from '~/lib/domain/flight';
 import { featureCollection as featureCollection } from '~/lib/domain/geojson';
 import { Scenario } from '~/lib/domain/scenario';
 import { MapEvent, MapMouseEvent } from 'mapbox-gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { destination, point, Units } from '@turf/turf';
-import { Pcd } from '~/lib/domain/pcd';
+import { Scenario as ScenarioDTO } from '~/lib/domain/validators';
 
 type ScenarioMapProps = {
     style?: CSSProperties;
-    scenario: Scenario;
+    scenario: ScenarioDTO;
     selectFlight: (id: string) => void;
     selectedFlight: string | null;
     selectedPairs: [string, string][];
@@ -24,39 +23,7 @@ type ScenarioMapProps = {
 const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
     const [zoom, setZoom] = useState<number | undefined>(undefined);
 
-    const flights = useMemo(
-        () =>
-            props.scenario.flights.map(
-                (flight) =>
-                    new Flight(
-                        flight.id,
-                        flight.latitudeDeg,
-                        flight.longitudeDeg,
-                        flight.altitudeFt,
-                        flight.callsign,
-                        flight.groundSpeedKts,
-                        flight.trackDeg,
-                        flight.verticalSpeedFtpm,
-                        flight.selectedAltitudeFt
-                    )
-            ),
-        [props.scenario.flights]
-    );
-
-    const pcds = useMemo(() => {
-        const pcds: Pcd[] = [];
-
-        for (const pcd of props.scenario.pcds) {
-            const firstFlight = flights.find((flight) => flight.id === pcd.firstId);
-            const secondFlight = flights.find((flight) => flight.id === pcd.secondId);
-
-            if (!firstFlight || !secondFlight) continue;
-
-            pcds.push(new Pcd(firstFlight, secondFlight, pcd.minDistanceNM, pcd.timeToMinDistanceMs));
-        }
-
-        return pcds;
-    }, [flights, props.scenario.pcds]);
+    const scenario = useMemo(() => new Scenario(props.scenario), [props.scenario]);
 
     const onClick = (e: MapMouseEvent) => {
         const id = e.features?.at(0)?.properties?.ref;
@@ -91,9 +58,7 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
                 <ResizeEffects bounds={props.scenario.boundaries} />
                 <Layers
                     zoom={zoom}
-                    flights={flights}
-                    pcds={pcds}
-                    solutionPairs={props.scenario.pcds.map((pcd) => [pcd.firstId, pcd.secondId])}
+                    scenario={scenario}
                     selectedFlight={props.selectedFlight}
                     selectedPairs={props.selectedPairs}
                     isGameOver={props.isGameOver}
@@ -167,9 +132,7 @@ const ResizeEffects = (props: PropsWithoutRef<{ bounds: number[] }>) => {
 
 type LayerProps = {
     zoom?: number;
-    flights: Flight[];
-    pcds: Pcd[];
-    solutionPairs: [string, string][];
+    scenario: Scenario;
     selectedFlight: string | null;
     selectedPairs: [string, string][];
     isGameOver: boolean;
@@ -198,8 +161,7 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
         const scalingFactor = props.zoom ** 2;
 
         const computedCollection = featureCollection(
-            props.flights,
-            props.pcds,
+            props.scenario,
             props.selectedFlight,
             props.selectedPairs,
             props.isGameOver,
@@ -209,16 +171,7 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
         );
 
         setCollection(computedCollection);
-    }, [
-        props.flights,
-        props.pcds,
-        props.zoom,
-        mapRef,
-        props.selectedFlight,
-        props.selectedPairs,
-        props.solutionPairs,
-        props.isGameOver
-    ]);
+    }, [props.scenario, props.zoom, mapRef, props.selectedFlight, props.selectedPairs, props.isGameOver]);
 
     return (
         <Source id="scenario-source" type="geojson" data={collection}>

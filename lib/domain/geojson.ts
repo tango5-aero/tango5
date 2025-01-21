@@ -1,12 +1,9 @@
 import type { FeatureCollection, LineString, Point, Polygon } from 'geojson';
 import { closestBorder, expand, toBBox, toPolygon } from './geometry';
 import { Movable, spread } from './spreader';
-import { Flight } from '~/lib/domain/flight';
 import { GeometryTypes } from '~/components/scenario/scenario-map';
 import { circle } from '@turf/turf';
-import { Pcd } from './pcd';
-
-const MIN_DIS_THRESHOLD_NM = 9;
+import { Scenario } from './scenario';
 
 type Props =
     | {
@@ -68,8 +65,7 @@ export function measureTextBBox(text: string, fontSize: number): { height: numbe
 }
 
 export function featureCollection(
-    flights: Flight[],
-    pcds: Pcd[],
+    scenario: Scenario,
     selectedFlight: string | null,
     selectedPairs: [string, string][],
     reveal: boolean,
@@ -89,7 +85,7 @@ export function featureCollection(
 
     const initialLabels: Movable[] = [];
 
-    for (const flight of flights) {
+    for (const flight of scenario.flights) {
         const flightPoint2D = project([flight.longitudeDeg, flight.latitudeDeg]);
         const flightPositionSquare = expand(flightPoint2D, flightBoxSize, flightBoxSize);
         const coordinates = [expand(flightPoint2D, flightBoxSize, flightBoxSize).map((point) => unproject(point))];
@@ -156,17 +152,17 @@ export function featureCollection(
     }
 
     const pairs = reveal
-        ? pcds.map((pcd) => [pcd.firstFlight.id, pcd.secondFlight.id]).concat(selectedPairs)
+        ? scenario.pcds.map((pcd) => [pcd.firstFlight.id, pcd.secondFlight.id]).concat(selectedPairs)
         : selectedPairs;
 
     for (const pair of pairs) {
-        const flight = flights.find((flight) => flight.id === pair[0]);
-        const otherFlight = flights.find((flight) => flight.id === pair[1]);
+        const flight = scenario.flights.find((flight) => flight.id === pair[0]);
+        const otherFlight = scenario.flights.find((flight) => flight.id === pair[1]);
 
         if (flight && otherFlight) {
             const id = flight < otherFlight ? `${flight.id}-${otherFlight.id}` : `${otherFlight.id}-${flight.id}`;
 
-            const pcd = pcds.find(
+            const pcd = scenario.pcds.find(
                 (pcd) =>
                     (pcd.firstFlight.id === flight.id && pcd.secondFlight.id === otherFlight.id) ||
                     (pcd.secondFlight.id === flight.id && pcd.firstFlight.id === otherFlight.id)
@@ -174,7 +170,7 @@ export function featureCollection(
 
             const currentDistanceNM = flight.distanceToNM(otherFlight);
 
-            const isPcd = pcd?.minDistanceNM ? pcd.minDistanceNM <= MIN_DIS_THRESHOLD_NM : false;
+            const isPcd = pcd?.isConflict ?? false;
 
             const text = `${currentDistanceNM.toFixed(1)}NM${pcd?.description ? `\r\n${pcd.description}` : ''}`;
 
@@ -258,7 +254,7 @@ export function featureCollection(
 
     const labelPositions = spread(initialLabels, nonOverlapping, maxMs);
 
-    for (const flight of flights) {
+    for (const flight of scenario.flights) {
         const ref = flight.id;
 
         if (flight.latitudeDeg === undefined || flight.longitudeDeg === undefined) continue;

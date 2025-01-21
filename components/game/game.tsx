@@ -2,7 +2,7 @@
 
 import { PropsWithoutRef, useEffect, useRef, useState } from 'react';
 import { ScenarioMap } from '~/components/scenario/scenario-map';
-import { Scenario } from '~/lib/domain/scenario';
+import { Scenario } from '~/lib/domain/validators';
 import { Button } from '~/components/ui/button';
 import { redirect } from 'next/navigation';
 import { completeUserGame } from '~/lib/actions';

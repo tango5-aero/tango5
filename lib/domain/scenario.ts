@@ -1,44 +1,39 @@
-import { z } from 'zod';
+import { Flight } from './flight';
+import { Pcd } from './pcd';
+import { Scenario as ScenarioDTO } from './validators';
 
-export const viewSchema = z.object({
-    longitude: z.number(),
-    latitude: z.number(),
-    zoom: z.number()
-});
+export class Scenario {
+    flights: Flight[];
+    pcds: Pcd[];
+    target: number;
 
-export type View = z.infer<typeof viewSchema>;
+    constructor(scenario: ScenarioDTO) {
+        this.flights = scenario.flights.map(
+            (flight) =>
+                new Flight(
+                    flight.id,
+                    flight.latitudeDeg,
+                    flight.longitudeDeg,
+                    flight.altitudeFt,
+                    flight.callsign,
+                    flight.groundSpeedKts,
+                    flight.trackDeg,
+                    flight.verticalSpeedFtpm,
+                    flight.selectedAltitudeFt
+                )
+        );
 
-export const boundariesSchema = z.number().array().length(4);
+        this.pcds = [];
 
-export type Boundaries = z.infer<typeof boundariesSchema>;
+        for (const pcd of scenario.pcds) {
+            const firstFlight = this.flights.find((flight) => flight.id === pcd.firstId);
+            const secondFlight = this.flights.find((flight) => flight.id === pcd.secondId);
 
-export const flightSchema = z.object({
-    id: z.string(),
-    callsign: z.string(),
-    latitudeDeg: z.number(),
-    longitudeDeg: z.number(),
-    altitudeFt: z.number(),
-    groundSpeedKts: z.number(),
-    trackDeg: z.number(),
-    verticalSpeedFtpm: z.number(),
-    selectedAltitudeFt: z.number()
-});
+            if (!firstFlight || !secondFlight) continue;
 
-export type Flight = z.infer<typeof flightSchema>;
+            this.pcds.push(new Pcd(firstFlight, secondFlight, pcd.minDistanceNM, pcd.timeToMinDistanceMs));
+        }
 
-export const pcdSchema = z.object({
-    firstId: z.string(),
-    secondId: z.string(),
-    minDistanceNM: z.number(),
-    timeToMinDistanceMs: z.number()
-});
-
-export type Pcd = z.infer<typeof pcdSchema>;
-
-export const scenarioSchema = z.object({
-    boundaries: boundariesSchema,
-    flights: flightSchema.array(),
-    pcds: pcdSchema.array()
-});
-
-export type Scenario = z.infer<typeof scenarioSchema>;
+        this.target = this.pcds.filter((pcd) => pcd.isConflict || pcd.isMonitor).length;
+    }
+}
