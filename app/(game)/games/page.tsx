@@ -13,12 +13,26 @@ export default async function Page() {
     }
 
     const userGames = await getUserGames(user.id);
+
+    // if the user hasn't played any scenarios start playing inmediately
+    if (userGames.length === 0) {
+        redirect('/play');
+    }
+
     const unplayedScenarios = await getUnplayedScenarios(user.id);
+
+    const isAllDone = unplayedScenarios.length == 0;
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center gap-6 p-6 md:p-10">
-            <h1 className="text-3xl">{'You have completed all available scenarios'}</h1>
-            <h3 className="text-xl">{'Return later to access new scenarios'}</h3>
+            {isAllDone && <h1 className="text-3xl">{'You have completed all available scenarios'}</h1>}
+            {isAllDone && <h3 className="text-xl">{'Return later to access new scenarios'}</h3>}
+
+            {!isAllDone && <h1 className="text-3xl">{`You have available scenarios`}</h1>}
+            {!isAllDone && (
+                <h3 className="text-xl">{`Keep playing to complete ${unplayedScenarios.length} remaining scenarios`}</h3>
+            )}
+
             <UserGamesTable usergames={userGames} allowDeleteGames={false} />
             <div className="flex flex-row gap-2">
                 <Button disabled={unplayedScenarios.length === 0} variant="outline">

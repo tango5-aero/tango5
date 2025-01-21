@@ -11,9 +11,9 @@ import {
 import { PropsWithChildren } from 'react';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '~/components/ui/sidebar';
 import { SignedIn, UserButton } from '@clerk/nextjs';
-import { Database, Dices, Users, Gamepad2, Play, List, PocketKnife } from 'lucide-react';
+import { Database, Users, Gamepad2, Play, List, PocketKnife } from 'lucide-react';
 import Link from 'next/link';
-import { ThemeSetting } from '../../components/theme/theme-setting';
+import { ThemeSetting } from '~/components/theme/theme-setting';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
@@ -43,12 +43,7 @@ export default async function DashBoardLayout({ children }: PropsWithChildren) {
                                         <span>{'Continue'}</span>
                                     </Link>
                                 </SidebarMenuButton>
-                                <SidebarMenuButton asChild tooltip={'random'}>
-                                    <Link href={'/play/random'}>
-                                        <Dices />
-                                        <span>{'Random'}</span>
-                                    </Link>
-                                </SidebarMenuButton>
+
                                 <SidebarMenuButton asChild tooltip={'games'}>
                                     <Link href={'/games'}>
                                         <Gamepad2 />
