@@ -1,9 +1,10 @@
-import { boolean, integer, interval, pgTable, serial, text } from 'drizzle-orm/pg-core';
+import { boolean, date, integer, interval, pgTable, serial, text } from 'drizzle-orm/pg-core';
 import { InferInsertModel, InferSelectModel } from 'drizzle-orm/table';
 
 export const ScenariosTable = pgTable('scenarios', {
     id: serial('id').primaryKey(),
-    data: text('data').notNull()
+    data: text('data').notNull(),
+    releaseDate: date('release_date')
 });
 export type ScenarioSelect = InferSelectModel<typeof ScenariosTable>;
 

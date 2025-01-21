@@ -30,7 +30,8 @@ async function main() {
                         JSON.stringify(scenarioSchema.parse(sc2)),
                         JSON.stringify(scenarioSchema.parse(sc3))
                     ]
-                })
+                }),
+                releaseDate: f.default({ defaultValue: null })
             }
         },
         UserGamesTable: {
