@@ -10,6 +10,7 @@ import { MapEvent, MapMouseEvent } from 'mapbox-gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { destination, point, Units } from '@turf/turf';
+import { Pcd } from '~/lib/domain/pcd';
 
 type ScenarioMapProps = {
     style?: CSSProperties;
@@ -26,22 +27,36 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
     const flights = useMemo(
         () =>
             props.scenario.flights.map(
-                (item) =>
+                (flight) =>
                     new Flight(
-                        item.id,
-                        item.latitudeDeg,
-                        item.longitudeDeg,
-                        item.altitudeFt,
-                        item.callsign,
-                        item.category,
-                        item.groundSpeedKts,
-                        item.trackDeg,
-                        item.verticalSpeedFtpm,
-                        item.selectedAltitudeFt
+                        flight.id,
+                        flight.latitudeDeg,
+                        flight.longitudeDeg,
+                        flight.altitudeFt,
+                        flight.callsign,
+                        flight.groundSpeedKts,
+                        flight.trackDeg,
+                        flight.verticalSpeedFtpm,
+                        flight.selectedAltitudeFt
                     )
             ),
         [props.scenario.flights]
     );
+
+    const pcds = useMemo(() => {
+        const pcds: Pcd[] = [];
+
+        for (const pcd of props.scenario.pcds) {
+            const firstFlight = flights.find((flight) => flight.id === pcd.firstId);
+            const secondFlight = flights.find((flight) => flight.id === pcd.secondId);
+
+            if (!firstFlight || !secondFlight) continue;
+
+            pcds.push(new Pcd(firstFlight, secondFlight, pcd.minDistanceNM, pcd.timeToMinDistanceMs));
+        }
+
+        return pcds;
+    }, [flights, props.scenario.pcds]);
 
     const onClick = (e: MapMouseEvent) => {
         const id = e.features?.at(0)?.properties?.ref;
@@ -77,6 +92,7 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
                 <Layers
                     zoom={zoom}
                     flights={flights}
+                    pcds={pcds}
                     solutionPairs={props.scenario.pcds.map((pcd) => [pcd.firstId, pcd.secondId])}
                     selectedFlight={props.selectedFlight}
                     selectedPairs={props.selectedPairs}
@@ -152,6 +168,7 @@ const ResizeEffects = (props: PropsWithoutRef<{ bounds: number[] }>) => {
 type LayerProps = {
     zoom?: number;
     flights: Flight[];
+    pcds: Pcd[];
     solutionPairs: [string, string][];
     selectedFlight: string | null;
     selectedPairs: [string, string][];
@@ -182,9 +199,9 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
 
         const computedCollection = featureCollection(
             props.flights,
+            props.pcds,
             props.selectedFlight,
             props.selectedPairs,
-            props.solutionPairs,
             props.isGameOver,
             scalingFactor,
             project,
@@ -194,6 +211,7 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
         setCollection(computedCollection);
     }, [
         props.flights,
+        props.pcds,
         props.zoom,
         mapRef,
         props.selectedFlight,

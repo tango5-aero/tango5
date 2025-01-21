@@ -4,6 +4,7 @@ import { Movable, spread } from './spreader';
 import { Flight } from '~/lib/domain/flight';
 import { GeometryTypes } from '~/components/scenario/scenario-map';
 import { circle } from '@turf/turf';
+import { Pcd } from './pcd';
 
 const MIN_DIS_THRESHOLD_NM = 9;
 
@@ -66,18 +67,11 @@ export function measureTextBBox(text: string, fontSize: number): { height: numbe
     return { height, width };
 }
 
-export function formatMs(millis: number): string {
-    const minutes = Math.floor(millis / 60000);
-    const seconds = (millis % 60000) / 1000;
-    return minutes + ':' + (seconds < 10 ? '0' : '') + seconds.toFixed(0);
-}
-
 export function featureCollection(
     flights: Flight[],
+    pcds: Pcd[],
     selectedFlight: string | null,
     selectedPairs: [string, string][],
-
-    solutionPairs: [string, string][],
     reveal: boolean,
     scalingFactor: number,
     project: ([lng, lat]: [number, number]) => [x: number, y: number],
@@ -154,15 +148,16 @@ export function featureCollection(
                     units: 'nauticalmiles',
                     properties: {
                         ref: flight.id,
-                        type: GeometryTypes.halo,
-                        correct: solutionPairs.some((pair) => pair.includes(flight.id))
+                        type: GeometryTypes.halo
                     }
                 })
             );
         }
     }
 
-    const pairs = reveal ? solutionPairs.concat(selectedPairs) : selectedPairs;
+    const pairs = reveal
+        ? pcds.map((pcd) => [pcd.firstFlight.id, pcd.secondFlight.id]).concat(selectedPairs)
+        : selectedPairs;
 
     for (const pair of pairs) {
         const flight = flights.find((flight) => flight.id === pair[0]);
@@ -171,15 +166,17 @@ export function featureCollection(
         if (flight && otherFlight) {
             const id = flight < otherFlight ? `${flight.id}-${otherFlight.id}` : `${otherFlight.id}-${flight.id}`;
 
-            const pcd = flight.minimizeDistanceTo(otherFlight);
+            const pcd = pcds.find(
+                (pcd) =>
+                    (pcd.firstFlight.id === flight.id && pcd.secondFlight.id === otherFlight.id) ||
+                    (pcd.secondFlight.id === flight.id && pcd.firstFlight.id === otherFlight.id)
+            );
 
             const currentDistanceNM = flight.distanceToNM(otherFlight);
 
-            const isPcd =
-                (currentDistanceNM <= MIN_DIS_THRESHOLD_NM || pcd.minimumDistanceNM <= MIN_DIS_THRESHOLD_NM) &&
-                flight.verticalIntersect(otherFlight);
+            const isPcd = pcd?.minDistanceNM ? pcd.minDistanceNM <= MIN_DIS_THRESHOLD_NM : false;
 
-            const text = `${currentDistanceNM.toFixed(1)}NM\n${pcd.minimumDistanceNM.toFixed(1)}NM ${formatMs(pcd.timeToMinimumDistanceMs)}`;
+            const text = `${currentDistanceNM.toFixed(1)}NM${pcd?.description ? `\r\n${pcd.description}` : ''}`;
 
             const textSize = measureTextBBox(text, fontSize);
 

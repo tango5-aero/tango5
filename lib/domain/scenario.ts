@@ -15,7 +15,6 @@ export type Boundaries = z.infer<typeof boundariesSchema>;
 export const flightSchema = z.object({
     id: z.string(),
     callsign: z.string(),
-    category: z.string(),
     latitudeDeg: z.number(),
     longitudeDeg: z.number(),
     altitudeFt: z.number(),
@@ -29,7 +28,9 @@ export type Flight = z.infer<typeof flightSchema>;
 
 export const pcdSchema = z.object({
     firstId: z.string(),
-    secondId: z.string()
+    secondId: z.string(),
+    minDistanceNM: z.number(),
+    timeToMinDistanceMs: z.number()
 });
 
 export type Pcd = z.infer<typeof pcdSchema>;
