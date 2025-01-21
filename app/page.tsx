@@ -14,7 +14,11 @@ export default async function Page() {
     return (
         <>
             <main className="relative z-20 flex h-screen flex-col items-center justify-center gap-2 p-6 md:p-10">
-                <h1 className="text-3xl">{'Welcome to Tango5'}</h1>
+                <div className="relative mb-14 flex h-44 flex-col items-end justify-between pl-40">
+                    <img src="/images/tango5-logo.svg" width="138" className="absolute bottom-0 left-0" />
+                    <span className="font-BarlowLight text-7xl">Welcome to</span>
+                    <img src="/images/tango5.svg" width="355" />
+                </div>
                 <p className="w-[490px] text-center font-BarlowLight text-4xl leading-10">
                     A professional enroute
                     <br />
