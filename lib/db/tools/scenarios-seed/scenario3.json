@@ -1,0 +1,126 @@
+{
+    "boundaries": [10, 46.25, 13, 47.25],
+    "flights": [
+        {
+            "id": "1926a397d21f8622b79c4edfec78967b",
+            "callsign": "DLA7EV",
+            "category": "",
+            "latitudeDeg": 46.9616025229679,
+            "longitudeDeg": 11.720270352734842,
+            "groundSpeedKts": 438,
+            "trackDeg": 183,
+            "altitudeFt": 30857,
+            "verticalSpeedFtpm": 1216,
+            "selectedAltitudeFt": 31008
+        },
+        {
+            "id": "989513c3c8c618adb028cc5439ff5627",
+            "callsign": "RYR5D",
+            "category": "",
+            "latitudeDeg": 46.80814058595838,
+            "longitudeDeg": 11.74107,
+            "groundSpeedKts": 389,
+            "trackDeg": 180,
+            "altitudeFt": 31230,
+            "verticalSpeedFtpm": -960,
+            "selectedAltitudeFt": 31008
+        },
+        {
+            "id": "24be24b8e5339e6f8dc926c2ca23e061",
+            "callsign": "DLH334",
+            "category": "A320",
+            "latitudeDeg": 46.542157158592836,
+            "longitudeDeg": 11.760816023018164,
+            "groundSpeedKts": 458,
+            "trackDeg": 166,
+            "altitudeFt": 37000,
+            "verticalSpeedFtpm": 0,
+            "selectedAltitudeFt": 36992
+        },
+        {
+            "id": "cc050a58176a89a797457e2e8241b1fd",
+            "callsign": "AUA9GE",
+            "category": "A321",
+            "latitudeDeg": 46.46310453223644,
+            "longitudeDeg": 11.684645082985604,
+            "groundSpeedKts": 412,
+            "trackDeg": 233,
+            "altitudeFt": 32321,
+            "verticalSpeedFtpm": 448,
+            "selectedAltitudeFt": 32992
+        },
+        {
+            "id": "1d31943d33b74be42845d9ca4bb3dd8d",
+            "callsign": "LWG1951",
+            "category": "DH8D",
+            "latitudeDeg": 47.03320162006796,
+            "longitudeDeg": 11.699794509885105,
+            "groundSpeedKts": 326,
+            "trackDeg": 201,
+            "altitudeFt": 23008,
+            "verticalSpeedFtpm": -1056,
+            "selectedAltitudeFt": 23008
+        },
+        {
+            "id": "4094e3659f666b52b103f59d12e178ff",
+            "callsign": "BTI683",
+            "category": "BCS3",
+            "latitudeDeg": 46.81925753361999,
+            "longitudeDeg": 12.296418304851874,
+            "groundSpeedKts": 372,
+            "trackDeg": 231,
+            "altitudeFt": 38000,
+            "verticalSpeedFtpm": -64,
+            "selectedAltitudeFt": 38016
+        },
+        {
+            "id": "cda4a930fa239903346f54228524fdff",
+            "callsign": "FDX6084",
+            "category": "",
+            "latitudeDeg": 47.07265830606181,
+            "longitudeDeg": 12.161457388012497,
+            "groundSpeedKts": 503,
+            "trackDeg": 117,
+            "altitudeFt": 33000,
+            "verticalSpeedFtpm": 0,
+            "selectedAltitudeFt": 32992
+        },
+        {
+            "id": "77ec01a4f61a64d6654d08f412a907ed",
+            "callsign": "DLH7M",
+            "category": "A321",
+            "latitudeDeg": 46.41613293898198,
+            "longitudeDeg": 11.121903272460404,
+            "groundSpeedKts": 413,
+            "trackDeg": 224,
+            "altitudeFt": 36992,
+            "verticalSpeedFtpm": 1536,
+            "selectedAltitudeFt": 36992
+        },
+        {
+            "id": "cd560c486c9a132a15b87723dff78085",
+            "callsign": "RYR8MD",
+            "category": "B738",
+            "latitudeDeg": 47.14721506997007,
+            "longitudeDeg": 11.218862424011157,
+            "groundSpeedKts": 415,
+            "trackDeg": 209,
+            "altitudeFt": 36000,
+            "verticalSpeedFtpm": -1088,
+            "selectedAltitudeFt": 36000
+        },
+        {
+            "id": "83600a8c122b4926aa920ee94f4a2693",
+            "callsign": "SIA335",
+            "category": "B77W",
+            "latitudeDeg": 47.23976353782755,
+            "longitudeDeg": 10.796990634155447,
+            "groundSpeedKts": 514,
+            "trackDeg": 104,
+            "altitudeFt": 31000,
+            "verticalSpeedFtpm": 0,
+            "selectedAltitudeFt": 31008
+        }
+    ],
+    "pcds": [{ "firstId": "989513c3c8c618adb028cc5439ff5627", "secondId": "1926a397d21f8622b79c4edfec78967b" }]
+}

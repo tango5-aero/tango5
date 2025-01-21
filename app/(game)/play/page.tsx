@@ -1,5 +1,5 @@
 import { getRandom, getUnplayedScenarios } from '~/lib/db/queries';
-import { notFound, redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { currentUser } from '@clerk/nextjs/server';
 
 export default async function Page() {
@@ -8,18 +8,20 @@ export default async function Page() {
     if (user) {
         const unplayedScenarios = await getUnplayedScenarios(user.id);
 
+        // if no remaining scenarios take the user to summary page
         if (unplayedScenarios.length == 0) {
             redirect('/games');
         }
 
         const scenario = await getRandom(unplayedScenarios.map((s) => s.id));
 
+        // this should never happen, take the user to summary page just in case
         if (!scenario) {
-            notFound();
+            redirect('/games');
         }
 
         redirect(`/play/${scenario.id}`);
     }
 
-    notFound();
+    redirect('/');
 }

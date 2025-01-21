@@ -1,0 +1,78 @@
+{
+    "boundaries": [19.75, 44.5, 21.75, 45.25],
+    "flights": [
+        {
+            "id": "d6c8d464c3e6ff6ee0acc35cbc927fec",
+            "callsign": "WZZ6010",
+            "category": "",
+            "latitudeDeg": 44.97542140069854,
+            "longitudeDeg": 20.444306938389097,
+            "groundSpeedKts": 382,
+            "trackDeg": 313,
+            "altitudeFt": 35975,
+            "verticalSpeedFtpm": 0,
+            "selectedAltitudeFt": 36000
+        },
+        {
+            "id": "0e35611e81a9614b8574334db0b3a1ad",
+            "callsign": "EZY18VH",
+            "category": "A320",
+            "latitudeDeg": 44.67413591067855,
+            "longitudeDeg": 20.33922468842282,
+            "groundSpeedKts": 390,
+            "trackDeg": 291,
+            "altitudeFt": 36000,
+            "verticalSpeedFtpm": -64,
+            "selectedAltitudeFt": 36000
+        },
+        {
+            "id": "6c99a1a34b4f3bcaf57690c4482ac785",
+            "callsign": "MSR733",
+            "category": "",
+            "latitudeDeg": 44.55593709826474,
+            "longitudeDeg": 20.56106319471907,
+            "groundSpeedKts": 383,
+            "trackDeg": 321,
+            "altitudeFt": 37000,
+            "verticalSpeedFtpm": 0,
+            "selectedAltitudeFt": 36992
+        },
+        {
+            "id": "605fe7ab3a3cb8dad940590d63fcc708",
+            "callsign": "BTI611",
+            "category": "BCS3",
+            "latitudeDeg": 44.877626013064415,
+            "longitudeDeg": 20.866702933217418,
+            "groundSpeedKts": 470,
+            "trackDeg": 158,
+            "altitudeFt": 36975,
+            "verticalSpeedFtpm": 0,
+            "selectedAltitudeFt": 36992
+        },
+        {
+            "id": "5722ea93711a79be8fa1ef2de5c79020",
+            "callsign": "WZZ1430",
+            "category": "",
+            "latitudeDeg": 44.81749688048465,
+            "longitudeDeg": 21.00520581288476,
+            "groundSpeedKts": 501,
+            "trackDeg": 96,
+            "altitudeFt": 37000,
+            "verticalSpeedFtpm": 0,
+            "selectedAltitudeFt": 36992
+        },
+        {
+            "id": "43be5e0661187a3e0c033f245b3b7e79",
+            "callsign": "THY4930",
+            "category": "",
+            "latitudeDeg": 45.21111953614458,
+            "longitudeDeg": 20.04311941851469,
+            "groundSpeedKts": 489,
+            "trackDeg": 131,
+            "altitudeFt": 39000,
+            "verticalSpeedFtpm": 0,
+            "selectedAltitudeFt": 39008
+        }
+    ],
+    "pcds": [{ "firstId": "5722ea93711a79be8fa1ef2de5c79020", "secondId": "605fe7ab3a3cb8dad940590d63fcc708" }]
+}
