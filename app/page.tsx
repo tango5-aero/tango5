@@ -30,7 +30,7 @@ export default async function Page() {
                 </p>
                 <a
                     href="/login"
-                    className="h-12 rounded-full bg-map px-8 py-2 font-BarlowBold text-2xl font-bold text-map-foreground shadow hover:bg-map/85">
+                    className="h-12 rounded-full bg-map px-8 py-2 font-BarlowBold text-2xl font-bold leading-7 text-map-foreground shadow hover:bg-map/85">
                     LOGIN
                 </a>
             </main>
