@@ -10,7 +10,7 @@ import {
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DataTablePagination } from './data-table-pagination';
-import { Loader2 } from 'lucide-react';
+import { LoadingSpinner } from './loading-spinner';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -63,10 +63,13 @@ export function DataTable<TData, TValue>({
                         </TableRow>
                     ))}
                 </TableHeader>
-
                 {loading ? (
                     <TableBody>
-                        <Loader2 />
+                        <TableRow>
+                            <TableCell colSpan={columns.length} className="flex h-32 items-center justify-center">
+                                <LoadingSpinner size={36} />
+                            </TableCell>
+                        </TableRow>
                     </TableBody>
                 ) : (
                     <TableBody>

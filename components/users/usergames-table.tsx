@@ -51,7 +51,12 @@ export const adminColumns: ColumnDef<UserGameRow>[] = [
     },
     {
         accessorKey: 'playTime',
-        header: () => <div className="text-center">Play Time</div>
+        header: () => <div className="text-center">Play Time</div>,
+        cell: ({ row }) => {
+            const playTime = row.getValue('playTime') as string;
+
+            return <div className="flex justify-end">{playTime}</div>;
+        }
     },
     {
         accessorKey: 'success',
