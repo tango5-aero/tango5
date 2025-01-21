@@ -1,6 +1,5 @@
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { Button } from '~/components/ui/button';
 import { VideoBackground } from '~/components/ui/video-background';
 import { tryCreateUser } from '~/lib/db/queries';
 
@@ -25,9 +24,11 @@ export default async function Page() {
                     Whether you’re aspiring to be an air traffic controller or just want to understand how air traffic
                     is managed, Tango5 is your ultimate online hub for all things ATC!
                 </p>
-                <Button variant="map" size="map">
+                <a
+                    href="/login"
+                    className="h-12 rounded-full bg-map px-8 py-2 font-BarlowBold text-2xl font-bold text-map-foreground shadow hover:bg-map/85">
                     LOGIN
-                </Button>
+                </a>
             </main>
             <VideoBackground />
         </>
