@@ -2,6 +2,7 @@ import { eq, inArray, notInArray, sql } from 'drizzle-orm';
 import { Scenario, scenarioSchema } from '~/lib/domain/scenario';
 import { db } from '~/lib/db';
 import { ScenariosTable, UserGamesTable } from '~/lib/db/schema';
+import { format } from 'date-fns';
 
 export const getScenarios = async () => {
     const res = await db.query.ScenariosTable.findMany();
@@ -47,6 +48,16 @@ export const getRandom = async (ids?: number[]) => {
 export const writeScenario = async (scenario: Scenario) => {
     const data = JSON.stringify(scenario);
     const res = await db.insert(ScenariosTable).values({ data }).returning();
+
+    return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
+};
+
+export const updateScenarioReleaseDate = async (id: number, releaseDate: Date) => {
+    const res = await db
+        .update(ScenariosTable)
+        .set({ releaseDate: format(releaseDate, 'yyyy-MM-dd') })
+        .where(eq(ScenariosTable.id, id))
+        .returning();
 
     return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
 };

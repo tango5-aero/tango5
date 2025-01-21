@@ -7,8 +7,9 @@ import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
 import { PropsWithoutRef } from 'react';
 import { Download, PlayIcon } from 'lucide-react';
+import { ScenarioPublishAction } from './scenario-publish-action';
 
-export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
+export const columns: ColumnDef<{ id: number; data: Scenario; releaseDate: string }>[] = [
     {
         accessorKey: 'id',
         header: () => <div className="text-right">ID</div>
@@ -34,10 +35,19 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
         }
     },
     {
+        accessorKey: 'releaseDate',
+        header: () => <div className="text-right">Release Date</div>,
+        cell: ({ row }) => {
+            const releaseDate = row.getValue('releaseDate') as string;
+            return <div className="text-center font-medium">{releaseDate ?? '-'}</div>;
+        }
+    },
+    {
         accessorKey: 'actions',
         header: () => <div className="text-right">Actions</div>,
         cell: ({ row }) => {
             const id = row.getValue('id') as number;
+            const releaseDate = row.getValue('releaseDate') as string;
             const data = row.getValue('data') as Scenario;
 
             return (
@@ -45,6 +55,7 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
                     <Link href={`/play/${id}`}>
                         <PlayIcon size={'1rem'} />
                     </Link>
+                    <ScenarioPublishAction id={id} releaseDate={releaseDate} />
                     <a
                         title={`Download scenario #${id}`}
                         href={`data:application/json,${JSON.stringify(data)}`}
@@ -58,6 +69,8 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
     }
 ];
 
-export const ScenariosTable = (props: PropsWithoutRef<{ scenarios: { id: number; data: Scenario }[] }>) => {
+export const ScenariosTable = (
+    props: PropsWithoutRef<{ scenarios: { id: number; data: Scenario; releaseDate: string }[] }>
+) => {
     return <DataTable data={props.scenarios} columns={columns} initialState={{ columnVisibility: { data: false } }} />;
 };

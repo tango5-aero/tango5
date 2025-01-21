@@ -2,8 +2,9 @@
 
 import { ActionState } from '.';
 import { scenarioSchema } from '~/lib/domain/scenario';
-import { writeScenario } from '~/lib/db/queries';
+import { updateScenarioReleaseDate, writeScenario } from '~/lib/db/queries';
 import { deleteScenario as deleteDBScenario } from '~/lib/db/queries';
+import { format } from 'date-fns';
 
 export async function createScenario(
     _prevState: ActionState,
@@ -30,6 +31,20 @@ export async function createScenario(
     }
 
     return { message: `Scenario #${result[0].id} created from ${payload.fileName}`, error: false };
+}
+
+export async function publishScenario(
+    _prevState: ActionState,
+    payload: { id: number; releaseDate: Date }
+): Promise<ActionState> {
+    const { id, releaseDate } = payload;
+    const result = await updateScenarioReleaseDate(id, releaseDate);
+
+    if (result.length === 0) {
+        return { message: `Scenario #${id} not found`, error: true };
+    }
+
+    return { message: `Scenario #${id} published for ${format(releaseDate!, 'PPP')}`, error: false };
 }
 
 export async function deleteScenario(_prevState: ActionState, id: number): Promise<ActionState> {
