@@ -1,5 +1,5 @@
-import { ScenarioUploadDialog } from '~/components/scenario/scenario-upload-dialog';
-import { ScenariosTable } from '~/components/scenario/scenario-table';
+import { ScenarioUploadDialog } from '~/components/backstage/scenario/scenario-upload-dialog';
+import { ScenariosTable } from '~/components/backstage/scenario/scenario-table';
 import { getScenarios } from '~/lib/db/queries';
 
 export default async function App() {

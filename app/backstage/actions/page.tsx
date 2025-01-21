@@ -1,5 +1,5 @@
 import { currentUser } from '@clerk/nextjs/server';
-import { UserResetAction } from '~/components/user/user-reset-action';
+import { UserResetAction } from '~/components/backstage/users/user-reset-action';
 
 export default async function App() {
     const user = await currentUser();

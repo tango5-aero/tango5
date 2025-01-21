@@ -1,9 +1,9 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { DataTable } from '~/components/ui/data-table';
+import { DataTable } from '~/components/backstage/ui/data-table';
 import { PropsWithoutRef } from 'react';
-import { UserGameDeleteDialog } from '~/components/user-game/usergame-delete-dialog';
+import { UserGameDeleteDialog } from '~/components/backstage/users/usergame-delete-dialog';
 
 type UserGameRow = {
     id: number;

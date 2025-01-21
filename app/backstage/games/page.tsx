@@ -1,4 +1,4 @@
-import { UserGamesTable } from '~/components/users/usergames-table';
+import { UserGamesTable } from '~/components/game/usergames-table';
 import { getUserGames } from '~/lib/db/queries';
 
 export default async function App() {

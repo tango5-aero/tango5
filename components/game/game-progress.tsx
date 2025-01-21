@@ -10,7 +10,7 @@ type GameProgressProps = {
 
 const GameProgress = (props: PropsWithoutRef<GameProgressProps>) => {
     return (
-        <div className="fixed left-16 top-5 z-10 select-none text-lg text-secondary transition-all hover:scale-110 dark:text-primary">
+        <div className="fixed left-16 top-5 z-10 select-none text-lg text-primary transition-all hover:scale-110">
             <CircularProgressWithLabel progress={props.progress} total={props.total} />
         </div>
     );

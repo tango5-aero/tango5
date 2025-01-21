@@ -1,8 +1,8 @@
 'use client';
 
 import { startTransition, useActionState, useEffect, useState } from 'react';
-import { Button } from '~/components/ui/button';
-import { Input } from '~/components/ui/input';
+import { Button } from '~/components/backstage/ui/button';
+import { Input } from '~/components/backstage/ui/input';
 import revalidateCacheTag, { createScenario } from '~/lib/actions';
 import { toast } from 'sonner';
 import {
@@ -14,7 +14,7 @@ import {
     DialogTitle,
     DialogTrigger,
     DialogClose
-} from '~/components/ui/dialog';
+} from '~/components/backstage/ui/dialog';
 import { FilePlus2 } from 'lucide-react';
 import { cacheTags } from '~/lib/constants';
 

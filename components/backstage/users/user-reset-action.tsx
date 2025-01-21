@@ -1,7 +1,7 @@
 'use client';
 
 import { PropsWithoutRef, startTransition, useActionState, useEffect, useState } from 'react';
-import { Button } from '~/components/ui/button';
+import { Button } from '~/components/backstage/ui/button';
 import { resetUserProgress } from '~/lib/actions';
 import {
     Dialog,
@@ -11,7 +11,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger
-} from '~/components/ui/dialog';
+} from '~/components/backstage/ui/dialog';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';

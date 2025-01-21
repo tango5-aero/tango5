@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button } from '~/components/ui/button';
+import { Button } from '~/components/backstage/ui/button';
 
 export default function Status404() {
     return (

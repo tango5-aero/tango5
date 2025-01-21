@@ -1,6 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
 import { notFound } from 'next/navigation';
-import { UsersTable } from '~/components/users/users-table';
+import { UsersTable } from '~/components/backstage/users/users-table';
 import { getUsers, getUser } from '~/lib/db/queries';
 
 export default async function App() {

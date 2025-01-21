@@ -1,9 +1,9 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { DataTable } from '~/components/ui/data-table';
+import { DataTable } from '~/components/backstage/ui/data-table';
 import { PropsWithoutRef } from 'react';
-import { UserWipeProgressDialog } from '../user/user-wipe-progress-dialog';
+import { UserWipeProgressDialog } from './user-wipe-progress-dialog';
 
 export const columns: ColumnDef<{ id: string }>[] = [
     {

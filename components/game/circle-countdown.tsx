@@ -16,14 +16,14 @@ const CircleCountdown = (props: PropsWithoutRef<CircleCountdownProps>) => {
     return (
         <svg width={props.size} height={props.size} viewBox={viewBox}>
             <circle
-                className="fill-none stroke-primary dark:stroke-secondary"
+                className="fill-none stroke-primary"
                 cx={props.size / 2}
                 cy={props.size / 2}
                 r={radius}
                 strokeWidth={`${props.strokeWidth}px`}
             />
             <circle
-                className="fill-none stroke-secondary dark:stroke-primary"
+                className="fill-none stroke-primary"
                 cx={props.size / 2}
                 cy={props.size / 2}
                 r={radius}
@@ -34,8 +34,8 @@ const CircleCountdown = (props: PropsWithoutRef<CircleCountdownProps>) => {
                     strokeDashoffset: dashOffset
                 }}
             />
-            <text className="fill-secondary dark:fill-primary" x="50%" y="50%" dy=".3em" textAnchor="middle">
-                {`${props.label}`}
+            <text className="fill-primary text-primary" x="50%" y="50%" dy=".3em" textAnchor="middle">
+                {props.label}
             </text>
         </svg>
     );

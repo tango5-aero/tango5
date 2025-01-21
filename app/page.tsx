@@ -3,6 +3,8 @@ import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { tryCreateUser } from '~/lib/db/queries';
 
+import './style.css';
+
 export default async function Page() {
     const user = await currentUser();
 

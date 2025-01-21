@@ -1,7 +1,7 @@
 'use client';
 
 import { PropsWithoutRef, startTransition, useActionState, useEffect, useState } from 'react';
-import { Button } from '~/components/ui/button';
+import { Button } from '~/components/backstage/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -10,7 +10,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger
-} from '~/components/ui/dialog';
+} from '~/components/backstage/ui/dialog';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { Trash2Icon } from 'lucide-react';
 import { cacheTags } from '~/lib/constants';

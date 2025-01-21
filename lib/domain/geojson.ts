@@ -2,7 +2,7 @@ import type { FeatureCollection, LineString, Point, Polygon } from 'geojson';
 import { closestBorder, expand, toBBox, toPolygon } from './geometry';
 import { Movable, spread } from './spreader';
 import { Flight } from '~/lib/domain/flight';
-import { GeometryTypes } from '~/components/scenario/scenario-map';
+import { GeometryTypes } from '~/components/game/game-map';
 import { circle } from '@turf/turf';
 
 const MIN_DIS_THRESHOLD_NM = 9;

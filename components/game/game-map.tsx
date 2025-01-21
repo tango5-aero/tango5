@@ -20,7 +20,7 @@ type ScenarioMapProps = {
     isGameOver: boolean;
 };
 
-const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
+const GameMap = (props: PropsWithChildren<ScenarioMapProps>) => {
     const [zoom, setZoom] = useState<number | undefined>(undefined);
 
     const flights = useMemo(
@@ -119,9 +119,9 @@ const ScaleMap = (props: PropsWithoutRef<{ latitude: number }>) => {
 
     return (
         <div className={`fixed bottom-8 left-8 z-30`} style={{ width: `${width}px` }}>
-            <div className="text-center text-sm text-secondary dark:text-primary">5NM</div>
-            <div className="h-[5px] w-full border-b-[1px] border-l-[1px] border-r-[1px] dark:border-primary"></div>
-            <div className="h-1 w-full border-l-[1px] border-r-[1px] dark:border-primary"></div>
+            <div className="text-center text-sm text-primary">5NM</div>
+            <div className="h-[5px] w-full border-b-[1px] border-l-[1px] border-r-[1px]"></div>
+            <div className="h-1 w-full border-l-[1px] border-r-[1px]"></div>
         </div>
     );
 };
@@ -317,4 +317,4 @@ const LayersIds = {
     labelAnchor: 'label-anchor'
 } as const;
 
-export { ScenarioMap, GeometryTypes };
+export { GameMap, GeometryTypes };

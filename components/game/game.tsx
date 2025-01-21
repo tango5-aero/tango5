@@ -1,9 +1,8 @@
 'use client';
 
 import { PropsWithoutRef, useEffect, useRef, useState } from 'react';
-import { ScenarioMap } from '~/components/scenario/scenario-map';
+import { GameMap } from '~/components/game/game-map';
 import { Scenario } from '~/lib/domain/scenario';
-import { Button } from '~/components/ui/button';
 import { redirect } from 'next/navigation';
 import { completeUserGame } from '~/lib/actions';
 import { GameCountdown } from './game-countdown';
@@ -108,18 +107,24 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
 
     return (
         <main>
-            <div className="fixed bottom-12 right-24 z-10 flex">
-                <Button disabled={!isGameOver} onClick={() => redirect(props.nextUrl)}>
-                    {'NEXT'}
-                </Button>
-            </div>
+            {isGameOver && (
+                <div className="fixed bottom-12 right-24 z-10">
+                    <button
+                        type="button"
+                        className="h-12 rounded-full bg-secondary-foreground px-8 py-2 text-2xl font-bold text-secondary shadow"
+                        disabled={!isGameOver}
+                        onClick={() => redirect(props.nextUrl)}>
+                        {'NEXT'}
+                    </button>
+                </div>
+            )}
             <GameProgress total={props.scenario.pcds.length} progress={selectedPairs.length} />
             <GameCountdown
                 initialCount={GAME_TIMEOUT_MS / 1000}
                 running={!isGameOver}
                 onComplete={() => setGameOver(true)}
             />
-            <ScenarioMap
+            <GameMap
                 style={{ width: '100%', height: '100dvh' }}
                 scenario={props.scenario}
                 selectFlight={selectFlight}

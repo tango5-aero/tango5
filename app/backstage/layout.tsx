@@ -7,17 +7,17 @@ import {
     SidebarMenuItem,
     SidebarProvider,
     SidebarTrigger
-} from '~/components/ui/sidebar';
+} from '~/components/backstage/ui/sidebar';
 import { PropsWithChildren } from 'react';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '~/components/ui/sidebar';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '~/components/backstage/ui/sidebar';
 import { SignedIn, UserButton } from '@clerk/nextjs';
 import { Database, Users, Gamepad2, Play, List, PocketKnife } from 'lucide-react';
 import Link from 'next/link';
-import { ThemeSetting } from '~/components/theme/theme-setting';
+import { ThemeSetting } from '~/components/backstage/theme/theme-setting';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { ThemeProvider } from 'next-themes';
-import { Toaster } from '~/components/ui/sonner';
+import { Toaster } from '~/components/backstage/ui/sonner';
 
 import './style.css';
 

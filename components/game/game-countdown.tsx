@@ -10,7 +10,7 @@ type GameCountdownProps = {
 };
 
 const renderTime = ({ remainingTime }: { remainingTime: number }) => {
-    return <div className="select-none text-lg text-secondary dark:text-primary">{remainingTime}</div>;
+    return <div className="select-none text-lg text-primary">{remainingTime}</div>;
 };
 
 const GameCountdown = (props: PropsWithoutRef<GameCountdownProps>) => {

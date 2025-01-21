@@ -1,8 +1,8 @@
 'use client';
 
 import { PropsWithoutRef, startTransition, useActionState, useEffect, useState } from 'react';
-import { Button } from '~/components/ui/button';
-import revalidateCacheTag, { deleteScenario } from '~/lib/actions';
+import { Button } from '~/components/backstage/ui/button';
+import { resetUserProgress } from '~/lib/actions';
 import {
     Dialog,
     DialogContent,
@@ -11,27 +11,25 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger
-} from '~/components/ui/dialog';
+} from '~/components/backstage/ui/dialog';
 import { DialogClose } from '@radix-ui/react-dialog';
-import { Trash2Icon } from 'lucide-react';
-import { cacheTags } from '~/lib/constants';
+import { HistoryIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
-export const ScenarioDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => {
+export const UserWipeProgressDialog = (props: PropsWithoutRef<{ id: string }>) => {
     const [open, setOpen] = useState(false);
-    const [state, action, pending] = useActionState(deleteScenario, { message: '', error: false });
+    const [state, action, pending] = useActionState(resetUserProgress, { message: '', error: false });
 
     useEffect(() => {
         if (state.message && state.error) toast.error(state.message);
         if (state.message && !state.error) toast.success(state.message);
-        revalidateCacheTag(cacheTags.scenarios);
     }, [state]);
 
     useEffect(() => {
-        if (pending) toast.info(`Deleting scenario #${props.id}`);
+        if (pending) toast.info(`Wiping progress of user #${props.id}`);
     }, [pending, props.id]);
 
-    const deleteCurrentScenario = () => {
+    const handleReset = () => {
         startTransition(async () => {
             action(props.id);
             setOpen(false);
@@ -41,19 +39,19 @@ export const ScenarioDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger>
-                <Trash2Icon size={'1rem'} />
+                <HistoryIcon size={'1rem'} />
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>{'Delete scenario'}</DialogTitle>
+                    <DialogTitle>{'Reset user'}</DialogTitle>
                     <DialogDescription>
-                        {'Are you sure you want to delete the scenario? This action can not be undone. '}
+                        {`Are you sure you want to reset the user's progress? This action cannot be undone.`}
                     </DialogDescription>
                 </DialogHeader>
 
                 <DialogFooter>
-                    <Button variant={'destructive'} disabled={pending} onClick={deleteCurrentScenario}>
-                        {pending ? 'Deleting' : 'Delete'}
+                    <Button variant={'destructive'} disabled={pending} onClick={handleReset}>
+                        {pending ? 'Resetting' : 'Reset'}
                     </Button>
                     <DialogClose asChild>
                         <Button variant={'outline'}>{'Cancel'}</Button>

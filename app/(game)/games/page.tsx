@@ -1,8 +1,8 @@
 import { currentUser } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { Button } from '~/components/ui/button';
-import { UserGamesTable } from '~/components/users/usergames-table';
+import { Button } from '~/components/backstage/ui/button';
+import { UserGamesTable } from '~/components/game/usergames-table';
 import { getUnplayedScenarios, getUserGames } from '~/lib/db/queries';
 
 export default async function Page() {

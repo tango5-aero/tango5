@@ -1,6 +1,7 @@
 import { SignedIn, SignedOut, SignIn, UserButton } from '@clerk/nextjs';
-
 import { PropsWithChildren } from 'react';
+
+import './style.css';
 
 export default function DashBoardLayout({ children }: PropsWithChildren) {
     return (

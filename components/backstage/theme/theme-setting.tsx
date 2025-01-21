@@ -7,8 +7,8 @@ import {
     SidebarMenuSub,
     SidebarMenuSubButton,
     SidebarMenuSubItem
-} from '~/components/ui/sidebar';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '~/components/ui/collapsible';
+} from '~/components/backstage/ui/sidebar';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '~/components/backstage/ui/collapsible';
 import { ChevronRight, Moon, Palette, Sun, SunMoon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
