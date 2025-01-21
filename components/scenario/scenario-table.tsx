@@ -6,7 +6,7 @@ import { type Scenario } from '~/lib/domain/scenario';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
 import { Download, PlayIcon } from 'lucide-react';
-import { getScenariosPage } from '~/lib/db/queries';
+import { getScenariosPage } from '~/lib/actions';
 import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
 
