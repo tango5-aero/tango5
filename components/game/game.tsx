@@ -9,13 +9,12 @@ import { completeUserGame } from '~/lib/actions';
 import { GameCountdown } from './game-countdown';
 import posthog from 'posthog-js';
 import { GameProgress } from './game-progress';
+import { GAME_TIMEOUT_MS } from '~/lib/constants';
 
 const posthogEvents = {
     gameStart: 'game_start',
     gameFinish: 'game_finish'
 };
-
-const GAME_TIMEOUT_MS = 30_000;
 
 const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: string }>) => {
     // Game related state

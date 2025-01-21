@@ -2,6 +2,7 @@
 
 import { PropsWithoutRef } from 'react';
 import { CircleCountdown } from './circle-countdown';
+import { GAME_INDICATOR_SIZE, GAME_INDICATOR_TRAIL_STROKE_WIDTH } from '~/lib/constants';
 
 type GameProgressProps = {
     progress: number;
@@ -17,7 +18,13 @@ const GameProgress = (props: PropsWithoutRef<GameProgressProps>) => {
 };
 
 function CircularProgressWithLabel(props: GameProgressProps) {
-    return <CircleCountdown size={60} strokeWidth={2} label={`${props.progress}/${props.total}`} />;
+    return (
+        <CircleCountdown
+            size={GAME_INDICATOR_SIZE}
+            strokeWidth={GAME_INDICATOR_TRAIL_STROKE_WIDTH}
+            label={`${props.progress}/${props.total}`}
+        />
+    );
 }
 
 export { GameProgress };
