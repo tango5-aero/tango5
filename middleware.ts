@@ -1,13 +1,18 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
+const isUserRegisteredRoute = createRouteMatcher(['/games(.*)', '/play(.*)']);
 const isBackstageRoute = createRouteMatcher(['/backstage(.*)']);
 
 export default clerkMiddleware(async (auth, req) => {
+    const rootUrl = new URL('/', req.url);
+
     if (isBackstageRoute(req) && (await auth()).sessionClaims?.metadata?.backstage !== true) {
-        const url = new URL('/', req.url);
-        return NextResponse.redirect(url);
+        return NextResponse.redirect(rootUrl);
     }
+
+    if (isUserRegisteredRoute(req))
+        await auth.protect({ unauthorizedUrl: rootUrl.toString(), unauthenticatedUrl: rootUrl.toString() });
 });
 
 export const config = {

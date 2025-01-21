@@ -1,8 +1,6 @@
 import { SignedOut, SignIn } from '@clerk/nextjs';
 import { currentUser } from '@clerk/nextjs/server';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { Button } from '~/components/ui/button';
 import { tryCreateUser } from '~/lib/db/queries';
 
 export default async function Page() {
@@ -10,8 +8,7 @@ export default async function Page() {
 
     if (user) {
         tryCreateUser(user);
-
-        redirect('/play');
+        redirect('/games');
     }
 
     return (
@@ -20,9 +17,6 @@ export default async function Page() {
             <SignedOut>
                 <SignIn routing="hash" />
             </SignedOut>
-            <Button variant="outline">
-                <Link href="/play/random">Anonymous access</Link>
-            </Button>
         </main>
     );
 }
