@@ -5,6 +5,8 @@ import { GeometryTypes } from '~/components/scenario/scenario-map';
 import { circle } from '@turf/turf';
 import { Scenario } from './scenario';
 
+type Status = 'conflict' | 'monitor' | 'clear' | undefined;
+
 type Props =
     | {
           ref: string;
@@ -24,14 +26,14 @@ type Props =
     | {
           ref: string;
           type: typeof GeometryTypes.pcdLink | typeof GeometryTypes.pcdLabel;
-          isPcd: boolean;
+          status: Status;
       }
     | {
           ref: string;
           type: typeof GeometryTypes.pcdText;
           text: string;
           fontSize: number;
-          isPcd: boolean;
+          status: Status;
       };
 
 export function measureTextBBox(text: string, fontSize: number): { height: number; width: number } {
@@ -170,7 +172,19 @@ export function featureCollection(
 
             const currentDistanceNM = flight.distanceToNM(otherFlight);
 
-            const isPcd = pcd?.isConflict ?? false;
+            let status: Status = undefined;
+
+            switch (true) {
+                case pcd?.isSafe:
+                    status = 'clear';
+                    break;
+                case pcd?.isMonitor:
+                    status = 'monitor';
+                    break;
+                case pcd?.isConflict:
+                    status = 'conflict';
+                    break;
+            }
 
             const text = `${currentDistanceNM.toFixed(1)}NM${pcd?.description ? `\r\n${pcd.description}` : ''}`;
 
@@ -209,7 +223,7 @@ export function featureCollection(
                 properties: {
                     ref: id,
                     type: GeometryTypes.pcdLink,
-                    isPcd
+                    status
                 },
                 geometry: {
                     type: 'LineString',
@@ -225,7 +239,7 @@ export function featureCollection(
                 properties: {
                     ref: id,
                     type: GeometryTypes.pcdLabel,
-                    isPcd
+                    status
                 },
                 geometry: {
                     type: 'Polygon',
@@ -240,7 +254,7 @@ export function featureCollection(
                     type: GeometryTypes.pcdText,
                     text,
                     fontSize,
-                    isPcd
+                    status
                 },
                 geometry: {
                     type: 'Point',

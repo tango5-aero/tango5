@@ -3,11 +3,13 @@ import { Pcd } from './pcd';
 import { Scenario as ScenarioDTO } from './validators';
 
 export class Scenario {
-    flights: Flight[];
-    pcds: Pcd[];
-    target: number;
+    public readonly boundaries: [number, number, number, number];
+    public readonly flights: Flight[];
+    public readonly pcds: Pcd[];
 
     constructor(scenario: ScenarioDTO) {
+        this.boundaries = scenario.boundaries as [number, number, number, number];
+
         this.flights = scenario.flights.map(
             (flight) =>
                 new Flight(
@@ -33,7 +35,29 @@ export class Scenario {
 
             this.pcds.push(new Pcd(firstFlight, secondFlight, pcd.minDistanceNM, pcd.timeToMinDistanceMs));
         }
+    }
 
-        this.target = this.pcds.filter((pcd) => pcd.isConflict || pcd.isMonitor).length;
+    get solution() {
+        return this.pcds.filter((pcd) => pcd.isMonitor || pcd.isConflict);
+    }
+
+    isSolution(solutionPairs: [string, string][]) {
+        return this.solution.every((pcd) =>
+            solutionPairs.some(
+                (pair) =>
+                    (pair[0] === pcd.firstFlight.id && pair[1] === pcd.secondFlight.id) ||
+                    (pair[0] === pcd.secondFlight.id && pair[1] === pcd.firstFlight.id)
+            )
+        );
+    }
+
+    numberCorrect(solutionPairs: [string, string][]) {
+        return this.solution.filter((conflict) =>
+            solutionPairs.some(
+                (pair) =>
+                    (pair[0] === conflict.firstFlight.id && pair[1] === conflict.secondFlight.id) ||
+                    (pair[0] === conflict.secondFlight.id && pair[1] === conflict.firstFlight.id)
+            )
+        ).length;
     }
 }

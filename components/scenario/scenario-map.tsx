@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, type PropsWithChildren, CSSProperties, useMemo, PropsWithoutRef } from 'react';
+import { useState, useEffect, type PropsWithChildren, CSSProperties, PropsWithoutRef } from 'react';
 import MapGL, { MapProvider, Layer, Source, useMap } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
 import { featureCollection as featureCollection } from '~/lib/domain/geojson';
@@ -9,11 +9,10 @@ import { MapEvent, MapMouseEvent } from 'mapbox-gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { destination, point, Units } from '@turf/turf';
-import { Scenario as ScenarioDTO } from '~/lib/domain/validators';
 
 type ScenarioMapProps = {
     style?: CSSProperties;
-    scenario: ScenarioDTO;
+    scenario: Scenario;
     selectFlight: (id: string) => void;
     selectedFlight: string | null;
     selectedPairs: [string, string][];
@@ -22,8 +21,6 @@ type ScenarioMapProps = {
 
 const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
     const [zoom, setZoom] = useState<number | undefined>(undefined);
-
-    const scenario = useMemo(() => new Scenario(props.scenario), [props.scenario]);
 
     const onClick = (e: MapMouseEvent) => {
         const id = e.features?.at(0)?.properties?.ref;
@@ -44,7 +41,7 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
             <MapGL
                 id="map"
                 mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-                initialViewState={{ bounds: props.scenario.boundaries as [number, number, number, number] }}
+                initialViewState={{ bounds: props.scenario.boundaries }}
                 style={props.style}
                 mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
                 interactive={false}
@@ -58,7 +55,7 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
                 <ResizeEffects bounds={props.scenario.boundaries} />
                 <Layers
                     zoom={zoom}
-                    scenario={scenario}
+                    scenario={props.scenario}
                     selectedFlight={props.selectedFlight}
                     selectedPairs={props.selectedPairs}
                     isGameOver={props.isGameOver}
