@@ -25,9 +25,7 @@ export const UserGamesTable = pgTable(
         playTime: interval('play_time').notNull(),
         success: boolean('success').notNull()
     },
-    (t) => ({
-        unique: unique('unique_id').on(t.userId, t.scenarioId)
-    })
+    (t) => [unique('unique_id').on(t.userId, t.scenarioId)]
 );
 export type UserGameInsert = InferInsertModel<typeof UserGamesTable>;
 export type UserGameSelect = InferSelectModel<typeof UserGamesTable>;
