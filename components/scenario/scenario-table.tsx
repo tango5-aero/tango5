@@ -2,13 +2,17 @@
 
 import Link from 'next/link';
 import { ScenarioDeleteDialog } from '~/components/scenario/scenario-delete-dialog';
-import { type Scenario } from '~/lib/domain/scenario';
+import { type ScenarioData } from '~/lib/domain/scenario';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
 import { PropsWithoutRef } from 'react';
 import { Download, PlayIcon } from 'lucide-react';
+import { ScenarioReleaseDateDialog } from './scenario-release-date-dialog';
+import { ScenarioSelect } from '~/lib/db/schema';
 
-export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
+type ScenarioType = Omit<ScenarioSelect, 'data'> & { data: ScenarioData };
+
+export const columns: ColumnDef<ScenarioType>[] = [
     {
         accessorKey: 'id',
         header: () => <div className="text-right">ID</div>
@@ -20,17 +24,25 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
         accessorKey: 'flights',
         header: () => <div className="text-right">Flights</div>,
         cell: ({ row }) => {
-            const scenario = row.getValue('data') as Scenario;
+            const scenarioData = row.getValue('data') as ScenarioData;
 
-            return <div className="text-right font-medium">{scenario.flights.length}</div>;
+            return <div className="text-right font-medium">{scenarioData.flights.length}</div>;
         }
     },
     {
         accessorKey: 'pcds',
         header: () => <div className="text-right">PCDs</div>,
         cell: ({ row }) => {
-            const scenario = row.getValue('data') as Scenario;
-            return <div className="text-right font-medium">{scenario.pcds.length}</div>;
+            const scenarioData = row.getValue('data') as ScenarioData;
+            return <div className="text-right font-medium">{scenarioData.pcds.length}</div>;
+        }
+    },
+    {
+        accessorKey: 'releaseDate',
+        header: () => <div className="text-right">Release Date</div>,
+        cell: ({ row }) => {
+            const releaseDate = row.getValue('releaseDate') as string;
+            return <div className="text-center font-medium">{releaseDate ?? '-'}</div>;
         }
     },
     {
@@ -38,13 +50,15 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
         header: () => <div className="text-right">Actions</div>,
         cell: ({ row }) => {
             const id = row.getValue('id') as number;
-            const data = row.getValue('data') as Scenario;
+            const releaseDate = row.getValue('releaseDate') as string;
+            const data = row.getValue('data') as ScenarioData;
 
             return (
                 <div className="flex flex-row gap-2">
                     <Link href={`/play/${id}`}>
                         <PlayIcon size={'1rem'} />
                     </Link>
+                    <ScenarioReleaseDateDialog id={id} releaseDate={releaseDate} />
                     <a
                         title={`Download scenario #${id}`}
                         href={`data:application/json,${JSON.stringify(data)}`}
@@ -58,6 +72,8 @@ export const columns: ColumnDef<{ id: number; data: Scenario }>[] = [
     }
 ];
 
-export const ScenariosTable = (props: PropsWithoutRef<{ scenarios: { id: number; data: Scenario }[] }>) => {
+export const ScenariosTable = (
+    props: PropsWithoutRef<{ scenarios: { id: number; data: ScenarioData; releaseDate: string | null }[] }>
+) => {
     return <DataTable data={props.scenarios} columns={columns} initialState={{ columnVisibility: { data: false } }} />;
 };

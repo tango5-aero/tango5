@@ -1,7 +1,8 @@
 import { eq, inArray, notInArray, sql } from 'drizzle-orm';
-import { Scenario, scenarioSchema } from '~/lib/domain/scenario';
+import { ScenarioData, scenarioSchema } from '~/lib/domain/scenario';
 import { db } from '~/lib/db';
 import { ScenariosTable, UserGamesTable } from '~/lib/db/schema';
+import { format } from 'date-fns';
 
 export const getScenarios = async () => {
     const res = await db.query.ScenariosTable.findMany();
@@ -44,9 +45,19 @@ export const getRandom = async (ids?: number[]) => {
     return first ? { ...first, data: scenarioSchema.parse(JSON.parse(first.data)) } : first;
 };
 
-export const writeScenario = async (scenario: Scenario) => {
-    const data = JSON.stringify(scenario);
+export const writeScenario = async (scenarioData: ScenarioData) => {
+    const data = JSON.stringify(scenarioData);
     const res = await db.insert(ScenariosTable).values({ data }).returning();
+
+    return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
+};
+
+export const updateScenarioReleaseDate = async (id: number, releaseDate: Date | undefined) => {
+    const res = await db
+        .update(ScenariosTable)
+        .set({ releaseDate: releaseDate ? format(releaseDate, 'yyyy-MM-dd') : null })
+        .where(eq(ScenariosTable.id, id))
+        .returning();
 
     return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
 };
