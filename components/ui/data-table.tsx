@@ -66,8 +66,10 @@ export function DataTable<TData, TValue>({
                 {loading ? (
                     <TableBody>
                         <TableRow>
-                            <TableCell colSpan={columns.length} className="flex h-32 items-center justify-center">
-                                <LoadingSpinner size={36} />
+                            <TableCell colSpan={columns.length} className="h-32 text-center">
+                                <div className="flex h-full w-full items-center justify-center">
+                                    <LoadingSpinner size={36} />
+                                </div>
                             </TableCell>
                         </TableRow>
                     </TableBody>
