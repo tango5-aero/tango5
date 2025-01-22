@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { VideoBackground } from '~/components/ui/video-background';
 import { WelcomeTango5Title } from '~/components/ui/welcome-tango5-title';
 
@@ -15,11 +16,11 @@ export default async function Page() {
                     Whether you’re aspiring to be an air traffic controller or just want to understand how air traffic
                     is managed, Tango5 is your ultimate online hub for all things ATC!
                 </p>
-                <a
+                <Link
                     href="/login"
                     className="h-12 rounded-full bg-map px-8 py-2 font-BarlowBold text-2xl font-bold leading-7 text-map-foreground shadow hover:bg-map/85">
                     LOGIN
-                </a>
+                </Link>
             </main>
             <VideoBackground />
         </>
