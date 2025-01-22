@@ -52,10 +52,10 @@ export const writeScenario = async (scenarioData: ScenarioData) => {
     return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
 };
 
-export const updateScenarioReleaseDate = async (id: number, releaseDate: Date) => {
+export const updateScenarioReleaseDate = async (id: number, releaseDate: Date | undefined) => {
     const res = await db
         .update(ScenariosTable)
-        .set({ releaseDate: format(releaseDate, 'yyyy-MM-dd') })
+        .set({ releaseDate: releaseDate ? format(releaseDate, 'yyyy-MM-dd') : null })
         .where(eq(ScenariosTable.id, id))
         .returning();
 

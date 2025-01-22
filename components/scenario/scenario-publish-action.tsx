@@ -26,7 +26,6 @@ export const ScenarioPublishAction = (props: PropsWithoutRef<{ id: number; relea
     }, [pending, props.id, date]);
 
     const publishCurrentScenario = () => {
-        if (!date) return;
         startTransition(async () => {
             action({ id: props.id, releaseDate: date });
             setOpen(false);

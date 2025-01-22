@@ -35,7 +35,7 @@ export async function createScenario(
 
 export async function publishScenario(
     _prevState: ActionState,
-    payload: { id: number; releaseDate: Date }
+    payload: { id: number; releaseDate: Date | undefined }
 ): Promise<ActionState> {
     const { id, releaseDate } = payload;
     const result = await updateScenarioReleaseDate(id, releaseDate);
@@ -44,7 +44,12 @@ export async function publishScenario(
         return { message: `Scenario #${id} not found`, error: true };
     }
 
-    return { message: `Scenario #${id} published for ${format(releaseDate!, 'PPP')}`, error: false };
+    return {
+        message: releaseDate
+            ? `Scenario #${id} published for ${format(releaseDate, 'PPP')}`
+            : `Cleared release date for scenario #${id}`,
+        error: false
+    };
 }
 
 export async function deleteScenario(_prevState: ActionState, id: number): Promise<ActionState> {
