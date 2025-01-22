@@ -8,8 +8,11 @@ import { DataTable } from '~/components/ui/data-table';
 import { PropsWithoutRef } from 'react';
 import { Download, PlayIcon } from 'lucide-react';
 import { ScenarioPublishAction } from './scenario-publish-action';
+import { ScenarioSelect } from '~/lib/db/schema';
 
-export const columns: ColumnDef<{ id: number; data: Scenario; releaseDate: string }>[] = [
+type ScenarioType = Omit<ScenarioSelect, 'data'> & { data: Scenario };
+
+export const columns: ColumnDef<ScenarioType>[] = [
     {
         accessorKey: 'id',
         header: () => <div className="text-right">ID</div>
@@ -70,7 +73,7 @@ export const columns: ColumnDef<{ id: number; data: Scenario; releaseDate: strin
 ];
 
 export const ScenariosTable = (
-    props: PropsWithoutRef<{ scenarios: { id: number; data: Scenario; releaseDate: string }[] }>
+    props: PropsWithoutRef<{ scenarios: { id: number; data: Scenario; releaseDate: string | null }[] }>
 ) => {
     return <DataTable data={props.scenarios} columns={columns} initialState={{ columnVisibility: { data: false } }} />;
 };
