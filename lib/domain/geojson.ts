@@ -154,7 +154,7 @@ export function featureCollection(
     }
 
     const pairs = reveal
-        ? scenario.pcds.map((pcd) => [pcd.firstFlight.id, pcd.secondFlight.id]).concat(selectedPairs)
+        ? scenario.solution.map((pcd) => [pcd.firstFlight.id, pcd.secondFlight.id]).concat(selectedPairs)
         : selectedPairs;
 
     for (const pair of pairs) {
@@ -173,20 +173,26 @@ export function featureCollection(
             const currentDistanceNM = flight.distanceToNM(otherFlight);
 
             let status: Status = undefined;
+            let statusText: string;
 
             switch (true) {
                 case pcd?.isSafe:
                     status = 'clear';
+                    statusText = 'GOOD TO GO';
                     break;
                 case pcd?.isMonitor:
                     status = 'monitor';
+                    statusText = 'MONITOR';
                     break;
                 case pcd?.isConflict:
                     status = 'conflict';
+                    statusText = 'CONFLICT';
                     break;
+                default:
+                    statusText = 'GOOD TO GO';
             }
 
-            const text = `${currentDistanceNM.toFixed(1)}NM${pcd?.description ? `\r\n${pcd.description}` : ''}`;
+            const text = `${statusText}\n${currentDistanceNM.toFixed(1)}NM${pcd?.description ? `\r\n${pcd.description}` : ''}`;
 
             const textSize = measureTextBBox(text, fontSize);
 

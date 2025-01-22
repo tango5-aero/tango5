@@ -206,8 +206,17 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
                 id={LayersIds.pcdLine}
                 type="line"
                 paint={{
-                    'line-color': ['case', ['boolean', ['get', 'isPcd'], true], '#D45D08', '#841212'],
-                    'line-dasharray': ['case', ['boolean', ['get', 'isPcd'], true], [1], [6, 4]]
+                    'line-color': [
+                        'match',
+                        ['get', 'status'],
+                        'conflict',
+                        '#D45D08',
+                        'monitor',
+                        '#D45D08',
+                        'clear',
+                        '#456C0F',
+                        '#456C0F'
+                    ]
                 }}
                 filter={['==', ['get', 'type'], GeometryTypes.pcdLink]}
                 beforeId={LayersIds.positionFill}
@@ -217,7 +226,17 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
                 type="fill"
                 paint={{
                     'fill-opacity': 1,
-                    'fill-color': ['case', ['boolean', ['get', 'isPcd'], true], '#8BA863', '#841212']
+                    'fill-color': [
+                        'match',
+                        ['get', 'status'],
+                        'conflict',
+                        '#D45D08',
+                        'monitor',
+                        '#D45D08',
+                        'clear',
+                        '#456C0F',
+                        '#456C0F'
+                    ]
                 }}
                 filter={['==', ['get', 'type'], GeometryTypes.pcdLabel]}
             />
@@ -233,7 +252,19 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
                     'text-size': ['get', 'fontSize'],
                     'text-rotation-alignment': 'viewport'
                 }}
-                paint={{ 'text-color': ['case', ['boolean', ['get', 'isPcd'], true], '#13151A', '#C9CDD0'] }}
+                paint={{
+                    'text-color': [
+                        'match',
+                        ['get', 'status'],
+                        'conflict',
+                        '#13151A',
+                        'monitor',
+                        '#13151A',
+                        'clear',
+                        '#C9CDD0',
+                        '#C9CDD0'
+                    ]
+                }}
             />
             <Layer
                 id={LayersIds.labelFill}
