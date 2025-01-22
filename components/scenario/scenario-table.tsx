@@ -67,7 +67,7 @@ export const ScenariosTable = () => {
 
     return (
         <DataTable
-            data={data as { id: number; data: Scenario }[]}
+            data={data}
             rowCount={rowCount}
             loading={loading}
             onPaginationChange={onPaginationChange}

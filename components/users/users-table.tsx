@@ -31,7 +31,7 @@ export const UsersTable = () => {
 
     return (
         <DataTable
-            data={data as { id: string }[]}
+            data={data}
             rowCount={rowCount}
             loading={loading}
             onPaginationChange={onPaginationChange}

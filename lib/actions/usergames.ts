@@ -2,7 +2,7 @@
 
 import { Duration } from 'luxon';
 import { currentUser } from '@clerk/nextjs/server';
-import { getUserGames, TableObject } from '~/lib/db/queries';
+import { getUserGames } from '~/lib/db/queries';
 import {
     deleteUserGame as deleteDBUserGame,
     writeUserGame,
@@ -55,6 +55,6 @@ export async function resetUserProgress(_prevState: ActionState, userId: string)
     return { message: `Games for user #${userId} deleted`, error: false };
 }
 
-export async function getUserGamesPage(pageIndex: number, pageSize: number): Promise<TableObject> {
+export async function getUserGamesPage(pageIndex: number, pageSize: number) {
     return await getDBUserGamesPage(pageIndex, pageSize);
 }

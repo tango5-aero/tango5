@@ -92,7 +92,7 @@ export const UserGamesTable = (props: PropsWithoutRef<UserGamesTableProps>) => {
 
     return (
         <DataTable
-            data={data as UserGameRow[]}
+            data={data}
             rowCount={rowCount}
             loading={loading}
             onPaginationChange={onPaginationChange}
