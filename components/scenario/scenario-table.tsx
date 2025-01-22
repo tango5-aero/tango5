@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ScenarioDeleteDialog } from '~/components/scenario/scenario-delete-dialog';
-import { type Scenario } from '~/lib/domain/scenario';
+import { type ScenarioData } from '~/lib/domain/scenario';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
 import { PropsWithoutRef } from 'react';
@@ -10,7 +10,7 @@ import { Download, PlayIcon } from 'lucide-react';
 import { ScenarioPublishAction } from './scenario-publish-action';
 import { ScenarioSelect } from '~/lib/db/schema';
 
-type ScenarioType = Omit<ScenarioSelect, 'data'> & { data: Scenario };
+type ScenarioType = Omit<ScenarioSelect, 'data'> & { data: ScenarioData };
 
 export const columns: ColumnDef<ScenarioType>[] = [
     {
@@ -24,17 +24,17 @@ export const columns: ColumnDef<ScenarioType>[] = [
         accessorKey: 'flights',
         header: () => <div className="text-right">Flights</div>,
         cell: ({ row }) => {
-            const scenario = row.getValue('data') as Scenario;
+            const scenarioData = row.getValue('data') as ScenarioData;
 
-            return <div className="text-right font-medium">{scenario.flights.length}</div>;
+            return <div className="text-right font-medium">{scenarioData.flights.length}</div>;
         }
     },
     {
         accessorKey: 'pcds',
         header: () => <div className="text-right">PCDs</div>,
         cell: ({ row }) => {
-            const scenario = row.getValue('data') as Scenario;
-            return <div className="text-right font-medium">{scenario.pcds.length}</div>;
+            const scenarioData = row.getValue('data') as ScenarioData;
+            return <div className="text-right font-medium">{scenarioData.pcds.length}</div>;
         }
     },
     {
@@ -51,7 +51,7 @@ export const columns: ColumnDef<ScenarioType>[] = [
         cell: ({ row }) => {
             const id = row.getValue('id') as number;
             const releaseDate = row.getValue('releaseDate') as string;
-            const data = row.getValue('data') as Scenario;
+            const data = row.getValue('data') as ScenarioData;
 
             return (
                 <div className="flex flex-row gap-2">
@@ -73,7 +73,7 @@ export const columns: ColumnDef<ScenarioType>[] = [
 ];
 
 export const ScenariosTable = (
-    props: PropsWithoutRef<{ scenarios: { id: number; data: Scenario; releaseDate: string | null }[] }>
+    props: PropsWithoutRef<{ scenarios: { id: number; data: ScenarioData; releaseDate: string | null }[] }>
 ) => {
     return <DataTable data={props.scenarios} columns={columns} initialState={{ columnVisibility: { data: false } }} />;
 };
