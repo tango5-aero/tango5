@@ -1,5 +1,5 @@
 {
-    "id": "ab71644e-5346-4335-b9ee-858bb284fa86",
+    "id": "55284aa3-6263-4ec0-9da9-722706cabfee",
     "prevId": "93ebea2d-a938-4b59-b59e-2dedafa7c7e4",
     "version": "7",
     "dialect": "postgresql",
@@ -19,12 +19,6 @@
                     "type": "text",
                     "primaryKey": false,
                     "notNull": true
-                },
-                "release_date": {
-                    "name": "release_date",
-                    "type": "date",
-                    "primaryKey": false,
-                    "notNull": false
                 }
             },
             "indexes": {},
@@ -92,7 +86,13 @@
                 }
             },
             "compositePrimaryKeys": {},
-            "uniqueConstraints": {},
+            "uniqueConstraints": {
+                "unique_id": {
+                    "name": "unique_id",
+                    "nullsNotDistinct": false,
+                    "columns": ["user_id", "scenario_id"]
+                }
+            },
             "policies": {},
             "checkConstraints": {},
             "isRLSEnabled": false
