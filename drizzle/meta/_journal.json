@@ -8,6 +8,13 @@
             "when": 1736963227427,
             "tag": "0000_wealthy_toro",
             "breakpoints": true
+        },
+        {
+            "idx": 1,
+            "version": "7",
+            "when": 1737539286074,
+            "tag": "0001_yellow_grandmaster",
+            "breakpoints": true
         }
     ]
 }
