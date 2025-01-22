@@ -7,7 +7,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
 import { PropsWithoutRef } from 'react';
 import { Download, PlayIcon } from 'lucide-react';
-import { ScenarioPublishAction } from './scenario-publish-action';
+import { ScenarioReleaseDateDialog } from './scenario-release-date-dialog';
 import { ScenarioSelect } from '~/lib/db/schema';
 
 type ScenarioType = Omit<ScenarioSelect, 'data'> & { data: ScenarioData };
@@ -58,7 +58,7 @@ export const columns: ColumnDef<ScenarioType>[] = [
                     <Link href={`/play/${id}`}>
                         <PlayIcon size={'1rem'} />
                     </Link>
-                    <ScenarioPublishAction id={id} releaseDate={releaseDate} />
+                    <ScenarioReleaseDateDialog id={id} releaseDate={releaseDate} />
                     <a
                         title={`Download scenario #${id}`}
                         href={`data:application/json,${JSON.stringify(data)}`}

@@ -33,7 +33,7 @@ export async function createScenario(
     return { message: `Scenario #${result[0].id} created from ${payload.fileName}`, error: false };
 }
 
-export async function publishScenario(
+export async function setScenarioReleaseDate(
     _prevState: ActionState,
     payload: { id: number; releaseDate: Date | undefined }
 ): Promise<ActionState> {
@@ -46,7 +46,7 @@ export async function publishScenario(
 
     return {
         message: releaseDate
-            ? `Scenario #${id} published for ${format(releaseDate, 'PPP')}`
+            ? `Set a new release date for scenario #${id} - ${format(releaseDate, 'PPP')}`
             : `Cleared release date for scenario #${id}`,
         error: false
     };
