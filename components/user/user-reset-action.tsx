@@ -15,11 +15,15 @@ import {
 import { DialogClose } from '@radix-ui/react-dialog';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { TimerReset } from 'lucide-react';
 
 export const UserResetAction = (props: PropsWithoutRef<{ id: string }>) => {
     const router = useRouter();
     const [open, setOpen] = useState(false);
-    const [state, action, pending] = useActionState(resetUserProgress, { message: '', error: false });
+    const [state, action, pending] = useActionState(resetUserProgress, {
+        message: '',
+        error: false
+    });
 
     useEffect(() => {
         if (state.message && state.error) toast.error(state.message);
@@ -43,7 +47,10 @@ export const UserResetAction = (props: PropsWithoutRef<{ id: string }>) => {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant={'destructive'}>{'Start over'}</Button>
+                <Button variant="destructive">
+                    <TimerReset />
+                    <span>{'Reset my progress'}</span>
+                </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>

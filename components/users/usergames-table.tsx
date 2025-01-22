@@ -43,7 +43,14 @@ export const adminColumns: ColumnDef<UserGameRow>[] = [
     },
     {
         accessorKey: 'userId',
-        header: () => <div className="text-center">User ID</div>
+        header: () => <div className="text-center">User ID</div>,
+        cell: ({ row }) => (
+            <div
+                className="max-w-20 overflow-hidden text-ellipsis text-center md:max-w-32 lg:max-w-none lg:overflow-auto"
+                title={row.original.userId}>
+                {row.original.userId}
+            </div>
+        )
     },
     {
         accessorKey: 'scenarioId',
