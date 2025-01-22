@@ -22,7 +22,7 @@ export const ScenarioPublishAction = (props: PropsWithoutRef<{ id: number; relea
     }, [state]);
 
     useEffect(() => {
-        if (pending) toast.info(`Publishing scenario #${props.id}...`);
+        if (pending) toast.info(date ? `Publishing scenario #${props.id}...` : `Unpublishing scenario #${props.id}...`);
     }, [pending, props.id, date]);
 
     const publishCurrentScenario = () => {
