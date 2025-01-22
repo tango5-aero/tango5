@@ -9,13 +9,12 @@ import { completeUserGame } from '~/lib/actions';
 import { GameCountdown } from './game-countdown';
 import posthog from 'posthog-js';
 import { GameProgress } from './game-progress';
+import { GAME_TIMEOUT_MS } from '~/lib/constants';
 
 const posthogEvents = {
     gameStart: 'game_start',
     gameFinish: 'game_finish'
 };
-
-const GAME_TIMEOUT_MS = 30_000;
 
 const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: string }>) => {
     // Game related state
@@ -109,11 +108,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
     return (
         <main>
             <div className="fixed bottom-12 right-24 z-10">
-                <Button
-                    disabled={!isGameOver}
-                    onClick={() => redirect(props.nextUrl)}
-                    variant="default_map"
-                    size="default_map">
+                <Button disabled={!isGameOver} onClick={() => redirect(props.nextUrl)} variant="map" size="map">
                     {'NEXT'}
                 </Button>
             </div>

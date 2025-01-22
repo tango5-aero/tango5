@@ -18,7 +18,10 @@ async function main() {
     console.log('🌱 Seeding database...');
     await seed(db, schema).refine((f) => ({
         UsersTable: {
-            count: 5
+            count: 5,
+            with: {
+                UserGamesTable: 1
+            }
         },
         ScenariosTable: {
             count: 3,
@@ -34,7 +37,6 @@ async function main() {
             }
         },
         UserGamesTable: {
-            count: 10,
             columns: {
                 playTime: f.valuesFromArray({
                     values: times
