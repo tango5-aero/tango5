@@ -20,7 +20,7 @@ export class Pcd {
     }
 
     get isMonitor() {
-        return !this.isConflict && this.minDistanceNM <= this.monitor_distance_threshold_nm;
+        return this.minDistanceNM <= this.monitor_distance_threshold_nm;
     }
 
     get isSafe() {
