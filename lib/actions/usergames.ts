@@ -11,6 +11,8 @@ import {
 } from '~/lib/db/queries';
 import { UserGameInsert } from '~/lib/db/schema';
 import { ActionState } from '.';
+import { unstable_cache } from 'next/cache';
+import { cacheTags } from '~/lib/constants';
 
 export async function completeUserGame(scenarioId: number, playTimeMs: number, success: boolean) {
     const user = await currentUser();
@@ -55,6 +57,11 @@ export async function resetUserProgress(_prevState: ActionState, userId: string)
     return { message: `Games for user #${userId} deleted`, error: false };
 }
 
+const getCachedUserGamesPage = unstable_cache(
+    async (pageIndex, pageSize) => getDBUserGamesPage(pageIndex, pageSize),
+    [cacheTags.userGames]
+);
+
 export async function getUserGamesPage(pageIndex: number, pageSize: number) {
-    return await getDBUserGamesPage(pageIndex, pageSize);
+    return await getCachedUserGamesPage(pageIndex, pageSize);
 }

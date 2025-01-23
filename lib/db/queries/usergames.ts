@@ -31,7 +31,12 @@ export const deleteUserGames = async (userId: string) => {
 export const getUserGamesPage = async (pageIndex: number, pageSize: number) => {
     try {
         const total = await db.select({ value: count() }).from(UserGamesTable);
-        const values = await db.select().from(UserGamesTable).limit(pageSize).offset(pageIndex);
+        const values = await db
+            .select()
+            .from(UserGamesTable)
+            .orderBy(UserGamesTable.id)
+            .limit(pageSize)
+            .offset(pageIndex);
         return {
             count: total[0]?.value,
             values

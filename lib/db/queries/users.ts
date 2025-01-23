@@ -20,7 +20,7 @@ export const getUsers = async () => {
 export const getUsersPage = async (pageIndex: number, pageSize: number) => {
     try {
         const total = await db.select({ value: count() }).from(UsersTable);
-        const values = await db.select().from(UsersTable).limit(pageSize).offset(pageIndex);
+        const values = await db.select().from(UsersTable).orderBy(UsersTable.id).limit(pageSize).offset(pageIndex);
         return {
             count: total[0]?.value,
             values

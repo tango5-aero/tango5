@@ -1,6 +1,7 @@
 export const cacheTags = {
     userGames: 'usergames',
-    scenarios: 'scenarios'
+    scenarios: 'scenarios',
+    users: 'users'
 };
 
 export const GAME_INDICATOR_SIZE = 60;

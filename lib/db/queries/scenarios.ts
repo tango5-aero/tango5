@@ -69,7 +69,12 @@ export const deleteScenario = async (id: number) => {
 export const getScenariosPage = async (pageIndex: number, pageSize: number) => {
     try {
         const total = await db.select({ value: count() }).from(ScenariosTable);
-        const values = await db.select().from(ScenariosTable).limit(pageSize).offset(pageIndex);
+        const values = await db
+            .select()
+            .from(ScenariosTable)
+            .orderBy(ScenariosTable.id)
+            .limit(pageSize)
+            .offset(pageIndex);
         return {
             count: total[0]?.value,
             values: values.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }))
