@@ -2,8 +2,7 @@
 
 import { PropsWithoutRef, useEffect, useMemo, useRef, useState } from 'react';
 import { ScenarioMap } from '~/components/scenario/scenario-map';
-import { Scenario } from '~/lib/domain/scenario';
-import { Scenario as ScenarioData } from '~/lib/domain/validators';
+import { ScenarioData } from '~/lib/domain/validators';
 import { Button } from '~/components/ui/button';
 import { redirect } from 'next/navigation';
 import { completeUserGame } from '~/lib/actions';
@@ -11,14 +10,15 @@ import { GameCountdown } from './game-countdown';
 import posthog from 'posthog-js';
 import { GameProgress } from './game-progress';
 import { GAME_TIMEOUT_MS } from '~/lib/constants';
+import { Scenario } from '~/lib/domain/scenario';
 
 const posthogEvents = {
     gameStart: 'game_start',
     gameFinish: 'game_finish'
 };
 
-const Game = (props: PropsWithoutRef<{ id: number; scenario: ScenarioData; nextUrl: string }>) => {
-    const scenario = useMemo(() => new Scenario(props.scenario), [props.scenario]);
+const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; nextUrl: string }>) => {
+    const scenario = useMemo(() => new Scenario(props.scenarioData), [props.scenarioData]);
 
     // Game related state
     const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
@@ -64,7 +64,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: ScenarioData; nextU
             return;
         }
 
-        const flight = props.scenario.flights.find((flight) => flight.id === id);
+        const flight = props.scenarioData.flights.find((flight) => flight.id === id);
 
         // this should never happen, fail silently
         if (!flight) return;

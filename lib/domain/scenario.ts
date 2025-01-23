@@ -1,13 +1,13 @@
 import { Flight } from './flight';
 import { Pcd } from './pcd';
-import { Scenario as ScenarioDTO } from './validators';
+import { ScenarioData } from './validators';
 
 export class Scenario {
     public readonly boundaries: [number, number, number, number];
     public readonly flights: Flight[];
     public readonly pcds: Pcd[];
 
-    constructor(scenario: ScenarioDTO) {
+    constructor(scenario: ScenarioData) {
         this.boundaries = scenario.boundaries as [number, number, number, number];
 
         this.flights = scenario.flights.map(

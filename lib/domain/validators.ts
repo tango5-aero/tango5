@@ -1,18 +1,8 @@
 import { z } from 'zod';
 
-export const viewSchema = z.object({
-    longitude: z.number(),
-    latitude: z.number(),
-    zoom: z.number()
-});
+const boundariesSchema = z.number().array().length(4);
 
-export type View = z.infer<typeof viewSchema>;
-
-export const boundariesSchema = z.number().array().length(4);
-
-export type Boundaries = z.infer<typeof boundariesSchema>;
-
-export const flightSchema = z.object({
+const flightSchema = z.object({
     id: z.string(),
     callsign: z.string(),
     latitudeDeg: z.number(),
@@ -24,16 +14,12 @@ export const flightSchema = z.object({
     selectedAltitudeFt: z.number()
 });
 
-export type Flight = z.infer<typeof flightSchema>;
-
-export const pcdSchema = z.object({
+const pcdSchema = z.object({
     firstId: z.string(),
     secondId: z.string(),
     minDistanceNM: z.number(),
     timeToMinDistanceMs: z.number()
 });
-
-export type Pcd = z.infer<typeof pcdSchema>;
 
 export const scenarioSchema = z.object({
     boundaries: boundariesSchema,
@@ -41,4 +27,4 @@ export const scenarioSchema = z.object({
     pcds: pcdSchema.array()
 });
 
-export type Scenario = z.infer<typeof scenarioSchema>;
+export type ScenarioData = z.infer<typeof scenarioSchema>;
