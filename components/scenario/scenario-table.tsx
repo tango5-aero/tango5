@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ScenarioDeleteDialog } from '~/components/scenario/scenario-delete-dialog';
-import { type ScenarioData } from '~/lib/domain/validators';
+import { type ScenarioData } from '~/lib/domain/scenario';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
 import { PropsWithoutRef } from 'react';

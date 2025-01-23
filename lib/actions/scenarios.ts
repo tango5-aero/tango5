@@ -1,7 +1,7 @@
 'use server';
 
 import { ActionState } from '.';
-import { scenarioSchema } from '~/lib/domain/validators';
+import { scenarioSchema } from '~/lib/domain/scenario';
 import { updateScenarioReleaseDate, writeScenario } from '~/lib/db/queries';
 import { deleteScenario as deleteDBScenario } from '~/lib/db/queries';
 import { format } from 'date-fns';
