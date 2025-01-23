@@ -2,6 +2,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Button } from '~/components/ui/button';
+import Calendar from '~/components/ui/calendar';
 import { UserGamesTable } from '~/components/users/usergames-table';
 import { getUnplayedScenarios, getUserGames } from '~/lib/db/queries';
 
@@ -32,7 +33,9 @@ export default async function Page() {
             {!isAllDone && (
                 <h3 className="text-xl">{`Keep playing to complete ${unplayedScenarios.length} remaining scenarios`}</h3>
             )}
-
+            <div className="w-full rounded-lg border">
+                <Calendar />
+            </div>
             <UserGamesTable usergames={userGames} allowDeleteGames={false} />
             <div className="flex flex-row gap-2">
                 <Button disabled={unplayedScenarios.length === 0} variant="outline">
