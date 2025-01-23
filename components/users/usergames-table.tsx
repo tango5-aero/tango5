@@ -4,6 +4,9 @@ import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
 import { PropsWithoutRef } from 'react';
 import { UserGameDeleteDialog } from '~/components/user-game/usergame-delete-dialog';
+import { usePagination } from '~/hooks/use-pagination';
+import { getUserGamesPage } from '~/lib/actions';
+import { useTableApi } from '~/hooks/use-table-api';
 
 type UserGameRow = {
     id: number;
@@ -14,7 +17,6 @@ type UserGameRow = {
 };
 
 type UserGamesTableProps = {
-    usergames: UserGameRow[];
     allowDeleteGames: boolean;
 };
 
@@ -56,7 +58,12 @@ export const adminColumns: ColumnDef<UserGameRow>[] = [
     },
     {
         accessorKey: 'playTime',
-        header: () => <div className="text-center">Play Time</div>
+        header: () => <div className="text-center">Play Time</div>,
+        cell: ({ row }) => {
+            const playTime = row.getValue('playTime') as string;
+
+            return <div className="flex justify-end">{playTime}</div>;
+        }
     },
     {
         accessorKey: 'success',
@@ -79,17 +86,19 @@ export const adminColumns: ColumnDef<UserGameRow>[] = [
 ];
 
 export const UserGamesTable = (props: PropsWithoutRef<UserGamesTableProps>) => {
-    if (props.allowDeleteGames) {
-        return (
-            <DataTable
-                data={props.usergames}
-                columns={adminColumns}
-                initialState={{ columnVisibility: { data: false } }}
-            />
-        );
-    }
+    const { pagination, onPaginationChange, limit, offset } = usePagination();
+
+    const { data, rowCount, loading } = useTableApi(getUserGamesPage, limit, offset);
 
     return (
-        <DataTable data={props.usergames} columns={userColumns} initialState={{ columnVisibility: { data: false } }} />
+        <DataTable
+            data={data}
+            rowCount={rowCount}
+            loading={loading}
+            onPaginationChange={onPaginationChange}
+            pagination={pagination}
+            columns={props.allowDeleteGames ? adminColumns : userColumns}
+            initialState={{ columnVisibility: { data: false } }}
+        />
     );
 };

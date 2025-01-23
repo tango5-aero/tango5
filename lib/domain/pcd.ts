@@ -1,9 +1,9 @@
 import { Flight } from './flight';
 
-const CONFLICT_DIST_THRESHOLD_NM = 5;
-const MONITOR_DIST_THRESHOLD_NM = 9;
-
 export class Pcd {
+    private conflict_distance_threshold_nm = 5;
+    private monitor_distance_threshold_nm = 9;
+
     constructor(
         public readonly firstFlight: Flight,
         public readonly secondFlight: Flight,
@@ -16,11 +16,11 @@ export class Pcd {
     }
 
     get isConflict() {
-        return this.minDistanceNM <= CONFLICT_DIST_THRESHOLD_NM;
+        return this.minDistanceNM <= this.conflict_distance_threshold_nm;
     }
 
     get isMonitor() {
-        return !this.isConflict && this.minDistanceNM <= MONITOR_DIST_THRESHOLD_NM;
+        return !this.isConflict && this.minDistanceNM <= this.monitor_distance_threshold_nm;
     }
 
     get isSafe() {
@@ -28,7 +28,7 @@ export class Pcd {
     }
 }
 
-export function formatMs(millis: number): string {
+function formatMs(millis: number): string {
     const minutes = Math.floor(millis / 60000);
     const seconds = (millis % 60000) / 1000;
     return minutes + ':' + (seconds < 10 ? '0' : '') + seconds.toFixed(0);

@@ -3,7 +3,7 @@
 import { ActionState } from '.';
 import { scenarioSchema } from '~/lib/domain/scenario';
 import { updateScenarioReleaseDate, writeScenario } from '~/lib/db/queries';
-import { deleteScenario as deleteDBScenario } from '~/lib/db/queries';
+import { deleteScenario as deleteDBScenario, getScenariosPage as getDBScenariosPage } from '~/lib/db/queries';
 import { format } from 'date-fns';
 
 export async function createScenario(
@@ -60,4 +60,8 @@ export async function deleteScenario(_prevState: ActionState, id: number): Promi
     }
 
     return { message: `Scenario #${id} deleted`, error: false };
+}
+
+export async function getScenariosPage(pageIndex: number, pageSize: number) {
+    return await getDBScenariosPage(pageIndex, pageSize);
 }
