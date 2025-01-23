@@ -40,4 +40,4 @@ export const scenarioSchema = z.object({
     pcds: pcdSchema.array()
 });
 
-export type Scenario = z.infer<typeof scenarioSchema>;
+export type ScenarioData = z.infer<typeof scenarioSchema>;

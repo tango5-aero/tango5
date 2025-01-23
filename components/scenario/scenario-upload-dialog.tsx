@@ -21,8 +21,8 @@ import { cacheTags } from '~/lib/constants';
 export function ScenarioUploadDialog() {
     const [open, setOpen] = useState(false);
     const [state, action, pending] = useActionState(createScenario, { message: '', error: false });
-    const [data, setData] = useState('');
-    const [fileName, setFileName] = useState('');
+    const [filesData, setFilesData] = useState<string[]>([]);
+    const [filesName, setFilesName] = useState<string[]>([]);
 
     useEffect(() => {
         if (state.message && state.error) toast.error(state.message);
@@ -31,25 +31,36 @@ export function ScenarioUploadDialog() {
     }, [state]);
 
     useEffect(() => {
-        if (!open) setData('');
+        if (!open) setFilesData([]);
     }, [open]);
 
     useEffect(() => {
-        if (pending) toast.info(`Creating new scenario from ${fileName}`);
-    }, [fileName, pending]);
+        if (pending) toast.info(`Creating new scenario from ${filesName}`);
+    }, [filesName, pending]);
 
-    const uploadScenario = (data: string, fileName: string) => {
-        if (data)
+    const uploadScenario = () => {
+        if (filesData) {
             startTransition(async () => {
-                action({ data, fileName });
+                action({ filesData, filesName });
                 setOpen(false);
             });
+        }
     };
 
-    const updateFileContents = (file: File) => {
+    const updateFilesContents = (files: FileList) => {
         startTransition(() => {
-            setFileName(file.name);
-            file.text().then(setData);
+            const newFilesName: string[] = [];
+            const newFilesData: string[] = [];
+            for (let i = 0; i < files.length; i++) {
+                const file = files.item(i);
+                if (!file) return;
+                file.text().then((fileData) => {
+                    newFilesData.push(fileData);
+                });
+                newFilesName.push(file.name);
+            }
+            setFilesName(newFilesName);
+            setFilesData(newFilesData);
         });
     };
 
@@ -68,14 +79,15 @@ export function ScenarioUploadDialog() {
 
                 <Input
                     type="file"
+                    multiple={true}
                     onChange={({ target: { files } }) => {
-                        const file = files?.item(0);
-                        if (file) updateFileContents(file);
+                        if (!files) return;
+                        updateFilesContents(files);
                     }}
                 />
 
                 <DialogFooter>
-                    <Button disabled={data === '' || pending} onClick={() => uploadScenario(data, fileName)}>
+                    <Button disabled={filesData.length > 0 || pending} onClick={() => uploadScenario()}>
                         {pending ? 'Loading' : 'Submit'}
                     </Button>
                     <DialogClose asChild>

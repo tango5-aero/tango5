@@ -5,7 +5,7 @@ import MapGL, { MapProvider, Layer, Source, useMap } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
 import { Flight } from '~/lib/domain/flight';
 import { featureCollection as featureCollection } from '~/lib/domain/geojson';
-import { Scenario } from '~/lib/domain/scenario';
+import { ScenarioData } from '~/lib/domain/scenario';
 import { MapEvent, MapMouseEvent } from 'mapbox-gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -13,7 +13,7 @@ import { destination, point, Units } from '@turf/turf';
 
 type ScenarioMapProps = {
     style?: CSSProperties;
-    scenario: Scenario;
+    scenarioData: ScenarioData;
     selectFlight: (id: string) => void;
     selectedFlight: string | null;
     selectedPairs: [string, string][];
@@ -25,7 +25,7 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
 
     const flights = useMemo(
         () =>
-            props.scenario.flights.map(
+            props.scenarioData.flights.map(
                 (item) =>
                     new Flight(
                         item.id,
@@ -40,7 +40,7 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
                         item.selectedAltitudeFt
                     )
             ),
-        [props.scenario.flights]
+        [props.scenarioData.flights]
     );
 
     const onClick = (e: MapMouseEvent) => {
@@ -58,11 +58,11 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
 
     return (
         <MapProvider>
-            <ScaleMap latitude={props.scenario.boundaries[3]} />
+            <ScaleMap latitude={props.scenarioData.boundaries[3]} />
             <MapGL
                 id="map"
                 mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-                initialViewState={{ bounds: props.scenario.boundaries as [number, number, number, number] }}
+                initialViewState={{ bounds: props.scenarioData.boundaries as [number, number, number, number] }}
                 style={props.style}
                 mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
                 interactive={false}
@@ -73,11 +73,11 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onClick={onClick}>
-                <ResizeEffects bounds={props.scenario.boundaries} />
+                <ResizeEffects bounds={props.scenarioData.boundaries} />
                 <Layers
                     zoom={zoom}
                     flights={flights}
-                    solutionPairs={props.scenario.pcds.map((pcd) => [pcd.firstId, pcd.secondId])}
+                    solutionPairs={props.scenarioData.pcds.map((pcd) => [pcd.firstId, pcd.secondId])}
                     selectedFlight={props.selectedFlight}
                     selectedPairs={props.selectedPairs}
                     isGameOver={props.isGameOver}

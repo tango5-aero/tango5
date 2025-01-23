@@ -1,7 +1,7 @@
 import { auth } from '@clerk/nextjs/server';
 import { notFound } from 'next/navigation';
 import { UsersTable } from '~/components/users/users-table';
-import { getUsers, getUser } from '~/lib/db/queries';
+import { getUser } from '~/lib/db/queries';
 
 export default async function App() {
     const { userId } = await auth();
@@ -10,14 +10,13 @@ export default async function App() {
     }
 
     const userData = await getUser(userId);
-    const allUsers = await getUsers();
 
     return (
         <main className="flex flex-col items-center justify-center gap-6 p-6 md:p-10">
             <p>Your ID: {JSON.stringify(userData?.id)}</p>
             <div>
                 <h3>All Users</h3>
-                <UsersTable users={allUsers} />
+                <UsersTable />
             </div>
         </main>
     );

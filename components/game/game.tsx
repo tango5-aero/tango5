@@ -2,7 +2,7 @@
 
 import { PropsWithoutRef, useEffect, useRef, useState } from 'react';
 import { ScenarioMap } from '~/components/scenario/scenario-map';
-import { Scenario } from '~/lib/domain/scenario';
+import { ScenarioData } from '~/lib/domain/scenario';
 import { Button } from '~/components/ui/button';
 import { redirect } from 'next/navigation';
 import { completeUserGame } from '~/lib/actions';
@@ -16,7 +16,7 @@ const posthogEvents = {
     gameFinish: 'game_finish'
 };
 
-const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: string }>) => {
+const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; nextUrl: string }>) => {
     // Game related state
     const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
@@ -37,7 +37,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
     useEffect(() => {
         if (isGameOver) {
             const correct = selectedPairs.filter((pair) =>
-                props.scenario.pcds.some(
+                props.scenarioData.pcds.some(
                     (pcd) =>
                         (pcd.firstId === pair[0] && pcd.secondId === pair[1]) ||
                         (pcd.firstId === pair[1] && pcd.secondId === pair[0])
@@ -45,7 +45,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
             );
 
             const elapsed = gameStartTimeMs.current ? performance.now() - gameStartTimeMs.current : 0;
-            const gameSuccess = correct.length === props.scenario.pcds.length;
+            const gameSuccess = correct.length === props.scenarioData.pcds.length;
 
             completeUserGame(props.id, elapsed, gameSuccess);
 
@@ -55,15 +55,15 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
                 success: gameSuccess
             });
         }
-    }, [isGameOver, props.id, props.scenario.pcds, selectedPairs]);
+    }, [isGameOver, props.id, props.scenarioData.pcds, selectedPairs]);
 
     useEffect(() => {
         // check if all pairs have been guessed
-        if (selectedPairs.length === props.scenario.pcds.length) {
+        if (selectedPairs.length === props.scenarioData.pcds.length) {
             setGameOver(true);
             return;
         }
-    }, [props.scenario.pcds.length, selectedPairs.length]);
+    }, [props.scenarioData.pcds.length, selectedPairs.length]);
 
     const selectFlight = (id: string) => {
         // if the game is over do not allow further interactions
@@ -71,7 +71,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
             return;
         }
 
-        const flight = props.scenario.flights.find((flight) => flight.id === id);
+        const flight = props.scenarioData.flights.find((flight) => flight.id === id);
 
         // this should never happen, fail silently
         if (!flight) return;
@@ -112,7 +112,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
                     {'NEXT'}
                 </Button>
             </div>
-            <GameProgress total={props.scenario.pcds.length} progress={selectedPairs.length} />
+            <GameProgress total={props.scenarioData.pcds.length} progress={selectedPairs.length} />
             <GameCountdown
                 initialCount={GAME_TIMEOUT_MS / 1000}
                 running={!isGameOver}
@@ -120,7 +120,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenario: Scenario; nextUrl: 
             />
             <ScenarioMap
                 style={{ width: '100%', height: '100dvh' }}
-                scenario={props.scenario}
+                scenarioData={props.scenarioData}
                 selectFlight={selectFlight}
                 selectedFlight={selectedFlight}
                 selectedPairs={selectedPairs}

@@ -18,7 +18,7 @@ export default async function Page() {
             <main className="relative z-20 flex h-screen flex-col items-center justify-center gap-6 p-6 md:p-10">
                 <WelcomeTango5Title />
                 <SignedOut>
-                    <SignIn routing="hash" forceRedirectUrl="" />
+                    <SignIn routing="hash" forceRedirectUrl={'/init'} />
                 </SignedOut>
             </main>
             <VideoBackground />
