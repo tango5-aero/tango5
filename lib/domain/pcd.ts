@@ -24,7 +24,7 @@ export class Pcd {
     }
 
     get isSafe() {
-        return !this.isMonitor;
+        return !this.isMonitor && !this.isConflict;
     }
 }
 
