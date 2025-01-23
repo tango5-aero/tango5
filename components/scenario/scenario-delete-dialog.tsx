@@ -34,8 +34,8 @@ export const ScenarioDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => 
         startTransition(async () => {
             action(props.id);
             setOpen(false);
-            revalidateCacheTag(cacheTags.scenarios);
         });
+        revalidateCacheTag(cacheTags.scenarios);
     };
 
     return (

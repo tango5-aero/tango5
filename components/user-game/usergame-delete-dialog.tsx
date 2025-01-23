@@ -34,8 +34,8 @@ export const UserGameDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => 
         startTransition(async () => {
             action(props.id);
             setOpen(false);
-            revalidateCacheTag(cacheTags.userGames);
         });
+        revalidateCacheTag(cacheTags.userGames);
     };
 
     return (
