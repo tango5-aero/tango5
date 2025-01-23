@@ -1,21 +1,13 @@
+import { Flight } from './flight';
+import { Pcd } from './pcd';
+
 import { z } from 'zod';
 
-export const viewSchema = z.object({
-    longitude: z.number(),
-    latitude: z.number(),
-    zoom: z.number()
-});
+const boundariesSchema = z.number().array().length(4);
 
-export type View = z.infer<typeof viewSchema>;
-
-export const boundariesSchema = z.number().array().length(4);
-
-export type Boundaries = z.infer<typeof boundariesSchema>;
-
-export const flightSchema = z.object({
+const flightSchema = z.object({
     id: z.string(),
     callsign: z.string(),
-    category: z.string(),
     latitudeDeg: z.number(),
     longitudeDeg: z.number(),
     altitudeFt: z.number(),
@@ -25,14 +17,12 @@ export const flightSchema = z.object({
     selectedAltitudeFt: z.number()
 });
 
-export type Flight = z.infer<typeof flightSchema>;
-
-export const pcdSchema = z.object({
+const pcdSchema = z.object({
     firstId: z.string(),
-    secondId: z.string()
+    secondId: z.string(),
+    minDistanceNM: z.number(),
+    timeToMinDistanceMs: z.number()
 });
-
-export type Pcd = z.infer<typeof pcdSchema>;
 
 export const scenarioSchema = z.object({
     boundaries: boundariesSchema,
@@ -41,3 +31,63 @@ export const scenarioSchema = z.object({
 });
 
 export type ScenarioData = z.infer<typeof scenarioSchema>;
+
+export class Scenario {
+    public readonly boundaries: [number, number, number, number];
+    public readonly flights: Flight[];
+    public readonly pcds: Pcd[];
+
+    constructor(scenario: ScenarioData) {
+        this.boundaries = scenario.boundaries as [number, number, number, number];
+
+        this.flights = scenario.flights.map(
+            (flight) =>
+                new Flight(
+                    flight.id,
+                    flight.latitudeDeg,
+                    flight.longitudeDeg,
+                    flight.altitudeFt,
+                    flight.callsign,
+                    flight.groundSpeedKts,
+                    flight.trackDeg,
+                    flight.verticalSpeedFtpm,
+                    flight.selectedAltitudeFt
+                )
+        );
+
+        this.pcds = [];
+
+        for (const pcd of scenario.pcds) {
+            const firstFlight = this.flights.find((flight) => flight.id === pcd.firstId);
+            const secondFlight = this.flights.find((flight) => flight.id === pcd.secondId);
+
+            if (!firstFlight || !secondFlight) continue;
+
+            this.pcds.push(new Pcd(firstFlight, secondFlight, pcd.minDistanceNM, pcd.timeToMinDistanceMs));
+        }
+    }
+
+    get solution() {
+        return this.pcds.filter((pcd) => pcd.isMonitor || pcd.isConflict);
+    }
+
+    isSolution(solutionPairs: [string, string][]) {
+        return this.solution.every((pcd) =>
+            solutionPairs.some(
+                (pair) =>
+                    (pair[0] === pcd.firstFlight.id && pair[1] === pcd.secondFlight.id) ||
+                    (pair[0] === pcd.secondFlight.id && pair[1] === pcd.firstFlight.id)
+            )
+        );
+    }
+
+    numberCorrect(solutionPairs: [string, string][]) {
+        return this.solution.filter((conflict) =>
+            solutionPairs.some(
+                (pair) =>
+                    (pair[0] === conflict.firstFlight.id && pair[1] === conflict.secondFlight.id) ||
+                    (pair[0] === conflict.secondFlight.id && pair[1] === conflict.firstFlight.id)
+            )
+        ).length;
+    }
+}

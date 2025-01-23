@@ -1,6 +1,6 @@
 'use client';
 
-import { PropsWithoutRef, useEffect, useRef, useState } from 'react';
+import { PropsWithoutRef, useEffect, useMemo, useRef, useState } from 'react';
 import { ScenarioMap } from '~/components/scenario/scenario-map';
 import { ScenarioData } from '~/lib/domain/scenario';
 import { Button } from '~/components/ui/button';
@@ -10,6 +10,7 @@ import { GameCountdown } from './game-countdown';
 import posthog from 'posthog-js';
 import { GameProgress } from './game-progress';
 import { GAME_TIMEOUT_MS } from '~/lib/constants';
+import { Scenario } from '~/lib/domain/scenario';
 
 const posthogEvents = {
     gameStart: 'game_start',
@@ -17,6 +18,8 @@ const posthogEvents = {
 };
 
 const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; nextUrl: string }>) => {
+    const scenario = useMemo(() => new Scenario(props.scenarioData), [props.scenarioData]);
+
     // Game related state
     const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
@@ -36,16 +39,8 @@ const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; n
 
     useEffect(() => {
         if (isGameOver) {
-            const correct = selectedPairs.filter((pair) =>
-                props.scenarioData.pcds.some(
-                    (pcd) =>
-                        (pcd.firstId === pair[0] && pcd.secondId === pair[1]) ||
-                        (pcd.firstId === pair[1] && pcd.secondId === pair[0])
-                )
-            );
-
             const elapsed = gameStartTimeMs.current ? performance.now() - gameStartTimeMs.current : 0;
-            const gameSuccess = correct.length === props.scenarioData.pcds.length;
+            const gameSuccess = scenario.isSolution(selectedPairs);
 
             completeUserGame(props.id, elapsed, gameSuccess);
 
@@ -55,15 +50,13 @@ const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; n
                 success: gameSuccess
             });
         }
-    }, [isGameOver, props.id, props.scenarioData.pcds, selectedPairs]);
+    }, [scenario, isGameOver, props.id, selectedPairs]);
 
     useEffect(() => {
-        // check if all pairs have been guessed
-        if (selectedPairs.length === props.scenarioData.pcds.length) {
+        if (scenario.isSolution(selectedPairs)) {
             setGameOver(true);
-            return;
         }
-    }, [props.scenarioData.pcds.length, selectedPairs.length]);
+    }, [scenario, selectedPairs]);
 
     const selectFlight = (id: string) => {
         // if the game is over do not allow further interactions
@@ -112,7 +105,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; n
                     {'NEXT'}
                 </Button>
             </div>
-            <GameProgress total={props.scenarioData.pcds.length} progress={selectedPairs.length} />
+            <GameProgress total={scenario.solution.length} progress={scenario.numberCorrect(selectedPairs)} />
             <GameCountdown
                 initialCount={GAME_TIMEOUT_MS / 1000}
                 running={!isGameOver}
@@ -120,7 +113,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; n
             />
             <ScenarioMap
                 style={{ width: '100%', height: '100dvh' }}
-                scenarioData={props.scenarioData}
+                scenario={scenario}
                 selectFlight={selectFlight}
                 selectedFlight={selectedFlight}
                 selectedPairs={selectedPairs}

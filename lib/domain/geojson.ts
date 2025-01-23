@@ -1,11 +1,11 @@
 import type { FeatureCollection, LineString, Point, Polygon } from 'geojson';
 import { closestBorder, expand, toBBox, toPolygon } from './geometry';
 import { Movable, spread } from './spreader';
-import { Flight } from '~/lib/domain/flight';
 import { GeometryTypes } from '~/components/scenario/scenario-map';
 import { circle } from '@turf/turf';
+import { Scenario } from './scenario';
 
-const MIN_DIS_THRESHOLD_NM = 9;
+type Status = 'conflict' | 'monitor' | 'clear' | undefined;
 
 type Props =
     | {
@@ -26,14 +26,14 @@ type Props =
     | {
           ref: string;
           type: typeof GeometryTypes.pcdLink | typeof GeometryTypes.pcdLabel;
-          isPcd: boolean;
+          status: Status;
       }
     | {
           ref: string;
           type: typeof GeometryTypes.pcdText;
           text: string;
           fontSize: number;
-          isPcd: boolean;
+          status: Status;
       };
 
 export function measureTextBBox(text: string, fontSize: number): { height: number; width: number } {
@@ -66,18 +66,10 @@ export function measureTextBBox(text: string, fontSize: number): { height: numbe
     return { height, width };
 }
 
-export function formatMs(millis: number): string {
-    const minutes = Math.floor(millis / 60000);
-    const seconds = (millis % 60000) / 1000;
-    return minutes + ':' + (seconds < 10 ? '0' : '') + seconds.toFixed(0);
-}
-
 export function featureCollection(
-    flights: Flight[],
+    scenario: Scenario,
     selectedFlight: string | null,
     selectedPairs: [string, string][],
-
-    solutionPairs: [string, string][],
     reveal: boolean,
     scalingFactor: number,
     project: ([lng, lat]: [number, number]) => [x: number, y: number],
@@ -95,7 +87,7 @@ export function featureCollection(
 
     const initialLabels: Movable[] = [];
 
-    for (const flight of flights) {
+    for (const flight of scenario.flights) {
         const flightPoint2D = project([flight.longitudeDeg, flight.latitudeDeg]);
         const flightPositionSquare = expand(flightPoint2D, flightBoxSize, flightBoxSize);
         const coordinates = [expand(flightPoint2D, flightBoxSize, flightBoxSize).map((point) => unproject(point))];
@@ -154,32 +146,53 @@ export function featureCollection(
                     units: 'nauticalmiles',
                     properties: {
                         ref: flight.id,
-                        type: GeometryTypes.halo,
-                        correct: solutionPairs.some((pair) => pair.includes(flight.id))
+                        type: GeometryTypes.halo
                     }
                 })
             );
         }
     }
 
-    const pairs = reveal ? solutionPairs.concat(selectedPairs) : selectedPairs;
+    const pairs = reveal
+        ? scenario.solution.map((pcd) => [pcd.firstFlight.id, pcd.secondFlight.id]).concat(selectedPairs)
+        : selectedPairs;
 
     for (const pair of pairs) {
-        const flight = flights.find((flight) => flight.id === pair[0]);
-        const otherFlight = flights.find((flight) => flight.id === pair[1]);
+        const flight = scenario.flights.find((flight) => flight.id === pair[0]);
+        const otherFlight = scenario.flights.find((flight) => flight.id === pair[1]);
 
         if (flight && otherFlight) {
             const id = flight < otherFlight ? `${flight.id}-${otherFlight.id}` : `${otherFlight.id}-${flight.id}`;
 
-            const pcd = flight.minimizeDistanceTo(otherFlight);
+            const pcd = scenario.pcds.find(
+                (pcd) =>
+                    (pcd.firstFlight.id === flight.id && pcd.secondFlight.id === otherFlight.id) ||
+                    (pcd.secondFlight.id === flight.id && pcd.firstFlight.id === otherFlight.id)
+            );
 
             const currentDistanceNM = flight.distanceToNM(otherFlight);
 
-            const isPcd =
-                (currentDistanceNM <= MIN_DIS_THRESHOLD_NM || pcd.minimumDistanceNM <= MIN_DIS_THRESHOLD_NM) &&
-                flight.verticalIntersect(otherFlight);
+            let status: Status = undefined;
+            let statusText: string;
 
-            const text = `${currentDistanceNM.toFixed(1)}NM\n${pcd.minimumDistanceNM.toFixed(1)}NM ${formatMs(pcd.timeToMinimumDistanceMs)}`;
+            switch (true) {
+                case pcd?.isSafe:
+                    status = 'clear';
+                    statusText = 'GOOD TO GO';
+                    break;
+                case pcd?.isMonitor:
+                    status = 'monitor';
+                    statusText = 'MONITOR';
+                    break;
+                case pcd?.isConflict:
+                    status = 'conflict';
+                    statusText = 'CONFLICT';
+                    break;
+                default:
+                    statusText = 'GOOD TO GO';
+            }
+
+            const text = `${statusText}\n${currentDistanceNM.toFixed(1)}NM${pcd?.description ? `\r\n${pcd.description}` : ''}`;
 
             const textSize = measureTextBBox(text, fontSize);
 
@@ -216,7 +229,7 @@ export function featureCollection(
                 properties: {
                     ref: id,
                     type: GeometryTypes.pcdLink,
-                    isPcd
+                    status
                 },
                 geometry: {
                     type: 'LineString',
@@ -232,7 +245,7 @@ export function featureCollection(
                 properties: {
                     ref: id,
                     type: GeometryTypes.pcdLabel,
-                    isPcd
+                    status
                 },
                 geometry: {
                     type: 'Polygon',
@@ -247,7 +260,7 @@ export function featureCollection(
                     type: GeometryTypes.pcdText,
                     text,
                     fontSize,
-                    isPcd
+                    status
                 },
                 geometry: {
                     type: 'Point',
@@ -261,7 +274,7 @@ export function featureCollection(
 
     const labelPositions = spread(initialLabels, nonOverlapping, maxMs);
 
-    for (const flight of flights) {
+    for (const flight of scenario.flights) {
         const ref = flight.id;
 
         if (flight.latitudeDeg === undefined || flight.longitudeDeg === undefined) continue;
