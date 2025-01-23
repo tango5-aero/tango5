@@ -5,10 +5,12 @@ import { ScenarioDeleteDialog } from '~/components/scenario/scenario-delete-dial
 import { type ScenarioData } from '~/lib/domain/scenario';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
-import { PropsWithoutRef } from 'react';
 import { Download, PlayIcon } from 'lucide-react';
-import { ScenarioReleaseDateDialog } from './scenario-release-date-dialog';
 import { ScenarioSelect } from '~/lib/db/schema';
+import { ScenarioReleaseDateDialog } from './scenario-release-date-dialog';
+import { usePagination } from '~/hooks/use-pagination';
+import { useTableApi } from '~/hooks/use-table-api';
+import { getScenariosPage } from '~/lib/actions';
 
 type ScenarioType = Omit<ScenarioSelect, 'data'> & { data: ScenarioData };
 
@@ -72,8 +74,20 @@ export const columns: ColumnDef<ScenarioType>[] = [
     }
 ];
 
-export const ScenariosTable = (
-    props: PropsWithoutRef<{ scenarios: { id: number; data: ScenarioData; releaseDate: string | null }[] }>
-) => {
-    return <DataTable data={props.scenarios} columns={columns} initialState={{ columnVisibility: { data: false } }} />;
+export const ScenariosTable = () => {
+    const { pagination, onPaginationChange, limit, offset } = usePagination();
+
+    const { data, rowCount, loading } = useTableApi(getScenariosPage, limit, offset);
+
+    return (
+        <DataTable
+            data={data}
+            rowCount={rowCount}
+            loading={loading}
+            onPaginationChange={onPaginationChange}
+            pagination={pagination}
+            columns={columns}
+            initialState={{ columnVisibility: { data: false } }}
+        />
+    );
 };

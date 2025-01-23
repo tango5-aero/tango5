@@ -1,4 +1,4 @@
-import { eq, inArray, notInArray, sql } from 'drizzle-orm';
+import { count, eq, inArray, notInArray, sql } from 'drizzle-orm';
 import { ScenarioData, scenarioSchema } from '~/lib/domain/scenario';
 import { db } from '~/lib/db';
 import { ScenariosTable, UserGamesTable } from '~/lib/db/schema';
@@ -64,4 +64,17 @@ export const updateScenarioReleaseDate = async (id: number, releaseDate: Date | 
 export const deleteScenario = async (id: number) => {
     const res = await db.delete(ScenariosTable).where(eq(ScenariosTable.id, id)).returning();
     return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
+};
+
+export const getScenariosPage = async (pageIndex: number, pageSize: number) => {
+    try {
+        const total = await db.select({ value: count() }).from(ScenariosTable);
+        const values = await db.select().from(ScenariosTable).limit(pageSize).offset(pageIndex);
+        return {
+            count: total[0]?.value,
+            values: values.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }))
+        };
+    } catch {
+        return { count: 0, values: [] };
+    }
 };
