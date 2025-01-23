@@ -3,7 +3,7 @@ import * as schema from '../schema';
 import sc1 from './scenarios-seed/scenario1.json';
 import sc2 from './scenarios-seed/scenario2.json';
 import sc3 from './scenarios-seed/scenario3.json';
-import { scenarioSchema } from '../../../lib/domain/scenario';
+import { scenarioSchema } from '../../domain/scenario';
 import { db } from '..';
 
 const times = ['00:00:05.184', '00:00:10.368', '00:00:12.552', '00:00:24.736', '00:00:26.920', '00:00:30.000'];
