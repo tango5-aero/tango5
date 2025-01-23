@@ -44,10 +44,9 @@ export const getRandom = async (ids?: number[]) => {
     return first ? { ...first, data: scenarioSchema.parse(JSON.parse(first.data)) } : first;
 };
 
-export const writeScenario = async (scenario: Scenario) => {
-    const data = JSON.stringify(scenario);
-    const res = await db.insert(ScenariosTable).values({ data }).returning();
-
+export const writeScenarios = async (scenarios: Scenario[]) => {
+    const data = scenarios.map((scenario) => ({ data: JSON.stringify(scenario) }));
+    const res = await db.insert(ScenariosTable).values(data).returning();
     return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
 };
 
