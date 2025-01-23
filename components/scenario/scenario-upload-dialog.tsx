@@ -25,7 +25,7 @@ export function ScenarioUploadDialog() {
     }, [open]);
 
     const handleConfirm = () => {
-        if (filesData)
+        if (filesData) {
             startTransition(async () => {
                 action({ filesData, filesName });
                 setOpen(false);
@@ -68,7 +68,7 @@ export function ScenarioUploadDialog() {
                 multiple
                 onChange={({ target: { files } }) => {
                     if (!files) return;
-                        updateFilesContents(files);
+                    updateFilesContents(files);
                 }}
             />
         </ActionDialog>
