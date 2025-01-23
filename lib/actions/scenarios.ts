@@ -76,11 +76,14 @@ export async function deleteScenario(_prevState: ActionState, id: number): Promi
     return { message: `Scenario #${id} deleted`, error: false };
 }
 
-const getCachedScenariosPage = unstable_cache(
-    async (pageIndex, pageSize) => getDBScenariosPage(pageIndex, pageSize),
-    [cacheTags.scenarios]
-);
-
 export async function getScenariosPage(pageIndex: number, pageSize: number) {
+    const getCachedScenariosPage = unstable_cache(
+        async (pageIndex, pageSize) => getDBScenariosPage(pageIndex, pageSize),
+        [cacheTags.scenarios, pageIndex.toString(), pageSize.toString()],
+        {
+            tags: [cacheTags.scenarios]
+        }
+    );
+
     return await getCachedScenariosPage(pageIndex, pageSize);
 }

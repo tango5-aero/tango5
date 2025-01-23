@@ -57,11 +57,13 @@ export async function resetUserProgress(_prevState: ActionState, userId: string)
     return { message: `Games for user #${userId} deleted`, error: false };
 }
 
-const getCachedUserGamesPage = unstable_cache(
-    async (pageIndex, pageSize) => getDBUserGamesPage(pageIndex, pageSize),
-    [cacheTags.userGames]
-);
-
 export async function getUserGamesPage(pageIndex: number, pageSize: number) {
+    const getCachedUserGamesPage = unstable_cache(
+        async (pageIndex, pageSize) => getDBUserGamesPage(pageIndex, pageSize),
+        [cacheTags.userGames, pageIndex.toString(), pageSize.toString()],
+        {
+            tags: [cacheTags.userGames]
+        }
+    );
     return await getCachedUserGamesPage(pageIndex, pageSize);
 }
