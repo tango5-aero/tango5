@@ -9,8 +9,9 @@ import { CalendarCog } from 'lucide-react';
 import { cacheTags } from '~/lib/constants';
 import { toast } from 'sonner';
 import { DatePicker } from '../ui/date-picker';
+import { ScenarioParsed } from '~/lib/types';
 
-export const ScenarioReleaseDateDialog = (props: PropsWithoutRef<{ id: number; releaseDate: string | undefined }>) => {
+export const ScenarioReleaseDateDialog = (props: PropsWithoutRef<Pick<ScenarioParsed, 'id' | 'releaseDate'>>) => {
     const [open, setOpen] = useState(false);
     const [date, setDate] = useState(props.releaseDate ? new Date(props.releaseDate) : undefined);
     const [state, action, pending] = useActionState(setScenarioReleaseDate, { message: '', error: false });

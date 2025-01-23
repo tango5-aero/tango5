@@ -9,7 +9,7 @@ import {
     deleteUserGames,
     getUserGamesPage as getDBUserGamesPage
 } from '~/lib/db/queries';
-import { UserGameInsert } from '~/lib/db/schema';
+import { UserGameInsert } from '~/lib/types';
 import { ActionState } from '.';
 
 export async function completeUserGame(scenarioId: number, playTimeMs: number, success: boolean) {

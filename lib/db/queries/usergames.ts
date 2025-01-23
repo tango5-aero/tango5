@@ -1,6 +1,7 @@
 import { count, eq } from 'drizzle-orm';
 import { db } from '~/lib/db';
-import { UserGameInsert, UserGamesTable } from '~/lib/db/schema';
+import { UserGamesTable } from '~/lib/db/schema';
+import { UserGameInsert } from '~/lib/types';
 
 export const writeUserGame = async (userGame: UserGameInsert) => {
     return await db

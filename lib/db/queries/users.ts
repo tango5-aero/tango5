@@ -1,6 +1,7 @@
 import { count } from 'drizzle-orm';
 import { db } from '~/lib/db';
-import { UserSelect, UsersTable } from '~/lib/db/schema';
+import { UsersTable } from '~/lib/db/schema';
+import { UserSelect } from '~/lib/types';
 
 export const getUser = async (id: string) => {
     const res = await db.query.UsersTable.findFirst({ where: (user, { eq }) => eq(user.id, id) });
