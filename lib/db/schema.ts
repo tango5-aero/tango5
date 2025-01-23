@@ -1,9 +1,10 @@
-import { boolean, integer, interval, pgTable, serial, text } from 'drizzle-orm/pg-core';
+import { boolean, date, integer, interval, pgTable, serial, text, unique } from 'drizzle-orm/pg-core';
 import { InferInsertModel, InferSelectModel } from 'drizzle-orm/table';
 
 export const ScenariosTable = pgTable('scenarios', {
     id: serial('id').primaryKey(),
-    data: text('data').notNull()
+    data: text('data').notNull(),
+    releaseDate: date('release_date')
 });
 export type ScenarioSelect = InferSelectModel<typeof ScenariosTable>;
 
@@ -12,16 +13,20 @@ export const UsersTable = pgTable('users', {
 });
 export type UserSelect = InferSelectModel<typeof UsersTable>;
 
-export const UserGamesTable = pgTable('usergames', {
-    id: serial('id').primaryKey(),
-    userId: text('user_id')
-        .references(() => UsersTable.id, { onDelete: 'cascade' })
-        .notNull(),
-    scenarioId: integer('scenario_id')
-        .references(() => ScenariosTable.id, { onDelete: 'cascade' })
-        .notNull(),
-    playTime: interval('play_time').notNull(),
-    success: boolean('success').notNull()
-});
+export const UserGamesTable = pgTable(
+    'usergames',
+    {
+        id: serial('id').primaryKey(),
+        userId: text('user_id')
+            .references(() => UsersTable.id, { onDelete: 'cascade' })
+            .notNull(),
+        scenarioId: integer('scenario_id')
+            .references(() => ScenariosTable.id, { onDelete: 'cascade' })
+            .notNull(),
+        playTime: interval('play_time').notNull(),
+        success: boolean('success').notNull()
+    },
+    (t) => [unique('unique_id').on(t.userId, t.scenarioId)]
+);
 export type UserGameInsert = InferInsertModel<typeof UserGamesTable>;
 export type UserGameSelect = InferSelectModel<typeof UserGamesTable>;

@@ -1,0 +1,1 @@
+ALTER TABLE "scenarios" ADD COLUMN "release_date" date;
