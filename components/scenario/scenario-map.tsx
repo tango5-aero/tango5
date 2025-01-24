@@ -245,7 +245,15 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
                 type="symbol"
                 filter={['==', ['get', 'type'], GeometryTypes.pcdText]}
                 layout={{
-                    'text-field': ['get', 'text'],
+                    'text-field': [
+                        'format',
+                        ['get', 'statusText'],
+                        { 'text-font': ['Barlow Bold'] },
+                        '\n',
+                        {},
+                        ['get', 'text'],
+                        { 'text-font': ['Barlow Regular'] }
+                    ],
                     'text-allow-overlap': true,
                     'text-ignore-placement': true,
                     'text-justify': 'left',
