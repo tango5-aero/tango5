@@ -1,44 +1,30 @@
 'use client';
 
-import { startTransition, useActionState, useEffect, useState } from 'react';
-import { Button } from '~/components/ui/button';
+import { startTransition, useEffect, useState } from 'react';
 import { Input } from '~/components/ui/input';
-import revalidateCacheTag, { createScenario } from '~/lib/actions';
-import { toast } from 'sonner';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-    DialogClose
-} from '~/components/ui/dialog';
+import { createScenario } from '~/lib/actions';
 import { FilePlus2 } from 'lucide-react';
 import { cacheTags } from '~/lib/constants';
+import { ActionDialog } from '../ui/action-dialog';
+import { useDialogAction } from '~/hooks/use-dialog-action';
+import { Button } from '../ui/button';
 
 export function ScenarioUploadDialog() {
     const [open, setOpen] = useState(false);
-    const [state, action, pending] = useActionState(createScenario, { message: '', error: false });
     const [filesData, setFilesData] = useState<string[]>([]);
     const [filesName, setFilesName] = useState<string[]>([]);
 
-    useEffect(() => {
-        if (state.message && state.error) toast.error(state.message);
-        if (state.message && !state.error) toast.success(state.message);
-        revalidateCacheTag(cacheTags.scenarios);
-    }, [state]);
+    const { action, pending } = useDialogAction(
+        `Creating new scenario from ${filesName}`,
+        createScenario,
+        cacheTags.scenarios
+    );
 
     useEffect(() => {
         if (!open) setFilesData([]);
     }, [open]);
 
-    useEffect(() => {
-        if (pending) toast.info(`Creating new scenario from ${filesName}`);
-    }, [filesName, pending]);
-
-    const uploadScenario = () => {
+    const handleConfirm = () => {
         if (filesData) {
             startTransition(async () => {
                 action({ filesData, filesName });
@@ -65,36 +51,26 @@ export function ScenarioUploadDialog() {
     };
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+        <ActionDialog
+            open={open}
+            openHandler={setOpen}
+            title={'Scenario Upload'}
+            pending={filesData.length > 0 || pending}
+            triggerAsChild
+            dialogTrigger={
                 <Button variant={'outline'}>
                     <FilePlus2 size={'1rem'} /> {'New'}
                 </Button>
-            </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>{'Scenario Upload'}</DialogTitle>
-                    <DialogDescription>{'Create a new scenario from a JSON file'}</DialogDescription>
-                </DialogHeader>
-
-                <Input
-                    type="file"
-                    multiple={true}
-                    onChange={({ target: { files } }) => {
-                        if (!files) return;
-                        updateFilesContents(files);
-                    }}
-                />
-
-                <DialogFooter>
-                    <Button disabled={filesData.length > 0 || pending} onClick={() => uploadScenario()}>
-                        {pending ? 'Loading' : 'Submit'}
-                    </Button>
-                    <DialogClose asChild>
-                        <Button variant="outline">{'Cancel'}</Button>
-                    </DialogClose>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+            }
+            onConfirm={handleConfirm}>
+            <Input
+                type="file"
+                multiple
+                onChange={({ target: { files } }) => {
+                    if (!files) return;
+                    updateFilesContents(files);
+                }}
+            />
+        </ActionDialog>
     );
 }
