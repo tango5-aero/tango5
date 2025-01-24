@@ -1,43 +1,17 @@
 'use client';
 
-import { PropsWithoutRef, startTransition, useActionState, useEffect, useState } from 'react';
+import { PropsWithoutRef, startTransition, useState } from 'react';
 import { Button } from '~/components/ui/button';
 import { resetUserProgress } from '~/lib/actions';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger
-} from '~/components/ui/dialog';
-import { DialogClose } from '@radix-ui/react-dialog';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
 import { TimerReset } from 'lucide-react';
+import { ActionDialog } from '../ui/action-dialog';
+import { useDialogAction } from '~/hooks/use-dialog-action';
 
 export const UserResetAction = (props: PropsWithoutRef<{ id: string }>) => {
-    const router = useRouter();
     const [open, setOpen] = useState(false);
-    const [state, action, pending] = useActionState(resetUserProgress, {
-        message: '',
-        error: false
-    });
+    const { action, pending } = useDialogAction(`Resetting progress...`, resetUserProgress);
 
-    useEffect(() => {
-        if (state.message && state.error) toast.error(state.message);
-        if (state.message && !state.error) {
-            toast.success(state.message);
-            router.push('/');
-        }
-    }, [state, router]);
-
-    useEffect(() => {
-        if (pending) toast.info('Resetting progress...');
-    }, [pending, props.id]);
-
-    const handleReset = () => {
+    const handleConfirm = () => {
         startTransition(async () => {
             action(props.id);
             setOpen(false);
@@ -45,30 +19,21 @@ export const UserResetAction = (props: PropsWithoutRef<{ id: string }>) => {
     };
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+        <ActionDialog
+            open={open}
+            openHandler={setOpen}
+            title={'Reset progress'}
+            description={'This action cannot be undone, are you sure you want to proceed?'}
+            pending={pending}
+            triggerAsChild
+            dialogTrigger={
                 <Button variant="destructive">
                     <TimerReset />
                     <span>{'Reset my progress'}</span>
                 </Button>
-            </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>{'Reset progress'}</DialogTitle>
-                    <DialogDescription>
-                        {`This action cannot be undone, are you sure you want to proceed?`}
-                    </DialogDescription>
-                </DialogHeader>
-
-                <DialogFooter>
-                    <Button variant={'destructive'} disabled={pending} onClick={handleReset}>
-                        {pending ? 'Processing' : 'Confirm'}
-                    </Button>
-                    <DialogClose asChild>
-                        <Button variant={'outline'}>{'Cancel'}</Button>
-                    </DialogClose>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+            }
+            confirmButtonVariant={'destructive'}
+            onConfirm={handleConfirm}
+        />
     );
 };
