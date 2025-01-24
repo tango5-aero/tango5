@@ -1,33 +1,29 @@
 'use client';
 
-import { PropsWithoutRef, startTransition, useActionState, useEffect, useState } from 'react';
-import { Button } from '~/components/ui/button';
-import revalidateCacheTag, { setScenarioReleaseDate } from '~/lib/actions';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog';
-import { DialogClose } from '@radix-ui/react-dialog';
+import { PropsWithoutRef, startTransition, useState, useEffect } from 'react';
+import { setScenarioReleaseDate } from '~/lib/actions';
 import { CalendarCog } from 'lucide-react';
 import { cacheTags } from '~/lib/constants';
-import { toast } from 'sonner';
 import { DatePicker } from '../ui/date-picker';
+import { ActionDialog } from '../ui/action-dialog';
+import { useDialogAction } from '~/hooks/use-dialog-action';
 import { ScenarioParsed } from '~/lib/types';
 import { format } from 'date-fns';
 
 export const ScenarioReleaseDateDialog = (props: PropsWithoutRef<Pick<ScenarioParsed, 'id' | 'releaseDate'>>) => {
     const [open, setOpen] = useState(false);
     const [date, setDate] = useState(props.releaseDate ? new Date(props.releaseDate) : undefined);
-    const [state, action, pending] = useActionState(setScenarioReleaseDate, { message: '', error: false });
+    const { action, pending } = useDialogAction(
+        'Setting release date for scenario...',
+        setScenarioReleaseDate,
+        cacheTags.scenarios
+    );
 
     useEffect(() => {
-        if (state.message && state.error) toast.error(state.message);
-        if (state.message && !state.error) toast.success(state.message);
-        revalidateCacheTag(cacheTags.scenarios);
-    }, [state]);
+        setDate(props.releaseDate ? new Date(props.releaseDate) : undefined);
+    }, [open, props.releaseDate]);
 
-    useEffect(() => {
-        if (pending) toast.info(`Setting release date for scenario #${props.id}...`);
-    }, [pending, props.id]);
-
-    const setCurrentScenarioReleaseDate = () => {
+    const handleConfirm = () => {
         startTransition(async () => {
             action({ id: props.id, releaseDate: date ? format(date, 'yyyy-MM-dd') : null });
             setOpen(false);
@@ -35,26 +31,14 @@ export const ScenarioReleaseDateDialog = (props: PropsWithoutRef<Pick<ScenarioPa
     };
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger>
-                <CalendarCog size={'1rem'} />
-            </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>{'Scenario Release Date'}</DialogTitle>
-                </DialogHeader>
-
-                <DatePicker date={date} onSelect={setDate} />
-
-                <DialogFooter>
-                    <Button variant={'default'} disabled={pending} onClick={setCurrentScenarioReleaseDate}>
-                        {pending ? 'Processing...' : 'Confirm'}
-                    </Button>
-                    <DialogClose asChild>
-                        <Button variant={'outline'}>{'Cancel'}</Button>
-                    </DialogClose>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+        <ActionDialog
+            open={open}
+            openHandler={setOpen}
+            title={'Scenario Release Date'}
+            pending={pending}
+            dialogTrigger={<CalendarCog size={'1rem'} />}
+            onConfirm={handleConfirm}>
+            <DatePicker date={date} onSelect={setDate} />
+        </ActionDialog>
     );
 };
