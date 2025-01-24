@@ -1,9 +1,17 @@
 import { SignedIn, UserButton } from '@clerk/nextjs';
+import { currentUser } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { VideoBackground } from '~/components/ui/video-background';
 import { WelcomeTango5Title } from '~/components/ui/welcome-tango5-title';
+import { tryCreateUser } from '~/lib/db/queries';
 
 export default async function Page() {
+    const user = await currentUser();
+
+    if (user) {
+        tryCreateUser(user);
+    }
+
     return (
         <>
             <div className="absolute right-5 top-5 z-40">
