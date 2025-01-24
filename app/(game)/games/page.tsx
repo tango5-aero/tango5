@@ -2,6 +2,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Button } from '~/components/ui/button';
+import { CalendarGames } from '~/components/ui/calendar-games';
 import { UserGamesTable } from '~/components/users/usergames-table';
 import { getUnplayedScenarios, getUserGames } from '~/lib/db/queries';
 
@@ -34,6 +35,7 @@ export default async function Page() {
             )}
 
             <UserGamesTable allowDeleteGames={false} />
+            <CalendarGames mode="range" />
             <div className="flex flex-row gap-2">
                 <Button disabled={unplayedScenarios.length === 0} variant="outline">
                     <Link href="/play">Continue</Link>
