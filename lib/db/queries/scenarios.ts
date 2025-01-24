@@ -1,8 +1,9 @@
-import { count, eq, inArray, notInArray, sql } from 'drizzle-orm';
+import { count, eq, and, inArray, notInArray, sql } from 'drizzle-orm';
 import { ScenarioData, scenarioSchema } from '~/lib/domain/scenario';
 import { db } from '~/lib/db';
 import { ScenariosTable, UserGamesTable } from '~/lib/db/schema';
 import { format } from 'date-fns';
+import { DateString } from '~/types';
 
 export const getScenarios = async () => {
     const res = await db.query.ScenariosTable.findMany();
@@ -14,18 +15,25 @@ export const getScenario = async (id: number) => {
     return res ? { ...res, data: scenarioSchema.parse(JSON.parse(res.data)) } : res;
 };
 
-export const getUnplayedScenarios = async (userId: string) => {
+export const getUnplayedScenarios = async (userId: string, releaseDate?: DateString) => {
     const sq = db
         .select({ scenario_id: UserGamesTable.scenarioId })
         .from(UserGamesTable)
         .where(eq(UserGamesTable.userId, userId))
         .as('sq');
 
-    return await db
-        .with(sq)
-        .select()
-        .from(ScenariosTable)
-        .where(notInArray(ScenariosTable.id, db.select().from(sq)));
+    const query = db.with(sq).select().from(ScenariosTable);
+
+    let whereClause = notInArray(ScenariosTable.id, db.select().from(sq));
+    if (releaseDate) {
+        const whereWithDay = and(whereClause, eq(ScenariosTable.releaseDate, releaseDate));
+
+        if (whereWithDay) {
+            whereClause = whereWithDay;
+        }
+    }
+
+    return await query.where(whereClause);
 };
 
 export const getRandom = async (ids?: number[]) => {
