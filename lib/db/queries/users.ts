@@ -3,7 +3,7 @@ import { db } from '~/lib/db';
 import { UsersTable } from '~/lib/db/schema';
 import { UserSelect } from '~/lib/types';
 
-export const getUser = async (id: string) => {
+export const getUser = async (id: UserSelect['id']) => {
     const res = await db.query.UsersTable.findFirst({ where: (user, { eq }) => eq(user.id, id) });
     return res;
 };

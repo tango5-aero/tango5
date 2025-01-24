@@ -10,6 +10,7 @@ import { cacheTags } from '~/lib/constants';
 import { toast } from 'sonner';
 import { DatePicker } from '../ui/date-picker';
 import { ScenarioParsed } from '~/lib/types';
+import { format } from 'date-fns';
 
 export const ScenarioReleaseDateDialog = (props: PropsWithoutRef<Pick<ScenarioParsed, 'id' | 'releaseDate'>>) => {
     const [open, setOpen] = useState(false);
@@ -28,7 +29,7 @@ export const ScenarioReleaseDateDialog = (props: PropsWithoutRef<Pick<ScenarioPa
 
     const setCurrentScenarioReleaseDate = () => {
         startTransition(async () => {
-            action({ id: props.id, releaseDate: date });
+            action({ id: props.id, releaseDate: date ? format(date, 'yyyy-MM-dd') : null });
             setOpen(false);
         });
     };

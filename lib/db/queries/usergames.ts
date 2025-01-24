@@ -1,7 +1,7 @@
 import { count, eq } from 'drizzle-orm';
 import { db } from '~/lib/db';
 import { UserGamesTable } from '~/lib/db/schema';
-import { UserGameInsert } from '~/lib/types';
+import { UserGameInsert, UserGameSelect } from '~/lib/types';
 
 export const writeUserGame = async (userGame: UserGameInsert) => {
     return await db
@@ -11,7 +11,7 @@ export const writeUserGame = async (userGame: UserGameInsert) => {
         .returning();
 };
 
-export const getUserGames = async (userId?: string) => {
+export const getUserGames = async (userId?: UserGameInsert['userId']) => {
     const query = db.select().from(UserGamesTable);
 
     if (userId) {
@@ -21,11 +21,11 @@ export const getUserGames = async (userId?: string) => {
     return await query.execute();
 };
 
-export const deleteUserGame = async (id: number) => {
+export const deleteUserGame = async (id: UserGameSelect['id']) => {
     return await db.delete(UserGamesTable).where(eq(UserGamesTable.id, id)).returning();
 };
 
-export const deleteUserGames = async (userId: string) => {
+export const deleteUserGames = async (userId: UserGameInsert['userId']) => {
     return await db.delete(UserGamesTable).where(eq(UserGamesTable.userId, userId)).returning();
 };
 
