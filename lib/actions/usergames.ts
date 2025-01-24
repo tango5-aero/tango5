@@ -11,7 +11,7 @@ import {
 } from '~/lib/db/queries';
 import { UserGameInsert } from '~/lib/db/schema';
 import { ActionState } from '.';
-import { unstable_cache } from 'next/cache';
+import { revalidateTag, unstable_cache } from 'next/cache';
 import { cacheTags } from '~/lib/constants';
 
 export async function completeUserGame(scenarioId: number, playTimeMs: number, success: boolean) {
@@ -44,6 +44,7 @@ export async function deleteUserGame(_prevState: ActionState, id: number): Promi
         return { message: `UserGame #${id} not found`, error: true };
     }
 
+    revalidateTag(cacheTags.userGames);
     return { message: `UserGame #${id} deleted`, error: false };
 }
 
@@ -54,6 +55,7 @@ export async function resetUserProgress(_prevState: ActionState, userId: string)
         return { message: `Error deleting games for user #${userId}`, error: true };
     }
 
+    revalidateTag(cacheTags.userGames);
     return { message: `Games for user #${userId} deleted`, error: false };
 }
 

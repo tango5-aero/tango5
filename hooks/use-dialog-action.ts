@@ -1,6 +1,6 @@
 import { useActionState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
-import revalidateCacheTag, { ActionState } from '~/lib/actions';
+import { ActionState } from '~/lib/actions';
 
 export function useDialogAction<TData>(
     loadingMessage: string,
@@ -14,7 +14,6 @@ export function useDialogAction<TData>(
         if (state.message) {
             if (state.error) toast.error(state.message, { id: toastId.current });
             if (!state.error) toast.success(state.message, { id: toastId.current });
-            if (cacheTag) revalidateCacheTag(cacheTag);
         }
     }, [state, cacheTag]);
 
