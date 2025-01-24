@@ -176,17 +176,17 @@ export function featureCollection(
             let statusText: string;
 
             switch (true) {
-                case pcd?.isSafe:
-                    status = 'clear';
-                    statusText = 'GOOD TO GO';
+                case pcd?.isConflict:
+                    status = 'conflict';
+                    statusText = 'CONFLICT';
                     break;
                 case pcd?.isMonitor:
                     status = 'monitor';
                     statusText = 'MONITOR';
                     break;
-                case pcd?.isConflict:
-                    status = 'conflict';
-                    statusText = 'CONFLICT';
+                case pcd?.isSafe:
+                    status = 'clear';
+                    statusText = 'GOOD TO GO';
                     break;
                 default:
                     statusText = 'GOOD TO GO';
