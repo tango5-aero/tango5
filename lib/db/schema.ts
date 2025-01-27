@@ -1,17 +1,13 @@
 import { boolean, date, integer, interval, pgTable, serial, text, unique } from 'drizzle-orm/pg-core';
-import { InferInsertModel, InferSelectModel } from 'drizzle-orm/table';
 
 export const ScenariosTable = pgTable('scenarios', {
     id: serial('id').primaryKey(),
     data: text('data').notNull(),
     releaseDate: date('release_date')
 });
-export type ScenarioSelect = InferSelectModel<typeof ScenariosTable>;
-
 export const UsersTable = pgTable('users', {
     id: text('id').primaryKey()
 });
-export type UserSelect = InferSelectModel<typeof UsersTable>;
 
 export const UserGamesTable = pgTable(
     'usergames',
@@ -28,5 +24,3 @@ export const UserGamesTable = pgTable(
     },
     (t) => [unique('unique_id').on(t.userId, t.scenarioId)]
 );
-export type UserGameInsert = InferInsertModel<typeof UserGamesTable>;
-export type UserGameSelect = InferSelectModel<typeof UserGamesTable>;

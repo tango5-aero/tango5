@@ -5,6 +5,7 @@ import { ScenarioData, scenarioSchema } from '~/lib/domain/scenario';
 import { writeScenarios, updateScenarioReleaseDate } from '~/lib/db/queries';
 import { deleteScenario as deleteDBScenario, getScenariosPage as getDBScenariosPage } from '~/lib/db/queries';
 import { format } from 'date-fns';
+import { ScenarioParsed } from '~/lib/types';
 
 export async function createScenario(
     _prevState: ActionState,
@@ -47,7 +48,7 @@ export async function createScenario(
 
 export async function setScenarioReleaseDate(
     _prevState: ActionState,
-    payload: { id: number; releaseDate: Date | undefined }
+    payload: Pick<ScenarioParsed, 'id' | 'releaseDate'>
 ): Promise<ActionState> {
     const { id, releaseDate } = payload;
     const result = await updateScenarioReleaseDate(id, releaseDate);
@@ -64,7 +65,7 @@ export async function setScenarioReleaseDate(
     };
 }
 
-export async function deleteScenario(_prevState: ActionState, id: number): Promise<ActionState> {
+export async function deleteScenario(_prevState: ActionState, id: ScenarioParsed['id']): Promise<ActionState> {
     const result = await deleteDBScenario(id);
 
     if (result.length === 0) {
