@@ -11,6 +11,7 @@ import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
 import { getScenariosPage } from '~/lib/actions';
 import { ScenarioParsed } from '~/lib/types';
+import { MONITOR_DISTANCE_THRESHOLD_NM } from '~/lib/constants';
 
 export const columns: ColumnDef<ScenarioParsed>[] = [
     {
@@ -34,7 +35,10 @@ export const columns: ColumnDef<ScenarioParsed>[] = [
         header: () => <div className="text-right">PCDs</div>,
         cell: ({ row }) => {
             const scenarioData = row.getValue('data') as ScenarioData;
-            return <div className="text-right font-medium">{scenarioData.pcds.length}</div>;
+            const countPcds = scenarioData.pcds.filter(
+                (pcd) => pcd.minDistanceNM <= MONITOR_DISTANCE_THRESHOLD_NM
+            ).length;
+            return <div className="text-right font-medium">{countPcds}</div>;
         }
     },
     {
