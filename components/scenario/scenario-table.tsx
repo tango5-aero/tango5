@@ -10,6 +10,8 @@ import { ScenarioReleaseDateDialog } from './scenario-release-date-dialog';
 import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
 import { getScenariosPage } from '~/lib/actions';
+import { Flight } from '~/lib/domain/flight';
+import { Pcd } from '~/lib/domain/pcd';
 import { ScenarioParsed } from '~/lib/types';
 
 export const columns: ColumnDef<ScenarioParsed>[] = [
@@ -34,7 +36,33 @@ export const columns: ColumnDef<ScenarioParsed>[] = [
         header: () => <div className="text-right">PCDs</div>,
         cell: ({ row }) => {
             const scenarioData = row.getValue('data') as ScenarioData;
-            return <div className="text-right font-medium">{scenarioData.pcds.length}</div>;
+            const flightsDict: Record<string, Flight> = scenarioData.flights.reduce(
+                (acc: Record<string, Flight>, flight) => {
+                    acc[flight.id] = new Flight(
+                        flight.id,
+                        flight.latitudeDeg,
+                        flight.longitudeDeg,
+                        flight.altitudeFt,
+                        flight.callsign,
+                        flight.groundSpeedKts,
+                        flight.trackDeg,
+                        flight.verticalSpeedFtpm,
+                        flight.selectedAltitudeFt
+                    );
+                    return acc;
+                },
+                {}
+            );
+            const countPcds = scenarioData.pcds.filter(
+                (pcd) =>
+                    !new Pcd(
+                        flightsDict[pcd.firstId],
+                        flightsDict[pcd.secondId],
+                        pcd.minDistanceNM,
+                        pcd.timeToMinDistanceMs
+                    ).isSafe
+            ).length;
+            return <div className="text-right font-medium">{countPcds}</div>;
         }
     },
     {
