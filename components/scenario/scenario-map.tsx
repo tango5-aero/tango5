@@ -5,7 +5,7 @@ import MapGL, { MapProvider, Layer, Source, useMap } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
 import { featureCollection as featureCollection } from '~/lib/domain/geojson';
 import { Scenario } from '~/lib/domain/scenario';
-import { MapEvent, MapMouseEvent } from 'mapbox-gl';
+import { MapEvent, MapMouseEvent, MapSourceDataEvent } from 'mapbox-gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { destination, point, Units } from '@turf/turf';
@@ -17,6 +17,7 @@ type ScenarioMapProps = {
     selectedFlight: string | null;
     selectedPairs: [string, string][];
     isGameOver: boolean;
+    onMapReady: () => void;
 };
 
 const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
@@ -35,6 +36,19 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
         e.target.getCanvas().style.cursor = '';
     };
 
+    const onSourceData = (e: MapSourceDataEvent) => {
+        if (e.sourceId !== 'scenario-source') return;
+        if (!e.isSourceLoaded) return;
+        if (e.source?.type !== 'geojson') return;
+
+        const haveFeatures =
+            typeof e.source.data !== 'string' && (e.source.data as FeatureCollection).features?.length > 0;
+
+        if (haveFeatures) {
+            props.onMapReady();
+        }
+    };
+
     return (
         <MapProvider>
             <ScaleMap latitude={props.scenario.boundaries[3]} />
@@ -51,7 +65,8 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
                 onZoomEnd={(e) => setZoom(e.viewState.zoom)}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
-                onClick={onClick}>
+                onClick={onClick}
+                onSourceData={onSourceData}>
                 <ResizeEffects bounds={props.scenario.boundaries} />
                 <Layers
                     zoom={zoom}
