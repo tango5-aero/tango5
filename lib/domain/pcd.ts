@@ -1,9 +1,7 @@
+import { CONFLICT_DISTANCE_THRESHOLD_NM, MONITOR_DISTANCE_THRESHOLD_NM } from '../constants';
 import { Flight } from './flight';
 
 export class Pcd {
-    private conflict_distance_threshold_nm = 5;
-    private monitor_distance_threshold_nm = 9;
-
     constructor(
         public readonly firstFlight: Flight,
         public readonly secondFlight: Flight,
@@ -16,11 +14,11 @@ export class Pcd {
     }
 
     get isConflict() {
-        return this.minDistanceNM <= this.conflict_distance_threshold_nm;
+        return this.minDistanceNM <= CONFLICT_DISTANCE_THRESHOLD_NM;
     }
 
     get isMonitor() {
-        return !this.isConflict && this.minDistanceNM <= this.monitor_distance_threshold_nm;
+        return !this.isConflict && this.minDistanceNM <= MONITOR_DISTANCE_THRESHOLD_NM;
     }
 
     get isSafe() {

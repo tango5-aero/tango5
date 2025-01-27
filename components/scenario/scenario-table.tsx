@@ -11,6 +11,7 @@ import { ScenarioReleaseDateDialog } from './scenario-release-date-dialog';
 import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
 import { getScenariosPage } from '~/lib/actions';
+import { MONITOR_DISTANCE_THRESHOLD_NM } from '~/lib/constants';
 
 type ScenarioType = Omit<ScenarioSelect, 'data'> & { data: ScenarioData };
 
@@ -36,7 +37,10 @@ export const columns: ColumnDef<ScenarioType>[] = [
         header: () => <div className="text-right">PCDs</div>,
         cell: ({ row }) => {
             const scenarioData = row.getValue('data') as ScenarioData;
-            return <div className="text-right font-medium">{scenarioData.pcds.length}</div>;
+            const countPcds = scenarioData.pcds.filter(
+                (pcd) => pcd.minDistanceNM <= MONITOR_DISTANCE_THRESHOLD_NM
+            ).length;
+            return <div className="text-right font-medium">{countPcds}</div>;
         }
     },
     {
