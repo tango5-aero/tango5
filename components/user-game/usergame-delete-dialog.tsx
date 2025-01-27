@@ -6,8 +6,10 @@ import { cacheTags } from '~/lib/constants';
 import { deleteUserGame } from '~/lib/actions';
 import { ActionDialog } from '../ui/action-dialog';
 import { useDialogAction } from '~/hooks/use-dialog-action';
+import { useTableContext } from '~/hooks/use-table-context';
 
 export const UserGameDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => {
+    const [refresh, setRefresh] = useTableContext();
     const [open, setOpen] = useState(false);
     const { action, pending } = useDialogAction(`Deleting user game #${props.id}`, deleteUserGame, cacheTags.userGames);
 
@@ -15,6 +17,7 @@ export const UserGameDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => 
         startTransition(async () => {
             action(props.id);
             setOpen(false);
+            setRefresh(!refresh);
         });
     };
 

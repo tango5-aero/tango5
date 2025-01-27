@@ -13,6 +13,8 @@ export function useTableApi<TRecord>(
     const [data, setData] = useState<TRecord[]>([]);
     const [rowCount, setRowCount] = useState(0);
     const [loading, setLoading] = useState(false);
+    const useRefresh = useState(false);
+    const [refresh, _] = useRefresh;
 
     useEffect(() => {
         setLoading(true);
@@ -22,7 +24,7 @@ export function useTableApi<TRecord>(
             setRowCount(count);
             setLoading(false);
         });
-    }, [limit, offset, setData, setLoading]);
+    }, [limit, offset, setData, setLoading, refresh]);
 
-    return { data, rowCount, loading };
+    return { data, rowCount, loading, useRefresh };
 }

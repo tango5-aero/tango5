@@ -5,7 +5,7 @@ import { ScenarioData, scenarioSchema } from '~/lib/domain/scenario';
 import { writeScenarios, updateScenarioReleaseDate } from '~/lib/db/queries';
 import { deleteScenario as deleteDBScenario, getScenariosPage as getDBScenariosPage } from '~/lib/db/queries';
 import { format } from 'date-fns';
-import { revalidateTag, unstable_cache } from 'next/cache';
+import { unstable_cache } from 'next/cache';
 import { cacheTags } from '../constants';
 
 export async function createScenario(
@@ -44,7 +44,6 @@ export async function createScenario(
         return { message: `Internal database error when saving scenarios`, error: true };
     }
 
-    revalidateTag(cacheTags.scenarios);
     return { message: `Scenario${result.length > 1 && 's'} created`, error: false };
 }
 
@@ -59,7 +58,6 @@ export async function setScenarioReleaseDate(
         return { message: `Scenario #${id} not found`, error: true };
     }
 
-    revalidateTag(cacheTags.scenarios);
     return {
         message: releaseDate
             ? `Set a new release date for scenario #${id} - ${format(releaseDate, 'PPP')}`
@@ -75,7 +73,6 @@ export async function deleteScenario(_prevState: ActionState, id: number): Promi
         return { message: `Scenario #${id} not found`, error: true };
     }
 
-    revalidateTag(cacheTags.scenarios);
     return { message: `Scenario #${id} deleted`, error: false };
 }
 

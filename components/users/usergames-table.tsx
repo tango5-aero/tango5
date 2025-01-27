@@ -7,6 +7,7 @@ import { UserGameDeleteDialog } from '~/components/user-game/usergame-delete-dia
 import { usePagination } from '~/hooks/use-pagination';
 import { getUserGamesPage } from '~/lib/actions';
 import { useTableApi } from '~/hooks/use-table-api';
+import { TableContext } from '~/hooks/use-table-context';
 
 type UserGameRow = {
     id: number;
@@ -87,18 +88,19 @@ export const adminColumns: ColumnDef<UserGameRow>[] = [
 
 export const UserGamesTable = (props: PropsWithoutRef<UserGamesTableProps>) => {
     const { pagination, onPaginationChange, limit, offset } = usePagination();
-
-    const { data, rowCount, loading } = useTableApi(getUserGamesPage, limit, offset);
+    const { data, rowCount, loading, useRefresh } = useTableApi(getUserGamesPage, limit, offset);
 
     return (
-        <DataTable
-            data={data}
-            rowCount={rowCount}
-            loading={loading}
-            onPaginationChange={onPaginationChange}
-            pagination={pagination}
-            columns={props.allowDeleteGames ? adminColumns : userColumns}
-            initialState={{ columnVisibility: { data: false } }}
-        />
+        <TableContext value={useRefresh}>
+            <DataTable
+                data={data}
+                rowCount={rowCount}
+                loading={loading}
+                onPaginationChange={onPaginationChange}
+                pagination={pagination}
+                columns={props.allowDeleteGames ? adminColumns : userColumns}
+                initialState={{ columnVisibility: { data: false } }}
+            />
+        </TableContext>
     );
 };

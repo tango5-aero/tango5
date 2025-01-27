@@ -11,6 +11,8 @@ import { ScenarioReleaseDateDialog } from './scenario-release-date-dialog';
 import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
 import { getScenariosPage } from '~/lib/actions';
+import { TableContext } from '~/hooks/use-table-context';
+import { ScenarioUploadDialog } from './scenario-upload-dialog';
 
 type ScenarioType = Omit<ScenarioSelect, 'data'> & { data: ScenarioData };
 
@@ -76,18 +78,20 @@ export const columns: ColumnDef<ScenarioType>[] = [
 
 export const ScenariosTable = () => {
     const { pagination, onPaginationChange, limit, offset } = usePagination();
-
-    const { data, rowCount, loading } = useTableApi(getScenariosPage, limit, offset);
+    const { data, rowCount, loading, useRefresh } = useTableApi(getScenariosPage, limit, offset);
 
     return (
-        <DataTable
-            data={data}
-            rowCount={rowCount}
-            loading={loading}
-            onPaginationChange={onPaginationChange}
-            pagination={pagination}
-            columns={columns}
-            initialState={{ columnVisibility: { data: false } }}
-        />
+        <TableContext value={useRefresh}>
+            <DataTable
+                data={data}
+                rowCount={rowCount}
+                loading={loading}
+                onPaginationChange={onPaginationChange}
+                pagination={pagination}
+                columns={columns}
+                initialState={{ columnVisibility: { data: false } }}
+            />
+            <ScenarioUploadDialog />
+        </TableContext>
     );
 };

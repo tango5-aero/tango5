@@ -6,8 +6,10 @@ import { Trash2Icon } from 'lucide-react';
 import { cacheTags } from '~/lib/constants';
 import { ActionDialog } from '../ui/action-dialog';
 import { useDialogAction } from '~/hooks/use-dialog-action';
+import { useTableContext } from '~/hooks/use-table-context';
 
 export const ScenarioDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => {
+    const [refresh, setRefresh] = useTableContext();
     const [open, setOpen] = useState(false);
     const { action, pending } = useDialogAction(`Deleting scenario #${props.id}`, deleteScenario, cacheTags.scenarios);
 
@@ -15,6 +17,7 @@ export const ScenarioDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => 
         startTransition(async () => {
             action(props.id);
             setOpen(false);
+            setRefresh(!refresh);
         });
     };
 
