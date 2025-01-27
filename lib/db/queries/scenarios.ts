@@ -1,20 +1,20 @@
 import { count, eq, inArray, notInArray, sql } from 'drizzle-orm';
-import { ScenarioData, scenarioSchema } from '~/lib/domain/scenario';
+import { scenarioSchema } from '~/lib/domain/scenario';
 import { db } from '~/lib/db';
 import { ScenariosTable, UserGamesTable } from '~/lib/db/schema';
-import { format } from 'date-fns';
+import { ScenarioParsed, UserGameInsert } from '~/lib/types';
 
 export const getScenarios = async () => {
     const res = await db.query.ScenariosTable.findMany();
     return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
 };
 
-export const getScenario = async (id: number) => {
+export const getScenario = async (id: ScenarioParsed['id']) => {
     const res = await db.query.ScenariosTable.findFirst({ where: (scenario, { eq }) => eq(scenario.id, id) });
     return res ? { ...res, data: scenarioSchema.parse(JSON.parse(res.data)) } : res;
 };
 
-export const getUnplayedScenarios = async (userId: string) => {
+export const getUnplayedScenarios = async (userId: UserGameInsert['userId']) => {
     const sq = db
         .select({ scenario_id: UserGamesTable.scenarioId })
         .from(UserGamesTable)
@@ -28,7 +28,7 @@ export const getUnplayedScenarios = async (userId: string) => {
         .where(notInArray(ScenariosTable.id, db.select().from(sq)));
 };
 
-export const getRandom = async (ids?: number[]) => {
+export const getRandom = async (ids?: ScenarioParsed['id'][]) => {
     const query = db.select().from(ScenariosTable);
 
     if (ids) {
@@ -45,23 +45,22 @@ export const getRandom = async (ids?: number[]) => {
     return first ? { ...first, data: scenarioSchema.parse(JSON.parse(first.data)) } : first;
 };
 
-export const writeScenarios = async (scenariosData: ScenarioData[]) => {
+export const writeScenarios = async (scenariosData: Array<ScenarioParsed['data']>) => {
     const data = scenariosData.map((scenarioData) => ({ data: JSON.stringify(scenarioData) }));
     const res = await db.insert(ScenariosTable).values(data).returning();
     return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
 };
 
-export const updateScenarioReleaseDate = async (id: number, releaseDate: Date | undefined) => {
-    const res = await db
-        .update(ScenariosTable)
-        .set({ releaseDate: releaseDate ? format(releaseDate, 'yyyy-MM-dd') : null })
-        .where(eq(ScenariosTable.id, id))
-        .returning();
+export const updateScenarioReleaseDate = async (
+    id: ScenarioParsed['id'],
+    releaseDate: ScenarioParsed['releaseDate']
+) => {
+    const res = await db.update(ScenariosTable).set({ releaseDate }).where(eq(ScenariosTable.id, id)).returning();
 
     return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
 };
 
-export const deleteScenario = async (id: number) => {
+export const deleteScenario = async (id: ScenarioParsed['id']) => {
     const res = await db.delete(ScenariosTable).where(eq(ScenariosTable.id, id)).returning();
     return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
 };
