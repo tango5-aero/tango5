@@ -9,6 +9,7 @@ import { MapEvent, MapMouseEvent, MapSourceDataEvent } from 'mapbox-gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { destination, point, Units } from '@turf/turf';
+import { MAP_SOURCE_ID } from '~/lib/constants';
 
 type ScenarioMapProps = {
     style?: CSSProperties;
@@ -37,7 +38,7 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
     };
 
     const onSourceData = (e: MapSourceDataEvent) => {
-        if (e.sourceId !== 'scenario-source') return;
+        if (e.sourceId !== MAP_SOURCE_ID) return;
         if (!e.isSourceLoaded) return;
         if (e.source?.type !== 'geojson') return;
 
@@ -186,7 +187,7 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
     }, [props.scenario, props.zoom, mapRef, props.selectedFlight, props.selectedPairs, props.isGameOver]);
 
     return (
-        <Source id="scenario-source" type="geojson" data={collection}>
+        <Source id={MAP_SOURCE_ID} type="geojson" data={collection}>
             <Layer
                 id={LayersIds.leadVector}
                 type="line"
