@@ -10,9 +10,9 @@ import { ScenarioReleaseDateDialog } from './scenario-release-date-dialog';
 import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
 import { getScenariosPage } from '~/lib/actions';
-import { ScenarioParsed } from '~/lib/types';
 import { Flight } from '~/lib/domain/flight';
 import { Pcd } from '~/lib/domain/pcd';
+import { ScenarioParsed } from '~/lib/types';
 
 export const columns: ColumnDef<ScenarioParsed>[] = [
     {
