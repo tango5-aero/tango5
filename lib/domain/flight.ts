@@ -53,10 +53,10 @@ export class Flight {
     }
 
     get intentDisplay(): '↑' | '↓' | '' {
-        if (this.verticalSpeedFtpm === undefined) return '';
+        if (this.selectedAltitudeFt === undefined || this.altitudeFt === undefined) return '';
 
-        if (this.verticalSpeedFtpm >= 200) return '↑';
-        if (this.verticalSpeedFtpm <= -200) return '↓';
+        if (this.selectedAltitudeFt - this.altitudeFt > 100) return '↑';
+        if (this.selectedAltitudeFt - this.altitudeFt < -100) return '↓';
 
         return '';
     }
