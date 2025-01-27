@@ -11,7 +11,8 @@ import { ScenarioReleaseDateDialog } from './scenario-release-date-dialog';
 import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
 import { getScenariosPage } from '~/lib/actions';
-import { MONITOR_DISTANCE_THRESHOLD_NM } from '~/lib/constants';
+import { Flight } from '~/lib/domain/flight';
+import { Pcd } from '~/lib/domain/pcd';
 
 type ScenarioType = Omit<ScenarioSelect, 'data'> & { data: ScenarioData };
 
@@ -37,8 +38,31 @@ export const columns: ColumnDef<ScenarioType>[] = [
         header: () => <div className="text-right">PCDs</div>,
         cell: ({ row }) => {
             const scenarioData = row.getValue('data') as ScenarioData;
+            const flightsDict: Record<string, Flight> = scenarioData.flights.reduce(
+                (acc: Record<string, Flight>, flight) => {
+                    acc[flight.id] = new Flight(
+                        flight.id,
+                        flight.latitudeDeg,
+                        flight.longitudeDeg,
+                        flight.altitudeFt,
+                        flight.callsign,
+                        flight.groundSpeedKts,
+                        flight.trackDeg,
+                        flight.verticalSpeedFtpm,
+                        flight.selectedAltitudeFt
+                    );
+                    return acc;
+                },
+                {}
+            );
             const countPcds = scenarioData.pcds.filter(
-                (pcd) => pcd.minDistanceNM <= MONITOR_DISTANCE_THRESHOLD_NM
+                (pcd) =>
+                    !new Pcd(
+                        flightsDict[pcd.firstId],
+                        flightsDict[pcd.secondId],
+                        pcd.minDistanceNM,
+                        pcd.timeToMinDistanceMs
+                    ).isSafe
             ).length;
             return <div className="text-right font-medium">{countPcds}</div>;
         }
