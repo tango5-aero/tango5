@@ -22,7 +22,7 @@ export function useTableApi<TRecord>(
             setRowCount(count);
             setLoading(false);
         });
-    }, [limit, offset, setData, setLoading]);
+    }, [limit, offset, action, setData, setLoading]);
 
     return { data, rowCount, loading };
 }

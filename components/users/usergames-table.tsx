@@ -5,7 +5,7 @@ import { DataTable } from '~/components/ui/data-table';
 import { PropsWithoutRef } from 'react';
 import { UserGameDeleteDialog } from '~/components/user-game/usergame-delete-dialog';
 import { usePagination } from '~/hooks/use-pagination';
-import { getUserGamesPage } from '~/lib/actions';
+import { getCurrentUserGamesPage, getUserGamesPage } from '~/lib/actions';
 import { useTableApi } from '~/hooks/use-table-api';
 
 type UserGameRow = {
@@ -17,7 +17,7 @@ type UserGameRow = {
 };
 
 type UserGamesTableProps = {
-    allowDeleteGames: boolean;
+    adminAccess: boolean;
 };
 
 export const userColumns: ColumnDef<UserGameRow>[] = [
@@ -88,7 +88,11 @@ export const adminColumns: ColumnDef<UserGameRow>[] = [
 export const UserGamesTable = (props: PropsWithoutRef<UserGamesTableProps>) => {
     const { pagination, onPaginationChange, limit, offset } = usePagination();
 
-    const { data, rowCount, loading } = useTableApi(getUserGamesPage, limit, offset);
+    const { data, rowCount, loading } = useTableApi(
+        props.adminAccess ? getUserGamesPage : getCurrentUserGamesPage,
+        limit,
+        offset
+    );
 
     return (
         <DataTable
@@ -97,7 +101,7 @@ export const UserGamesTable = (props: PropsWithoutRef<UserGamesTableProps>) => {
             loading={loading}
             onPaginationChange={onPaginationChange}
             pagination={pagination}
-            columns={props.allowDeleteGames ? adminColumns : userColumns}
+            columns={props.adminAccess ? adminColumns : userColumns}
             initialState={{ columnVisibility: { data: false } }}
         />
     );

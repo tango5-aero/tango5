@@ -7,7 +7,8 @@ import {
     deleteUserGame as deleteDBUserGame,
     writeUserGame,
     deleteUserGames,
-    getUserGamesPage as getDBUserGamesPage
+    getUserGamesPage as getDBUserGamesPage,
+    getCurrentUserGamesPage as getDBCurrentUserGamesPage
 } from '~/lib/db/queries';
 import { UserGameInsert, UserGameSelect } from '~/lib/types';
 import { ActionState } from '.';
@@ -64,4 +65,8 @@ export async function resetUserProgress(
 
 export async function getUserGamesPage(pageIndex: number, pageSize: number) {
     return await getDBUserGamesPage(pageIndex, pageSize);
+}
+
+export async function getCurrentUserGamesPage(pageIndex: number, pageSize: number) {
+    return await getDBCurrentUserGamesPage(pageIndex, pageSize);
 }
