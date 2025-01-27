@@ -187,10 +187,10 @@ export function featureCollection(
                     break;
                 case pcd?.isSafe:
                     status = 'clear';
-                    statusText = 'GOOD TO GO';
+                    statusText = 'KEEP TRYING';
                     break;
                 default:
-                    statusText = 'GOOD TO GO';
+                    statusText = 'KEEP TRYING';
             }
 
             const text = `${currentDistanceNM.toFixed(1)}NM${pcd?.description ? `\r\n${pcd.description}` : ''}`;
