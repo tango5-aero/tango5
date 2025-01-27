@@ -6,17 +6,15 @@ import { type ScenarioData } from '~/lib/domain/scenario';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
 import { Download, PlayIcon } from 'lucide-react';
-import { ScenarioSelect } from '~/lib/db/schema';
 import { ScenarioReleaseDateDialog } from './scenario-release-date-dialog';
 import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
 import { getScenariosPage } from '~/lib/actions';
 import { Flight } from '~/lib/domain/flight';
 import { Pcd } from '~/lib/domain/pcd';
+import { ScenarioParsed } from '~/lib/types';
 
-type ScenarioType = Omit<ScenarioSelect, 'data'> & { data: ScenarioData };
-
-export const columns: ColumnDef<ScenarioType>[] = [
+export const columns: ColumnDef<ScenarioParsed>[] = [
     {
         accessorKey: 'id',
         header: () => <div className="text-right">ID</div>
