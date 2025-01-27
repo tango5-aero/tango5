@@ -5,7 +5,7 @@ import { WelcomeTango5Title } from '~/components/ui/welcome-tango5-title';
 export default async function Page() {
     return (
         <>
-            <main className="flex h-screen flex-col items-center justify-center gap-6 px-5 lg:hidden">
+            <main className="flex h-[100dvh] flex-col items-center justify-center gap-6 px-5 lg:hidden">
                 <h2 className="text-xl sm:text-2xl">Screen Size Not Supported</h2>
                 <p className="text-pretty text-sm sm:text-base">
                     This application requires a minimum screen width of 1024 pixels to function properly.
