@@ -53,10 +53,12 @@ export class Flight {
     }
 
     get intentDisplay(): '↑' | '↓' | '' {
-        if (this.verticalSpeedFtpm === undefined) return '';
+        if (this.selectedAltitudeFt === undefined || this.altitudeFt === undefined) return '';
 
-        if (this.verticalSpeedFtpm >= 200) return '↑';
-        if (this.verticalSpeedFtpm <= -200) return '↓';
+        const altitudeFtWithoutDecimals = Math.round(this.altitudeFt / 100);
+        const selectedAltitudeFtWithoutDecimals = Math.round(this.selectedAltitudeFt / 100);
+        if (selectedAltitudeFtWithoutDecimals > altitudeFtWithoutDecimals) return '↑';
+        if (selectedAltitudeFtWithoutDecimals < altitudeFtWithoutDecimals) return '↓';
 
         return '';
     }
