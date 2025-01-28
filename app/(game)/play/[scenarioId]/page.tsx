@@ -1,6 +1,7 @@
-import { notFound } from 'next/navigation';
-import { getScenario } from '~/lib/db/queries';
+import { notFound, redirect } from 'next/navigation';
+import { getScenario, getUnplayedScenarios } from '~/lib/db/queries';
 import { Game } from '~/components/game/game';
+import { currentUser } from '@clerk/nextjs/server';
 
 export default async function Page({ params }: { params: Promise<{ scenarioId: number }> }) {
     const id = (await params).scenarioId;
@@ -10,5 +11,13 @@ export default async function Page({ params }: { params: Promise<{ scenarioId: n
 
     if (!scenario?.data) notFound();
 
-    return <Game id={id} scenarioData={scenario.data} nextUrl={'/play'} />;
+    const user = await currentUser();
+
+    if (!user) {
+        redirect('/');
+    }
+
+    const unplayedScenarios = (await getUnplayedScenarios(user.id)).length;
+
+    return <Game id={id} unplayedScenarios={unplayedScenarios} scenarioData={scenario.data} nextUrl={'/play'} />;
 }

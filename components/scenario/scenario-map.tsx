@@ -9,6 +9,7 @@ import { MapEvent, MapMouseEvent, MapSourceDataEvent } from 'mapbox-gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { destination, point, Units } from '@turf/turf';
+import { BBox } from '~/lib/domain/geometry';
 import { MAP_SOURCE_ID } from '~/lib/constants';
 
 type ScenarioMapProps = {
@@ -37,6 +38,7 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
         e.target.getCanvas().style.cursor = '';
     };
 
+    const scaledBoundaries = scaleBbox(props.scenario.boundaries);
     const onSourceData = (e: MapSourceDataEvent) => {
         if (e.sourceId !== MAP_SOURCE_ID) return;
         if (!e.isSourceLoaded) return;
@@ -56,7 +58,7 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
             <MapGL
                 id="map"
                 mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-                initialViewState={{ bounds: props.scenario.boundaries }}
+                initialViewState={{ bounds: scaledBoundaries }}
                 style={props.style}
                 mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
                 interactive={false}
@@ -127,7 +129,7 @@ const ResizeEffects = (props: PropsWithoutRef<{ bounds: number[] }>) => {
         const map = mapRef?.getMap();
 
         if (map) {
-            const fitBounds = () => map.fitBounds(props.bounds as [number, number, number, number]);
+            const fitBounds = () => map.fitBounds(scaleBbox(props.bounds as [number, number, number, number]));
             const resize = () => map.resize.bind(map);
 
             window.addEventListener('resize', fitBounds);
@@ -171,7 +173,7 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
             return [point.lng, point.lat] as [number, number];
         };
 
-        const scalingFactor = props.zoom ** 2;
+        const scalingFactor = props.zoom ** 2.1;
 
         const computedCollection = featureCollection(
             props.scenario,
@@ -339,5 +341,17 @@ const LayersIds = {
     labelText: 'labels-text',
     labelAnchor: 'label-anchor'
 } as const;
+
+const scaleBbox = (boundaries: BBox): BBox => {
+    const estimatedPaddingX = 0.5;
+    const estimatedPaddingY = 0.7;
+
+    return [
+        boundaries[0] - estimatedPaddingX,
+        boundaries[1] - estimatedPaddingY,
+        boundaries[2] + estimatedPaddingX,
+        boundaries[3] + estimatedPaddingY
+    ];
+};
 
 export { ScenarioMap, GeometryTypes };
