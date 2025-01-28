@@ -20,7 +20,7 @@ const posthogEvents = {
 const Game = (
     props: PropsWithoutRef<{
         id: number;
-        unplayedScenarios: number | undefined;
+        unplayedScenarios: number;
         scenarioData: ScenarioData;
         nextUrl: string;
     }>
@@ -121,13 +121,9 @@ const Game = (
                         running={!isGameOver}
                         onComplete={() => setGameOver(true)}
                     />
-                    {props.unplayedScenarios !== undefined && (
-                        <div className="fixed right-24 top-6 z-10">
-                            <Button disabled={true} onClick={() => {}} variant="map" size="lg">
-                                Remaining scenarios: {props.unplayedScenarios}
-                            </Button>
-                        </div>
-                    )}
+                    <div className="fixed right-32 top-6 z-10 text-white text-opacity-50 dark:text-black">
+                        Remaining scenarios: {props.unplayedScenarios}
+                    </div>
                 </>
             )}
             <ScenarioMap
