@@ -121,7 +121,7 @@ const Game = (
                         running={!isGameOver}
                         onComplete={() => setGameOver(true)}
                     />
-                    <div className="fixed right-32 top-6 z-10 text-white text-opacity-50 dark:text-black">
+                    <div className="fixed right-32 top-6 z-10 select-none text-white/50">
                         Remaining scenarios: {props.unplayedScenarios}
                     </div>
                 </>
