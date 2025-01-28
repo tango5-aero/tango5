@@ -243,8 +243,6 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
                 id={LayersIds.pcdLabelFill}
                 type="fill"
                 paint={{
-                    'fill-opacity': 0,
-                    'fill-opacity-transition': { duration: 4000, delay: 1000 },
                     'fill-color': [
                         'match',
                         ['get', 'status'],

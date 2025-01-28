@@ -25,6 +25,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; n
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
     const [isMapReady, setIsMapReady] = useState(false);
     const [isGameOver, setGameOver] = useState(false);
+    const selectedPairsRef = useRef(selectedPairs);
 
     const gameStartTimeMs = useRef<number | undefined>(undefined);
 
@@ -58,6 +59,15 @@ const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; n
             setGameOver(true);
         }
     }, [scenario, selectedPairs]);
+
+    useEffect(() => {
+        selectedPairsRef.current = selectedPairs;
+
+        setTimeout(() => {
+            const [, ...rest] = selectedPairsRef.current;
+            setSelectedPairs(rest);
+        }, 5000);
+    }, [selectedPairs]);
 
     const selectFlight = (id: string) => {
         // if the game is over do not allow further interactions
