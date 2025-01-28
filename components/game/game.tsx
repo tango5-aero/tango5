@@ -9,7 +9,7 @@ import { completeUserGame } from '~/lib/actions';
 import { GameCountdown } from './game-countdown';
 import posthog from 'posthog-js';
 import { GameProgress } from './game-progress';
-import { GAME_TIMEOUT_MS } from '~/lib/constants';
+import { GAME_TIMEOUT_MS, TIME_TO_REMOVE_FAILED_PAIRS_MS } from '~/lib/constants';
 import { Scenario } from '~/lib/domain/scenario';
 import { Pcd } from '~/lib/domain/pcd';
 
@@ -17,8 +17,6 @@ const posthogEvents = {
     gameStart: 'game_start',
     gameFinish: 'game_finish'
 };
-
-const TIME_TO_REMOVE_FAILED_PAIRS_MS = 5000;
 
 const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; nextUrl: string }>) => {
     const scenario = useMemo(() => new Scenario(props.scenarioData), [props.scenarioData]);
