@@ -17,7 +17,14 @@ const posthogEvents = {
     gameFinish: 'game_finish'
 };
 
-const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; nextUrl: string }>) => {
+const Game = (
+    props: PropsWithoutRef<{
+        id: number;
+        unplayedScenarios: number | undefined;
+        scenarioData: ScenarioData;
+        nextUrl: string;
+    }>
+) => {
     const scenario = useMemo(() => new Scenario(props.scenarioData), [props.scenarioData]);
 
     // Game related state
@@ -114,6 +121,13 @@ const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; n
                         running={!isGameOver}
                         onComplete={() => setGameOver(true)}
                     />
+                    {props.unplayedScenarios !== undefined && (
+                        <div className="fixed right-24 top-6 z-10">
+                            <Button disabled={true} onClick={() => {}} variant="map" size="lg">
+                                Remaining scenarios: {props.unplayedScenarios}
+                            </Button>
+                        </div>
+                    )}
                 </>
             )}
             <ScenarioMap
