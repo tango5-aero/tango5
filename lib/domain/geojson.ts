@@ -34,6 +34,7 @@ type Props =
           text: string;
           fontSize: number;
           status: Status;
+          statusText: string;
       };
 
 export function measureTextBBox(text: string, fontSize: number): { height: number; width: number } {
@@ -186,15 +187,15 @@ export function featureCollection(
                     break;
                 case pcd?.isSafe:
                     status = 'clear';
-                    statusText = 'GOOD TO GO';
+                    statusText = 'KEEP TRYING';
                     break;
                 default:
-                    statusText = 'GOOD TO GO';
+                    statusText = 'KEEP TRYING';
             }
 
-            const text = `${statusText}\n${currentDistanceNM.toFixed(1)}NM${pcd?.description ? `\r\n${pcd.description}` : ''}`;
+            const text = `${currentDistanceNM.toFixed(1)}NM${pcd?.description ? `\r\n${pcd.description}` : ''}`;
 
-            const textSize = measureTextBBox(text, fontSize);
+            const textSize = measureTextBBox(`${statusText}\n${text}`, fontSize);
 
             const width = Math.max(1, textSize.width / 1.5);
             const height = Math.max(1, textSize.height / 1.25);
@@ -259,6 +260,7 @@ export function featureCollection(
                     ref: id,
                     type: GeometryTypes.pcdText,
                     text,
+                    statusText,
                     fontSize,
                     status
                 },

@@ -7,6 +7,7 @@ import { deleteScenario as deleteDBScenario, getScenariosPage as getDBScenariosP
 import { format } from 'date-fns';
 import { unstable_cache } from 'next/cache';
 import { cacheTags } from '../constants';
+import { ScenarioParsed } from '~/lib/types';
 
 export async function createScenario(
     _prevState: ActionState,
@@ -49,7 +50,7 @@ export async function createScenario(
 
 export async function setScenarioReleaseDate(
     _prevState: ActionState,
-    payload: { id: number; releaseDate: Date | undefined }
+    payload: Pick<ScenarioParsed, 'id' | 'releaseDate'>
 ): Promise<ActionState> {
     const { id, releaseDate } = payload;
     const result = await updateScenarioReleaseDate(id, releaseDate);
@@ -66,7 +67,7 @@ export async function setScenarioReleaseDate(
     };
 }
 
-export async function deleteScenario(_prevState: ActionState, id: number): Promise<ActionState> {
+export async function deleteScenario(_prevState: ActionState, id: ScenarioParsed['id']): Promise<ActionState> {
     const result = await deleteDBScenario(id);
 
     if (result.length === 0) {

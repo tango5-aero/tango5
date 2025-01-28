@@ -6,17 +6,17 @@ import { type ScenarioData } from '~/lib/domain/scenario';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
 import { Download, PlayIcon } from 'lucide-react';
-import { ScenarioSelect } from '~/lib/db/schema';
 import { ScenarioReleaseDateDialog } from './scenario-release-date-dialog';
 import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
 import { getScenariosPage } from '~/lib/actions';
 import { TableContext } from '~/hooks/use-table-context';
 import { ScenarioUploadDialog } from './scenario-upload-dialog';
+import { Flight } from '~/lib/domain/flight';
+import { Pcd } from '~/lib/domain/pcd';
+import { ScenarioParsed } from '~/lib/types';
 
-type ScenarioType = Omit<ScenarioSelect, 'data'> & { data: ScenarioData };
-
-export const columns: ColumnDef<ScenarioType>[] = [
+export const columns: ColumnDef<ScenarioParsed>[] = [
     {
         accessorKey: 'id',
         header: () => <div className="text-right">ID</div>
@@ -38,7 +38,33 @@ export const columns: ColumnDef<ScenarioType>[] = [
         header: () => <div className="text-right">PCDs</div>,
         cell: ({ row }) => {
             const scenarioData = row.getValue('data') as ScenarioData;
-            return <div className="text-right font-medium">{scenarioData.pcds.length}</div>;
+            const flightsDict: Record<string, Flight> = scenarioData.flights.reduce(
+                (acc: Record<string, Flight>, flight) => {
+                    acc[flight.id] = new Flight(
+                        flight.id,
+                        flight.latitudeDeg,
+                        flight.longitudeDeg,
+                        flight.altitudeFt,
+                        flight.callsign,
+                        flight.groundSpeedKts,
+                        flight.trackDeg,
+                        flight.verticalSpeedFtpm,
+                        flight.selectedAltitudeFt
+                    );
+                    return acc;
+                },
+                {}
+            );
+            const countPcds = scenarioData.pcds.filter(
+                (pcd) =>
+                    !new Pcd(
+                        flightsDict[pcd.firstId],
+                        flightsDict[pcd.secondId],
+                        pcd.minDistanceNM,
+                        pcd.timeToMinDistanceMs
+                    ).isSafe
+            ).length;
+            return <div className="text-right font-medium">{countPcds}</div>;
         }
     },
     {

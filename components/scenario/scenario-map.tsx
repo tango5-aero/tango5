@@ -5,10 +5,11 @@ import MapGL, { MapProvider, Layer, Source, useMap } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
 import { featureCollection as featureCollection } from '~/lib/domain/geojson';
 import { Scenario } from '~/lib/domain/scenario';
-import { MapEvent, MapMouseEvent } from 'mapbox-gl';
+import { MapEvent, MapMouseEvent, MapSourceDataEvent } from 'mapbox-gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { destination, point, Units } from '@turf/turf';
+import { MAP_SOURCE_ID } from '~/lib/constants';
 
 type ScenarioMapProps = {
     style?: CSSProperties;
@@ -17,6 +18,7 @@ type ScenarioMapProps = {
     selectedFlight: string | null;
     selectedPairs: [string, string][];
     isGameOver: boolean;
+    onMapReady: () => void;
 };
 
 const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
@@ -35,6 +37,19 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
         e.target.getCanvas().style.cursor = '';
     };
 
+    const onSourceData = (e: MapSourceDataEvent) => {
+        if (e.sourceId !== MAP_SOURCE_ID) return;
+        if (!e.isSourceLoaded) return;
+        if (e.source?.type !== 'geojson') return;
+
+        const haveFeatures =
+            typeof e.source.data !== 'string' && (e.source.data as FeatureCollection).features?.length > 0;
+
+        if (haveFeatures) {
+            props.onMapReady();
+        }
+    };
+
     return (
         <MapProvider>
             <ScaleMap latitude={props.scenario.boundaries[3]} />
@@ -51,7 +66,8 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
                 onZoomEnd={(e) => setZoom(e.viewState.zoom)}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
-                onClick={onClick}>
+                onClick={onClick}
+                onSourceData={onSourceData}>
                 <ResizeEffects bounds={props.scenario.boundaries} />
                 <Layers
                     zoom={zoom}
@@ -96,7 +112,7 @@ const ScaleMap = (props: PropsWithoutRef<{ latitude: number }>) => {
     if (!mapRef) return;
 
     return (
-        <div className={`fixed bottom-8 left-8 z-30`} style={{ width: `${width}px` }}>
+        <div className={`fixed left-60 top-7 z-30`} style={{ width: `${width}px` }}>
             <div className="text-center text-sm text-secondary dark:text-primary">5NM</div>
             <div className="h-[5px] w-full border-b-[1px] border-l-[1px] border-r-[1px] dark:border-primary"></div>
             <div className="h-1 w-full border-l-[1px] border-r-[1px] dark:border-primary"></div>
@@ -171,7 +187,7 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
     }, [props.scenario, props.zoom, mapRef, props.selectedFlight, props.selectedPairs, props.isGameOver]);
 
     return (
-        <Source id="scenario-source" type="geojson" data={collection}>
+        <Source id={MAP_SOURCE_ID} type="geojson" data={collection}>
             <Layer
                 id={LayersIds.leadVector}
                 type="line"
@@ -245,7 +261,15 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
                 type="symbol"
                 filter={['==', ['get', 'type'], GeometryTypes.pcdText]}
                 layout={{
-                    'text-field': ['get', 'text'],
+                    'text-field': [
+                        'format',
+                        ['get', 'statusText'],
+                        { 'text-font': ['Barlow Bold'] },
+                        '\n',
+                        {},
+                        ['get', 'text'],
+                        { 'text-font': ['Barlow Regular'] }
+                    ],
                     'text-allow-overlap': true,
                     'text-ignore-placement': true,
                     'text-justify': 'left',

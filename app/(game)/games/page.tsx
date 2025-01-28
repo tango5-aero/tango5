@@ -33,11 +33,13 @@ export default async function Page() {
                 <h3 className="text-xl">{`Keep playing to complete ${unplayedScenarios.length} remaining scenarios`}</h3>
             )}
 
-            <UserGamesTable allowDeleteGames={false} />
+            <UserGamesTable adminAccess={false} />
             <div className="flex flex-row gap-2">
-                <Button disabled={unplayedScenarios.length === 0} variant="outline">
-                    <Link href="/play">Continue</Link>
-                </Button>
+                <Link href="/play" passHref>
+                    <Button disabled={unplayedScenarios.length === 0} variant="outline">
+                        {'Continue'}
+                    </Button>
+                </Link>
             </div>
         </main>
     );

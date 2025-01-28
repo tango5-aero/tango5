@@ -7,14 +7,19 @@ import {
     deleteUserGame as deleteDBUserGame,
     writeUserGame,
     deleteUserGames,
-    getUserGamesPage as getDBUserGamesPage
+    getUserGamesPage as getDBUserGamesPage,
+    getCurrentUserGamesPage as getDBCurrentUserGamesPage
 } from '~/lib/db/queries';
-import { UserGameInsert } from '~/lib/db/schema';
+import { UserGameInsert, UserGameSelect } from '~/lib/types';
 import { ActionState } from '.';
 import { unstable_cache } from 'next/cache';
 import { cacheTags } from '~/lib/constants';
 
-export async function completeUserGame(scenarioId: number, playTimeMs: number, success: boolean) {
+export async function completeUserGame(
+    scenarioId: UserGameInsert['scenarioId'],
+    playTimeMs: number,
+    success: UserGameInsert['success']
+) {
     const user = await currentUser();
 
     if (!user) {
@@ -37,7 +42,7 @@ export async function completeUserGame(scenarioId: number, playTimeMs: number, s
     await writeUserGame(userGame);
 }
 
-export async function deleteUserGame(_prevState: ActionState, id: number): Promise<ActionState> {
+export async function deleteUserGame(_prevState: ActionState, id: UserGameSelect['id']): Promise<ActionState> {
     const res = await deleteDBUserGame(id);
 
     if (res.length === 0) {
@@ -47,7 +52,10 @@ export async function deleteUserGame(_prevState: ActionState, id: number): Promi
     return { message: `UserGame #${id} deleted`, error: false };
 }
 
-export async function resetUserProgress(_prevState: ActionState, userId: string): Promise<ActionState> {
+export async function resetUserProgress(
+    _prevState: ActionState,
+    userId: UserGameInsert['userId']
+): Promise<ActionState> {
     try {
         await deleteUserGames(userId);
     } catch {
@@ -66,4 +74,8 @@ export async function getUserGamesPage(pageIndex: number, pageSize: number) {
         }
     );
     return await getCachedUserGamesPage(pageIndex, pageSize);
+}
+
+export async function getCurrentUserGamesPage(pageIndex: number, pageSize: number) {
+    return await getDBCurrentUserGamesPage(pageIndex, pageSize);
 }
