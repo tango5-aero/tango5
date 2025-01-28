@@ -23,19 +23,20 @@ const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; n
     // Game related state
     const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
+    const [isMapReady, setIsMapReady] = useState(false);
     const [isGameOver, setGameOver] = useState(false);
 
     const gameStartTimeMs = useRef<number | undefined>(undefined);
 
     useEffect(() => {
-        if (typeof gameStartTimeMs.current === 'undefined') {
+        if (isMapReady && typeof gameStartTimeMs.current === 'undefined') {
             gameStartTimeMs.current = performance.now();
 
             posthog.capture(posthogEvents.gameStart, {
                 scenarioId: props.id
             });
         }
-    }, [props.id]);
+    }, [props.id, isMapReady]);
 
     useEffect(() => {
         if (isGameOver) {
@@ -105,12 +106,16 @@ const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; n
                     {'NEXT'}
                 </Button>
             </div>
-            <GameProgress total={scenario.solution.length} progress={scenario.numberCorrect(selectedPairs)} />
-            <GameCountdown
-                initialCount={GAME_TIMEOUT_MS / 1000}
-                running={!isGameOver}
-                onComplete={() => setGameOver(true)}
-            />
+            {isMapReady && (
+                <>
+                    <GameProgress total={scenario.solution.length} progress={scenario.numberCorrect(selectedPairs)} />
+                    <GameCountdown
+                        initialCount={GAME_TIMEOUT_MS / 1000}
+                        running={!isGameOver}
+                        onComplete={() => setGameOver(true)}
+                    />
+                </>
+            )}
             <ScenarioMap
                 style={{ width: '100%', height: '100dvh' }}
                 scenario={scenario}
@@ -118,6 +123,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; n
                 selectedFlight={selectedFlight}
                 selectedPairs={selectedPairs}
                 isGameOver={isGameOver}
+                onMapReady={() => setIsMapReady(true)}
             />
         </main>
     );
