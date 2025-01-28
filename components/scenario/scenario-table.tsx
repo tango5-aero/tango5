@@ -104,10 +104,10 @@ export const columns: ColumnDef<ScenarioParsed>[] = [
 
 export const ScenariosTable = () => {
     const { pagination, onPaginationChange, limit, offset } = usePagination();
-    const { data, rowCount, loading, useRefresh } = useTableApi(getScenariosPage, limit, offset);
+    const { data, rowCount, loading, forceRefresh } = useTableApi(getScenariosPage, limit, offset);
 
     return (
-        <TableContext value={useRefresh}>
+        <TableContext value={{ forceRefresh }}>
             <DataTable
                 data={data}
                 rowCount={rowCount}

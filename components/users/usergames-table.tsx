@@ -89,14 +89,14 @@ export const adminColumns: ColumnDef<UserGameRow>[] = [
 export const UserGamesTable = (props: PropsWithoutRef<UserGamesTableProps>) => {
     const { pagination, onPaginationChange, limit, offset } = usePagination();
 
-    const { data, rowCount, loading, useRefresh } = useTableApi(
+    const { data, rowCount, loading, forceRefresh } = useTableApi(
         props.adminAccess ? getUserGamesPage : getCurrentUserGamesPage,
         limit,
         offset
     );
 
     return (
-        <TableContext value={useRefresh}>
+        <TableContext value={{ forceRefresh }}>
             <DataTable
                 data={data}
                 rowCount={rowCount}

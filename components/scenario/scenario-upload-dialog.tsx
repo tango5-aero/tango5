@@ -11,7 +11,7 @@ import { Button } from '../ui/button';
 import { useTableContext } from '~/hooks/use-table-context';
 
 export function ScenarioUploadDialog() {
-    const [refresh, setRefresh] = useTableContext();
+    const { forceRefresh } = useTableContext();
     const [open, setOpen] = useState(false);
     const [filesData, setFilesData] = useState<string[]>([]);
     const [filesName, setFilesName] = useState<string[]>([]);
@@ -31,7 +31,7 @@ export function ScenarioUploadDialog() {
             startTransition(async () => {
                 action({ filesData, filesName });
                 setOpen(false);
-                setRefresh(!refresh);
+                forceRefresh();
             });
         }
     };

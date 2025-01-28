@@ -26,10 +26,10 @@ export const columns: ColumnDef<{ id: string }>[] = [
 
 export const UsersTable = () => {
     const { pagination, onPaginationChange, limit, offset } = usePagination();
-    const { data, rowCount, loading, useRefresh } = useTableApi(getUsersPage, limit, offset);
+    const { data, rowCount, loading, forceRefresh } = useTableApi(getUsersPage, limit, offset);
 
     return (
-        <TableContext value={useRefresh}>
+        <TableContext value={{ forceRefresh }}>
             <DataTable
                 data={data}
                 rowCount={rowCount}

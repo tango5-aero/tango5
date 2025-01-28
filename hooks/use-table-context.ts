@@ -1,8 +1,8 @@
 'use client';
 
-import { Dispatch, SetStateAction, useContext, createContext } from 'react';
+import { useContext, createContext } from 'react';
 
-type Context = [boolean, Dispatch<SetStateAction<boolean>>];
+type Context = { forceRefresh: () => void };
 
 export const TableContext = createContext<Context | undefined>(undefined);
 

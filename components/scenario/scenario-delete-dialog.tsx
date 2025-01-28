@@ -9,7 +9,7 @@ import { useDialogAction } from '~/hooks/use-dialog-action';
 import { useTableContext } from '~/hooks/use-table-context';
 
 export const ScenarioDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => {
-    const [refresh, setRefresh] = useTableContext();
+    const { forceRefresh } = useTableContext();
     const [open, setOpen] = useState(false);
     const { action, pending } = useDialogAction(`Deleting scenario #${props.id}`, deleteScenario, cacheTags.scenarios);
 
@@ -17,7 +17,7 @@ export const ScenarioDeleteDialog = (props: PropsWithoutRef<{ id: number }>) => 
         startTransition(async () => {
             action(props.id);
             setOpen(false);
-            setRefresh(!refresh);
+            forceRefresh();
         });
     };
 
