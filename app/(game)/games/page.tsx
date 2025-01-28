@@ -39,6 +39,12 @@ export default async function Page() {
                     <Link href="/play">Continue</Link>
                 </Button>
             </div>
+
+            <div>
+                <h3>{'Keep me posted for new scenarios'}</h3>
+                <input type="text" value="pepito@test.com" />
+                <Button>Submit</Button>
+            </div>
         </main>
     );
 }
