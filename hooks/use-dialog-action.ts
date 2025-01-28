@@ -11,9 +11,13 @@ export function useDialogAction<TData>(
     const toastId = useRef<string | number | undefined>(undefined);
 
     useEffect(() => {
-        if (state.message && state.error) toast.error(state.message, { id: toastId.current });
-        if (state.message && !state.error) toast.success(state.message, { id: toastId.current });
-        if (cacheTag) revalidateCacheTag(cacheTag);
+        if (state.message) {
+            if (state.error) toast.error(state.message, { id: toastId.current });
+            if (!state.error) {
+                toast.success(state.message, { id: toastId.current });
+                if (cacheTag) revalidateCacheTag(cacheTag);
+            }
+        }
     }, [state, cacheTag]);
 
     useEffect(() => {

@@ -5,8 +5,10 @@ import { resetUserProgress } from '~/lib/actions';
 import { HistoryIcon } from 'lucide-react';
 import { ActionDialog } from '../ui/action-dialog';
 import { useDialogAction } from '~/hooks/use-dialog-action';
+import { useTableContext } from '~/hooks/use-table-context';
 
 export const UserWipeProgressDialog = (props: PropsWithoutRef<{ id: string }>) => {
+    const { forceRefresh } = useTableContext();
     const [open, setOpen] = useState(false);
     const { action, pending } = useDialogAction(`Wiping progress of user #${props.id}`, resetUserProgress);
 
@@ -14,6 +16,7 @@ export const UserWipeProgressDialog = (props: PropsWithoutRef<{ id: string }>) =
         startTransition(async () => {
             action(props.id);
             setOpen(false);
+            forceRefresh();
         });
     };
 
