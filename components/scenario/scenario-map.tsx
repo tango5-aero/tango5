@@ -129,7 +129,7 @@ const ResizeEffects = (props: PropsWithoutRef<{ bounds: number[] }>) => {
         const map = mapRef?.getMap();
 
         if (map) {
-            const fitBounds = () => map.fitBounds(props.bounds as [number, number, number, number]);
+            const fitBounds = () => map.fitBounds(scaleBbox(props.bounds as [number, number, number, number]));
             const resize = () => map.resize.bind(map);
 
             window.addEventListener('resize', fitBounds);
