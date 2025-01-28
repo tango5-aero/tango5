@@ -25,16 +25,12 @@ type Props =
       }
     | {
           ref: string;
-          type:
-              | typeof GeometryTypes.pcdLink
-              | typeof GeometryTypes.pcdLabel
-              | typeof GeometryTypes.clearLabel
-              | typeof GeometryTypes.clearLink;
+          type: typeof GeometryTypes.pcdLink | typeof GeometryTypes.pcdLabel;
           status: Status;
       }
     | {
           ref: string;
-          type: typeof GeometryTypes.pcdText | typeof GeometryTypes.clearText;
+          type: typeof GeometryTypes.pcdText;
           text: string;
           fontSize: number;
           status: Status;
@@ -194,7 +190,6 @@ export function featureCollection(
                     statusText = 'KEEP TRYING';
                     break;
                 default:
-                    status = 'clear';
                     statusText = 'KEEP TRYING';
             }
 
@@ -234,7 +229,7 @@ export function featureCollection(
                 type: 'Feature',
                 properties: {
                     ref: id,
-                    type: status === 'clear' ? GeometryTypes.clearLink : GeometryTypes.pcdLink,
+                    type: GeometryTypes.pcdLink,
                     status
                 },
                 geometry: {
@@ -250,7 +245,7 @@ export function featureCollection(
                 type: 'Feature',
                 properties: {
                     ref: id,
-                    type: status === 'clear' ? GeometryTypes.clearLabel : GeometryTypes.pcdLabel,
+                    type: GeometryTypes.pcdLabel,
                     status
                 },
                 geometry: {
@@ -263,7 +258,7 @@ export function featureCollection(
                 type: 'Feature',
                 properties: {
                     ref: id,
-                    type: status === 'clear' ? GeometryTypes.clearText : GeometryTypes.pcdText,
+                    type: GeometryTypes.pcdText,
                     text,
                     statusText,
                     fontSize,

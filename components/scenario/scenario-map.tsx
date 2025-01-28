@@ -223,14 +223,40 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
             <Layer
                 id={LayersIds.pcdLine}
                 type="line"
-                paint={{ 'line-color': '#D45D08' }}
+                paint={{
+                    'line-color': [
+                        'match',
+                        ['get', 'status'],
+                        'conflict',
+                        '#D45D08',
+                        'monitor',
+                        '#D45D08',
+                        'clear',
+                        '#456C0F',
+                        '#456C0F'
+                    ]
+                }}
                 filter={['==', ['get', 'type'], GeometryTypes.pcdLink]}
                 beforeId={LayersIds.positionFill}
             />
             <Layer
                 id={LayersIds.pcdLabelFill}
                 type="fill"
-                paint={{ 'fill-color': '#D45D08' }}
+                paint={{
+                    'fill-opacity': 0,
+                    'fill-opacity-transition': { duration: 4000, delay: 1000 },
+                    'fill-color': [
+                        'match',
+                        ['get', 'status'],
+                        'conflict',
+                        '#D45D08',
+                        'monitor',
+                        '#D45D08',
+                        'clear',
+                        '#456C0F',
+                        '#456C0F'
+                    ]
+                }}
                 filter={['==', ['get', 'type'], GeometryTypes.pcdLabel]}
             />
             <Layer
@@ -253,42 +279,19 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
                     'text-size': ['get', 'fontSize'],
                     'text-rotation-alignment': 'viewport'
                 }}
-                paint={{ 'text-color': '#13151A' }}
-            />
-            <Layer
-                id={LayersIds.clearLine}
-                type="line"
-                paint={{ 'line-color': '#456C0F' }}
-                filter={['==', ['get', 'type'], GeometryTypes.clearLink]}
-                beforeId={LayersIds.positionFill}
-            />
-            <Layer
-                id={LayersIds.clearLabelFill}
-                type="fill"
-                paint={{ 'fill-color': '#456C0F' }}
-                filter={['==', ['get', 'type'], GeometryTypes.clearLabel]}
-            />
-            <Layer
-                id={LayersIds.clearLabelText}
-                type="symbol"
-                filter={['==', ['get', 'type'], GeometryTypes.clearText]}
-                layout={{
-                    'text-field': [
-                        'format',
-                        ['get', 'statusText'],
-                        { 'text-font': ['Barlow Bold'] },
-                        '\n',
-                        {},
-                        ['get', 'text'],
-                        { 'text-font': ['Barlow Regular'] }
-                    ],
-                    'text-allow-overlap': true,
-                    'text-ignore-placement': true,
-                    'text-justify': 'left',
-                    'text-size': ['get', 'fontSize'],
-                    'text-rotation-alignment': 'viewport'
+                paint={{
+                    'text-color': [
+                        'match',
+                        ['get', 'status'],
+                        'conflict',
+                        '#13151A',
+                        'monitor',
+                        '#13151A',
+                        'clear',
+                        '#C9CDD0',
+                        '#C9CDD0'
+                    ]
                 }}
-                paint={{ 'text-color': '#C9CDD0' }}
             />
             <Layer
                 id={LayersIds.labelFill}
@@ -322,9 +325,6 @@ const GeometryTypes = {
     pcdLabel: 'pcd-label',
     pcdText: 'pcd-text',
     pcdLink: 'pcd-link',
-    clearLabel: 'clear-label',
-    clearText: 'clear-text',
-    clearLink: 'clear-link',
     label: 'label',
     labelText: 'label-text',
     labelLink: 'label-link'
@@ -338,9 +338,6 @@ const LayersIds = {
     pcdLabelText: 'pcd-label-text',
     pcdLabelFill: 'pcd-label-fill',
     pcdLine: 'pcd-line',
-    clearLabelText: 'clear-label-text',
-    clearLabelFill: 'clear-label-fill',
-    clearLine: 'clear-line',
     labelFill: 'labels-fill',
     labelText: 'labels-text',
     labelAnchor: 'label-anchor'
