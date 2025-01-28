@@ -9,6 +9,7 @@ import { MapEvent, MapMouseEvent } from 'mapbox-gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { destination, point, Units } from '@turf/turf';
+import { BBox } from '~/lib/domain/geometry';
 
 type ScenarioMapProps = {
     style?: CSSProperties;
@@ -35,13 +36,15 @@ const ScenarioMap = (props: PropsWithChildren<ScenarioMapProps>) => {
         e.target.getCanvas().style.cursor = '';
     };
 
+    const scaledBoundaries = scaleBbox(props.scenario.boundaries);
+
     return (
         <MapProvider>
             <ScaleMap latitude={props.scenario.boundaries[3]} />
             <MapGL
                 id="map"
                 mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-                initialViewState={{ bounds: props.scenario.boundaries }}
+                initialViewState={{ bounds: scaledBoundaries }}
                 style={props.style}
                 mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
                 interactive={false}
@@ -155,7 +158,7 @@ const Layers = (props: PropsWithChildren<LayerProps>) => {
             return [point.lng, point.lat] as [number, number];
         };
 
-        const scalingFactor = props.zoom ** 2;
+        const scalingFactor = props.zoom ** 2.1;
 
         const computedCollection = featureCollection(
             props.scenario,
@@ -323,5 +326,17 @@ const LayersIds = {
     labelText: 'labels-text',
     labelAnchor: 'label-anchor'
 } as const;
+
+const scaleBbox = (boundaries: BBox): BBox => {
+    const estimatedPaddingX = 0.5;
+    const estimatedPaddingY = 0.7;
+
+    return [
+        boundaries[0] - estimatedPaddingX,
+        boundaries[1] - estimatedPaddingY,
+        boundaries[2] + estimatedPaddingX,
+        boundaries[3] + estimatedPaddingY
+    ];
+};
 
 export { ScenarioMap, GeometryTypes };
