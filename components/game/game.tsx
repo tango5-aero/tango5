@@ -137,6 +137,7 @@ const Game = (
                     {'NEXT'}
                 </Button>
             </div>
+            <div className="fixed bottom-1 right-72 z-10 mt-10 text-xs text-white/15">{props.id}</div>
             {isMapReady && (
                 <>
                     <GameProgress total={scenario.solution.length} progress={scenario.numberCorrect(selectedPairs)} />
