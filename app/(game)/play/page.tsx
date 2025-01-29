@@ -1,6 +1,7 @@
-import { getRandom, getUnplayedScenarios } from '~/lib/db/queries';
-import { redirect } from 'next/navigation';
 import { currentUser } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
+import { GameLayout } from '~/components/game/game-layout';
+import { getRandom, getUnplayedScenarios } from '~/lib/db/queries';
 
 export default async function Page() {
     const user = await currentUser();
@@ -12,7 +13,7 @@ export default async function Page() {
     const unplayedScenarios = await getUnplayedScenarios(user.id);
 
     // if no remaining scenarios take the user to summary page
-    if (unplayedScenarios.length == 0) {
+    if (unplayedScenarios.length === 0) {
         redirect('/games');
     }
 
@@ -23,5 +24,5 @@ export default async function Page() {
         redirect('/games');
     }
 
-    redirect(`/play/${scenario.id}`);
+    return <GameLayout id={scenario.id} unplayedScenarios={unplayedScenarios.length} scenarioData={scenario.data} />;
 }
