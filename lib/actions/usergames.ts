@@ -12,6 +12,8 @@ import {
 } from '~/lib/db/queries';
 import { UserGameInsert, UserGameSelect } from '~/lib/types';
 import { ActionState } from '.';
+import { unstable_cache } from 'next/cache';
+import { cacheTags } from '~/lib/constants';
 
 export async function completeUserGame(
     scenarioId: UserGameInsert['scenarioId'],
@@ -64,7 +66,14 @@ export async function resetUserProgress(
 }
 
 export async function getUserGamesPage(pageIndex: number, pageSize: number) {
-    return await getDBUserGamesPage(pageIndex, pageSize);
+    const getCachedUserGamesPage = unstable_cache(
+        async (pageIndex, pageSize) => getDBUserGamesPage(pageIndex, pageSize),
+        [cacheTags.userGames, pageIndex.toString(), pageSize.toString()],
+        {
+            tags: [cacheTags.userGames]
+        }
+    );
+    return await getCachedUserGamesPage(pageIndex, pageSize);
 }
 
 export async function getCurrentUserGamesPage(pageIndex: number, pageSize: number) {
