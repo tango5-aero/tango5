@@ -22,14 +22,14 @@ export default async function Page() {
                         <br />
                         Air Traffic Control training tool
                     </p>
-                    <p className="mb-16 w-[460px] text-left font-Barlow text-xl leading-6">
+                    <p className="mb-5 w-[460px] text-left font-Barlow text-xl leading-6">
                         Whether you’re aspiring to be an air traffic controller or just want to understand how air
                         traffic is managed, Tango5 is your ultimate online hub for all things ATC!
                     </p>
                     <Link
                         href="/login"
                         className="h-12 rounded-full bg-map px-8 py-2 font-BarlowBold text-2xl font-bold leading-7 text-map-foreground shadow hover:bg-map/85">
-                        LOGIN
+                        {'Log in >'}
                     </Link>
                 </div>
                 <VideoBackground />
