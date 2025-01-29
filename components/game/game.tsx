@@ -1,6 +1,6 @@
 'use client';
 
-import { PropsWithoutRef, useEffect, useMemo, useRef, useState } from 'react';
+import { PropsWithoutRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ScenarioMap } from '~/components/scenario/scenario-map';
 import { ScenarioData } from '~/lib/domain/scenario';
 import { Button } from '~/components/ui/button';
@@ -68,6 +68,21 @@ const Game = (
         }
     }, [scenario, selectedPairs]);
 
+    const isClear = useCallback(
+        (pair: [string, string]) => {
+            const pcd = scenario.pcds.find(
+                (pcd) =>
+                    (pcd.firstFlight.id === pair[0] && pcd.secondFlight.id === pair[1]) ||
+                    (pcd.firstFlight.id === pair[1] && pcd.secondFlight.id === pair[0])
+            );
+            return (
+                typeof pcd === 'undefined' ||
+                new Pcd(pcd.firstFlight, pcd.secondFlight, pcd.minDistanceNM, pcd.timeToMinDistanceMs).isSafe
+            );
+        },
+        [scenario.pcds]
+    );
+
     useEffect(() => {
         selectedPairsRef.current = selectedPairs;
         const pairsToClean = selectedPairs.filter((pair) => isClear(pair));
@@ -76,19 +91,7 @@ const Game = (
                 setSelectedPairs(selectedPairsRef.current.filter((pair) => !pairsToClean.includes(pair)));
             }, TIME_TO_REMOVE_FAILED_PAIRS_MS);
         }
-    }, [selectedPairs]);
-
-    const isClear = (pair: [string, string]) => {
-        const pcd = scenario.pcds.find(
-            (pcd) =>
-                (pcd.firstFlight.id === pair[0] && pcd.secondFlight.id === pair[1]) ||
-                (pcd.firstFlight.id === pair[1] && pcd.secondFlight.id === pair[0])
-        );
-        return (
-            typeof pcd === 'undefined' ||
-            new Pcd(pcd.firstFlight, pcd.secondFlight, pcd.minDistanceNM, pcd.timeToMinDistanceMs).isSafe
-        );
-    };
+    }, [selectedPairs, isClear]);
 
     const selectFlight = (id: string) => {
         // if the game is over do not allow further interactions
