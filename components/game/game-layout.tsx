@@ -7,8 +7,10 @@ import { Game } from '~/components/game/game';
 
 type GameLayoutProps = {
     id: number;
-    unplayedScenarios: number;
+    unplayedScenarios?: number;
     scenarioData: ScenarioData;
+    disableNext?: boolean;
+    exitUrl?: string;
 };
 
 export const GameLayout = (props: PropsWithoutRef<GameLayoutProps>) => {
@@ -16,7 +18,7 @@ export const GameLayout = (props: PropsWithoutRef<GameLayoutProps>) => {
         <>
             <TooltipProvider delayDuration={0}>
                 <Tooltip>
-                    <Link href="/games">
+                    <Link href={props.exitUrl ?? '/games'}>
                         <TooltipTrigger asChild>
                             <LogOutIcon className="fixed right-16 top-5 z-10 cursor-pointer text-white" />
                         </TooltipTrigger>
@@ -30,7 +32,7 @@ export const GameLayout = (props: PropsWithoutRef<GameLayoutProps>) => {
                 id={props.id}
                 unplayedScenarios={props.unplayedScenarios}
                 scenarioData={props.scenarioData}
-                nextUrl={'/play'}
+                nextUrl={!props.disableNext ? '/play' : undefined}
             />
         </>
     );

@@ -24,5 +24,7 @@ export default async function Page() {
         redirect('/games');
     }
 
-    return <GameLayout id={scenario.id} unplayedScenarios={unplayedScenarios.length} scenarioData={scenario.data} />;
+    return (
+        <GameLayout id={scenario.id} unplayedScenarios={unplayedScenarios.length - 1} scenarioData={scenario.data} />
+    );
 }
