@@ -2,6 +2,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Button } from '~/components/ui/button';
+import { Input } from '~/components/ui/input';
 import { UserGamesTable } from '~/components/users/usergames-table';
 import { getUnplayedScenarios, getUserGames } from '~/lib/db/queries';
 
@@ -43,8 +44,8 @@ export default async function Page() {
             </div>
 
             <div>
-                <h3>{'Keep me posted for new scenarios'}</h3>
-                <input type="text" value="pepito@test.com" />
+                <h3 className="text-xl">{'Keep me posted for new scenarios'}</h3>
+                <Input type="text" value="pepito@test.com" />
                 <Button>Submit</Button>
             </div>
         </main>
