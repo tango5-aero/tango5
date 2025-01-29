@@ -7,10 +7,12 @@ import { cacheTags } from '~/lib/constants';
 import { DatePicker } from '../ui/date-picker';
 import { ActionDialog } from '../ui/action-dialog';
 import { useDialogAction } from '~/hooks/use-dialog-action';
+import { useTableContext } from '~/hooks/use-table-context';
 import { ScenarioParsed } from '~/lib/types';
 import { format } from 'date-fns';
 
 export const ScenarioReleaseDateDialog = (props: PropsWithoutRef<Pick<ScenarioParsed, 'id' | 'releaseDate'>>) => {
+    const { forceRefresh } = useTableContext();
     const [open, setOpen] = useState(false);
     const [date, setDate] = useState(props.releaseDate ? new Date(props.releaseDate) : undefined);
     const { action, pending } = useDialogAction(
@@ -27,6 +29,7 @@ export const ScenarioReleaseDateDialog = (props: PropsWithoutRef<Pick<ScenarioPa
         startTransition(async () => {
             action({ id: props.id, releaseDate: date ? format(date, 'yyyy-MM-dd') : null });
             setOpen(false);
+            forceRefresh();
         });
     };
 

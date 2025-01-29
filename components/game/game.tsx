@@ -9,15 +9,23 @@ import { completeUserGame } from '~/lib/actions';
 import { GameCountdown } from './game-countdown';
 import posthog from 'posthog-js';
 import { GameProgress } from './game-progress';
-import { GAME_TIMEOUT_MS } from '~/lib/constants';
+import { GAME_TIMEOUT_MS, TIME_TO_REMOVE_FAILED_PAIRS_MS } from '~/lib/constants';
 import { Scenario } from '~/lib/domain/scenario';
+import { Pcd } from '~/lib/domain/pcd';
 
 const posthogEvents = {
     gameStart: 'game_start',
     gameFinish: 'game_finish'
 };
 
-const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; nextUrl: string }>) => {
+const Game = (
+    props: PropsWithoutRef<{
+        id: number;
+        unplayedScenarios: number;
+        scenarioData: ScenarioData;
+        nextUrl: string;
+    }>
+) => {
     const scenario = useMemo(() => new Scenario(props.scenarioData), [props.scenarioData]);
 
     // Game related state
@@ -25,6 +33,7 @@ const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; n
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
     const [isMapReady, setIsMapReady] = useState(false);
     const [isGameOver, setGameOver] = useState(false);
+    const selectedPairsRef = useRef(selectedPairs);
 
     const gameStartTimeMs = useRef<number | undefined>(undefined);
 
@@ -58,6 +67,28 @@ const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; n
             setGameOver(true);
         }
     }, [scenario, selectedPairs]);
+
+    useEffect(() => {
+        selectedPairsRef.current = selectedPairs;
+        const pairsToClean = selectedPairs.filter((pair) => isClear(pair));
+        if (pairsToClean.length > 0) {
+            setTimeout(() => {
+                setSelectedPairs(selectedPairsRef.current.filter((pair) => !pairsToClean.includes(pair)));
+            }, TIME_TO_REMOVE_FAILED_PAIRS_MS);
+        }
+    }, [selectedPairs]);
+
+    const isClear = (pair: [string, string]) => {
+        const pcd = scenario.pcds.find(
+            (pcd) =>
+                (pcd.firstFlight.id === pair[0] && pcd.secondFlight.id === pair[1]) ||
+                (pcd.firstFlight.id === pair[1] && pcd.secondFlight.id === pair[0])
+        );
+        return (
+            typeof pcd === 'undefined' ||
+            new Pcd(pcd.firstFlight, pcd.secondFlight, pcd.minDistanceNM, pcd.timeToMinDistanceMs).isSafe
+        );
+    };
 
     const selectFlight = (id: string) => {
         // if the game is over do not allow further interactions
@@ -114,6 +145,9 @@ const Game = (props: PropsWithoutRef<{ id: number; scenarioData: ScenarioData; n
                         running={!isGameOver}
                         onComplete={() => setGameOver(true)}
                     />
+                    <div className="fixed right-32 top-6 z-10 select-none text-white/50">
+                        Remaining scenarios: {props.unplayedScenarios}
+                    </div>
                 </>
             )}
             <ScenarioMap

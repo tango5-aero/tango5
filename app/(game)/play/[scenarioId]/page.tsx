@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { LogOutIcon } from 'lucide-react';
-import { getScenario } from '~/lib/db/queries';
+import { currentUser } from '@clerk/nextjs/server';
+import { getScenario, getUnplayedScenarios } from '~/lib/db/queries';
 import { Game } from '~/components/game/game';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/ui/tooltip';
 
@@ -12,6 +13,14 @@ export default async function Page({ params }: { params: Promise<{ scenarioId: n
     const scenario = await getScenario(id);
 
     if (!scenario?.data) notFound();
+
+    const user = await currentUser();
+
+    if (!user) {
+        redirect('/');
+    }
+
+    const unplayedScenarios = (await getUnplayedScenarios(user.id)).length;
 
     return (
         <>
@@ -27,7 +36,7 @@ export default async function Page({ params }: { params: Promise<{ scenarioId: n
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>
-            <Game id={id} scenarioData={scenario.data} nextUrl={'/play'} />
+            <Game id={id} unplayedScenarios={unplayedScenarios} scenarioData={scenario.data} nextUrl={'/play'} />
         </>
     );
 }

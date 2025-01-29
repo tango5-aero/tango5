@@ -10,6 +10,8 @@ import { ScenarioReleaseDateDialog } from './scenario-release-date-dialog';
 import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
 import { getScenariosPage } from '~/lib/actions';
+import { TableContext } from '~/hooks/use-table-context';
+import { ScenarioUploadDialog } from './scenario-upload-dialog';
 import { Flight } from '~/lib/domain/flight';
 import { Pcd } from '~/lib/domain/pcd';
 import { ScenarioParsed } from '~/lib/types';
@@ -102,18 +104,20 @@ export const columns: ColumnDef<ScenarioParsed>[] = [
 
 export const ScenariosTable = () => {
     const { pagination, onPaginationChange, limit, offset } = usePagination();
-
-    const { data, rowCount, loading } = useTableApi(getScenariosPage, limit, offset);
+    const { data, rowCount, loading, forceRefresh } = useTableApi(getScenariosPage, limit, offset);
 
     return (
-        <DataTable
-            data={data}
-            rowCount={rowCount}
-            loading={loading}
-            onPaginationChange={onPaginationChange}
-            pagination={pagination}
-            columns={columns}
-            initialState={{ columnVisibility: { data: false } }}
-        />
+        <TableContext value={{ forceRefresh }}>
+            <DataTable
+                data={data}
+                rowCount={rowCount}
+                loading={loading}
+                onPaginationChange={onPaginationChange}
+                pagination={pagination}
+                columns={columns}
+                initialState={{ columnVisibility: { data: false } }}
+            />
+            <ScenarioUploadDialog />
+        </TableContext>
     );
 };

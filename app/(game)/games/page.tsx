@@ -28,9 +28,11 @@ export default async function Page() {
 
             <UserGamesTable adminAccess={false} />
             <div className="flex flex-row gap-2">
-                <Button disabled={unplayedScenarios.length === 0} variant="outline">
-                    <Link href="/play">Continue</Link>
-                </Button>
+                <Link href="/play" passHref>
+                    <Button disabled={unplayedScenarios.length === 0} variant="outline">
+                        {'Continue'}
+                    </Button>
+                </Link>
             </div>
         </main>
     );

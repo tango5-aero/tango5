@@ -3,10 +3,10 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
 import { UserWipeProgressDialog } from '../user/user-wipe-progress-dialog';
-import {} from '~/lib/actions';
 import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
 import { getUsersPage } from '~/lib/actions/users';
+import { TableContext } from '~/hooks/use-table-context';
 
 export const columns: ColumnDef<{ id: string }>[] = [
     {
@@ -26,18 +26,19 @@ export const columns: ColumnDef<{ id: string }>[] = [
 
 export const UsersTable = () => {
     const { pagination, onPaginationChange, limit, offset } = usePagination();
-
-    const { data, rowCount, loading } = useTableApi(getUsersPage, limit, offset);
+    const { data, rowCount, loading, forceRefresh } = useTableApi(getUsersPage, limit, offset);
 
     return (
-        <DataTable
-            data={data}
-            rowCount={rowCount}
-            loading={loading}
-            onPaginationChange={onPaginationChange}
-            pagination={pagination}
-            columns={columns}
-            initialState={{ columnVisibility: { data: false } }}
-        />
+        <TableContext value={{ forceRefresh }}>
+            <DataTable
+                data={data}
+                rowCount={rowCount}
+                loading={loading}
+                onPaginationChange={onPaginationChange}
+                pagination={pagination}
+                columns={columns}
+                initialState={{ columnVisibility: { data: false } }}
+            />
+        </TableContext>
     );
 };

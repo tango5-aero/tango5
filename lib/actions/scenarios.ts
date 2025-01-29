@@ -5,6 +5,8 @@ import { ScenarioData, scenarioSchema } from '~/lib/domain/scenario';
 import { writeScenarios, updateScenarioReleaseDate } from '~/lib/db/queries';
 import { deleteScenario as deleteDBScenario, getScenariosPage as getDBScenariosPage } from '~/lib/db/queries';
 import { format } from 'date-fns';
+import { unstable_cache } from 'next/cache';
+import { cacheTags } from '../constants';
 import { ScenarioParsed } from '~/lib/types';
 
 export async function createScenario(
@@ -76,5 +78,13 @@ export async function deleteScenario(_prevState: ActionState, id: ScenarioParsed
 }
 
 export async function getScenariosPage(pageIndex: number, pageSize: number) {
-    return await getDBScenariosPage(pageIndex, pageSize);
+    const getCachedScenariosPage = unstable_cache(
+        async (pageIndex, pageSize) => getDBScenariosPage(pageIndex, pageSize),
+        [cacheTags.scenarios, pageIndex.toString(), pageSize.toString()],
+        {
+            tags: [cacheTags.scenarios]
+        }
+    );
+
+    return await getCachedScenariosPage(pageIndex, pageSize);
 }
