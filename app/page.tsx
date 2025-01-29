@@ -15,7 +15,7 @@ export default async function Page() {
                 </p>
             </main>
             <main className="max-lg:hidden">
-                <div className="relative z-20 flex h-screen flex-col items-center justify-center gap-2 p-6 md:p-10">
+                <div className="relative z-20 flex flex-col items-center gap-2 p-6 md:p-20">
                     <WelcomeTango5Title />
                     <p className="w-[490px] text-center font-BarlowLight text-4xl leading-10">
                         A professional enroute
@@ -31,6 +31,15 @@ export default async function Page() {
                         className="h-12 rounded-full bg-map px-8 py-2 font-BarlowBold text-2xl font-bold leading-7 text-map-foreground shadow hover:bg-map/85">
                         {'Log in >'}
                     </Link>
+                    <div className="mt-20">
+                        <p className="text-center font-Barlow text-4xl">Un título que hable de</p>
+                        <p className="text-center font-BarlowBold text-4xl">a quién va dirigido esto</p>
+                    </div>
+                    <div className="mt-8 flex w-full flex-row justify-between">
+                        <div>{'ATCO Candidates'}</div>
+                        <div>{'ATCO Candidates'}</div>
+                        <div>{'ATCO Candidates'}</div>
+                    </div>
                 </div>
                 <VideoBackground />
             </main>
