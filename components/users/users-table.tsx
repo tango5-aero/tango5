@@ -14,6 +14,10 @@ export const columns: ColumnDef<{ id: string }>[] = [
         header: () => <div className="text-center">id</div>
     },
     {
+        accessorKey: 'consent',
+        header: () => <div className="text-center">consent</div>
+    },
+    {
         accessorKey: 'actions',
         header: () => <div className="text-right">Actions</div>,
         cell: ({ row }) => {

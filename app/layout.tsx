@@ -9,9 +9,8 @@ import './globals.css';
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
     const user = await currentUser();
-
     if (user) {
-        tryCreateUser(user);
+        tryCreateUser({ id: user.id, consent: true });
     }
 
     return (
