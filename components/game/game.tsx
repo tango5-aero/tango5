@@ -135,11 +135,11 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
     return (
         <main>
             {props.nextUrl && (
-            <div className="fixed bottom-12 right-24 z-10">
+                <div className="fixed bottom-12 right-24 z-10">
                     <Button disabled={!isGameOver} onClick={() => redirect(props.nextUrl!)} variant="map" size="map">
-                    {'NEXT'}
-                </Button>
-            </div>
+                        {'NEXT'}
+                    </Button>
+                </div>
             )}
 
             <div className="fixed bottom-1 right-72 z-10 mt-10 text-xs text-white/15">{props.id}</div>
@@ -152,9 +152,9 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
                         onComplete={() => setGameOver(true)}
                     />
                     {props.unplayedScenarios !== undefined && (
-                    <div className="fixed right-32 top-6 z-10 select-none text-white/50">
-                        Remaining scenarios: {props.unplayedScenarios}
-                    </div>
+                        <div className="fixed right-32 top-6 z-10 select-none text-white/50">
+                            Remaining scenarios: {props.unplayedScenarios}
+                        </div>
                     )}
                 </>
             )}
@@ -171,9 +171,4 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
     );
 };
 
-export function formatMs(millis: number): string {
-    const minutes = Math.floor(millis / 60000);
-    const seconds = (millis % 60000) / 1000;
-    return (minutes > 0 ? minutes.toFixed(0) + 'm ' : '') + seconds.toFixed(0) + 's';
-}
 export { Game };
