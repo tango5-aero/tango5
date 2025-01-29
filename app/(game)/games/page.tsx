@@ -2,8 +2,9 @@ import { currentUser } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Button } from '~/components/ui/button';
-import { Input } from '~/components/ui/input';
+import { UserNotifyMeForm } from '~/components/user/user-notify-me-form';
 import { UserGamesTable } from '~/components/users/usergames-table';
+import { getUserInfo } from '~/lib/actions/users';
 import { getUnplayedScenarios, getUserGames } from '~/lib/db/queries';
 
 export default async function Page() {
@@ -12,6 +13,7 @@ export default async function Page() {
     if (!user) {
         redirect('/');
     }
+    const userInfo = await getUserInfo();
 
     const userGames = await getUserGames(user.id);
 
@@ -43,11 +45,7 @@ export default async function Page() {
                 </Link>
             </div>
 
-            <div>
-                <h3 className="text-xl">{'Keep me posted for new scenarios'}</h3>
-                <Input type="text" value="pepito@test.com" />
-                <Button>Submit</Button>
-            </div>
+            <UserNotifyMeForm consent={userInfo?.consent ?? false} />
         </main>
     );
 }

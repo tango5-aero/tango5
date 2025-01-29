@@ -1,4 +1,4 @@
-import { count } from 'drizzle-orm';
+import { count, eq } from 'drizzle-orm';
 import { db } from '~/lib/db';
 import { UsersTable } from '~/lib/db/schema';
 import { UserSelect } from '~/lib/types';
@@ -29,4 +29,7 @@ export const getUsersPage = async (pageIndex: number, pageSize: number) => {
     } catch {
         return { count: 0, values: [] };
     }
+};
+export const updateUserConsent = async (id: UserSelect['id']) => {
+    return await db.update(UsersTable).set({ consent: true }).where(eq(UsersTable.id, id)).returning();
 };
