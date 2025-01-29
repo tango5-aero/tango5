@@ -5,7 +5,7 @@ import { Button } from '~/components/ui/button';
 import { UserNotifyMeForm } from '~/components/user/user-notify-me-form';
 import { UserGamesTable } from '~/components/users/usergames-table';
 import { getUserInfo } from '~/lib/actions/users';
-import { getUnplayedScenarios, getUserGames } from '~/lib/db/queries';
+import { getUnplayedScenarios } from '~/lib/db/queries';
 
 export default async function Page() {
     const user = await currentUser();
@@ -14,13 +14,6 @@ export default async function Page() {
         redirect('/');
     }
     const userInfo = await getUserInfo();
-
-    const userGames = await getUserGames(user.id);
-
-    // if the user hasn't played any scenarios start playing inmediately
-    if (userGames.length === 0) {
-        redirect('/play');
-    }
 
     const unplayedScenarios = await getUnplayedScenarios(user.id);
 
