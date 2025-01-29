@@ -3,20 +3,13 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Button } from '~/components/ui/button';
 import { UserGamesTable } from '~/components/users/usergames-table';
-import { getUnplayedScenarios, getUserGames } from '~/lib/db/queries';
+import { getUnplayedScenarios } from '~/lib/db/queries';
 
 export default async function Page() {
     const user = await currentUser();
 
     if (!user) {
         redirect('/');
-    }
-
-    const userGames = await getUserGames(user.id);
-
-    // if the user hasn't played any scenarios start playing inmediately
-    if (userGames.length === 0) {
-        redirect('/play');
     }
 
     const unplayedScenarios = await getUnplayedScenarios(user.id);
