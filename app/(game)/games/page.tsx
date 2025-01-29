@@ -34,6 +34,15 @@ export default async function Page() {
                     </Button>
                 </Link>
             </div>
+
+            <div className="mt-10">
+                <span className="text-xs">{'Any comments? please, contact us'}</span>{' '}
+                <Link
+                    href="mailto:communication@DataBeacon.aero?subject=Comments about T5"
+                    className="text-xs text-primary">
+                    {'communication@DataBeacon.aero'}
+                </Link>
+            </div>
         </main>
     );
 }
