@@ -8,8 +8,10 @@ import { cacheTags } from '~/lib/constants';
 import { ActionDialog } from '../ui/action-dialog';
 import { useDialogAction } from '~/hooks/use-dialog-action';
 import { Button } from '../ui/button';
+import { useTableContext } from '~/hooks/use-table-context';
 
 export function ScenarioUploadDialog() {
+    const { forceRefresh } = useTableContext();
     const [open, setOpen] = useState(false);
     const [filesData, setFilesData] = useState<string[]>([]);
     const [filesName, setFilesName] = useState<string[]>([]);
@@ -29,6 +31,7 @@ export function ScenarioUploadDialog() {
             startTransition(async () => {
                 action({ filesData, filesName });
                 setOpen(false);
+                forceRefresh();
             });
         }
     };
