@@ -1,4 +1,4 @@
-import { count } from 'drizzle-orm';
+import { count, eq } from 'drizzle-orm';
 import { db } from '~/lib/db';
 import { UsersTable } from '~/lib/db/schema';
 import { UserSelect } from '~/lib/types';
@@ -9,8 +9,8 @@ export const getUser = async (id: UserSelect['id']) => {
 };
 
 // Try to insert and quit silently if user already exists
-export const tryCreateUser = async (user: UserSelect) => {
-    return await db.insert(UsersTable).values(user).onConflictDoNothing().returning();
+export const tryCreateUser = async (id: UserSelect['id']) => {
+    return await db.insert(UsersTable).values({ id }).onConflictDoNothing().returning();
 };
 
 export const getUsers = async () => {
@@ -29,4 +29,7 @@ export const getUsersPage = async (pageIndex: number, pageSize: number) => {
     } catch {
         return { count: 0, values: [] };
     }
+};
+export const updateUserConsent = async (id: UserSelect['id'], consent: UserSelect['consent']) => {
+    return await db.update(UsersTable).set({ consent }).where(eq(UsersTable.id, id)).returning();
 };
