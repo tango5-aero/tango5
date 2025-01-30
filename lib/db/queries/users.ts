@@ -9,9 +9,8 @@ export const getUser = async (id: UserSelect['id']) => {
 };
 
 // Try to insert and quit silently if user already exists
-export const tryCreateUser = async (userId: string) => {
-    const user = { id: userId, consent: false };
-    return await db.insert(UsersTable).values(user).onConflictDoNothing().returning();
+export const tryCreateUser = async (id: UserSelect['id']) => {
+    return await db.insert(UsersTable).values({ id }).onConflictDoNothing().returning();
 };
 
 export const getUsers = async () => {
