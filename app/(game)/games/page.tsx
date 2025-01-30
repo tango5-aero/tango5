@@ -1,8 +1,7 @@
 import { currentUser } from '@clerk/nextjs/server';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { Button } from '~/components/ui/button';
 import { UserNotifyMeForm } from '~/components/user/user-notify-me-form';
+import { LinkButton } from '~/components/ui/link-button';
 import { UserGamesTable } from '~/components/users/usergames-table';
 import { getUserInfo } from '~/lib/actions/users';
 import { getUnplayedScenarios } from '~/lib/db/queries';
@@ -30,13 +29,10 @@ export default async function Page() {
             )}
 
             <UserGamesTable adminAccess={false} />
-            <div className="flex flex-row gap-2">
-                <Link href="/play" passHref>
-                    <Button disabled={unplayedScenarios.length === 0} variant="outline">
-                        {'Continue'}
-                    </Button>
-                </Link>
-            </div>
+
+            <LinkButton href="/play" variant="outline" disabled={unplayedScenarios.length === 0}>
+                {'Continue'}
+            </LinkButton>
 
             <UserNotifyMeForm consent={userInfo?.consent ?? false} />
         </main>
