@@ -1,4 +1,5 @@
 import { currentUser } from '@clerk/nextjs/server';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { UserNotifyMeForm } from '~/components/user/user-notify-me-form';
 import { LinkButton } from '~/components/ui/link-button';
@@ -35,6 +36,15 @@ export default async function Page() {
             </LinkButton>
 
             <UserNotifyMeForm consent={userInfo?.consent ?? false} />
+
+            <footer>
+                <span className="text-xs">{'Any comments? please, contact us at'}</span>{' '}
+                <Link
+                    href="mailto:communication@DataBeacon.aero?subject=Comments about T5"
+                    className="text-xs text-primary">
+                    {'communication@DataBeacon.aero'}
+                </Link>
+            </footer>
         </main>
     );
 }
