@@ -7,15 +7,17 @@ import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
 import { getUsersPage } from '~/lib/actions/users';
 import { TableContext } from '~/hooks/use-table-context';
+import { UserSelect } from '~/lib/types';
 
-export const columns: ColumnDef<{ id: string }>[] = [
+export const columns: ColumnDef<UserSelect>[] = [
     {
         accessorKey: 'id',
         header: () => <div className="text-center">id</div>
     },
     {
         accessorKey: 'consent',
-        header: () => <div className="text-center">consent</div>
+        header: () => <div className="text-center">consent</div>,
+        cell: ({ row }) => <div className="text-center">{row.original.consent ? '✅' : '❌'}</div>
     },
     {
         accessorKey: 'actions',
