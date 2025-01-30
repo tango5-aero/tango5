@@ -1,17 +1,15 @@
 'use client';
 
-import { PropsWithoutRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ScenarioMap } from '~/components/scenario/scenario-map';
-import { ScenarioData } from '~/lib/domain/scenario';
-import { Button } from '~/components/ui/button';
-import { redirect } from 'next/navigation';
-import { completeUserGame } from '~/lib/actions';
-import { GameCountdown } from './game-countdown';
 import posthog from 'posthog-js';
-import { GameProgress } from './game-progress';
+import { PropsWithoutRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { completeUserGame } from '~/lib/actions';
 import { GAME_TIMEOUT_MS, TIME_TO_REMOVE_FAILED_PAIRS_MS } from '~/lib/constants';
-import { Scenario } from '~/lib/domain/scenario';
 import { Pcd } from '~/lib/domain/pcd';
+import { Scenario, ScenarioData } from '~/lib/domain/scenario';
+import { LinkButton } from '~/components/ui/link-button';
+import { GameCountdown } from '~/components/game/game-countdown';
+import { GameProgress } from '~/components/game/game-progress';
+import { ScenarioMap } from '~/components/scenario/scenario-map';
 
 const posthogEvents = {
     gameStart: 'game_start',
@@ -135,11 +133,14 @@ const Game = (
 
     return (
         <main>
-            <div className="fixed bottom-12 right-24 z-10">
-                <Button disabled={!isGameOver} onClick={() => redirect(props.nextUrl)} variant="map" size="map">
-                    {'NEXT'}
-                </Button>
-            </div>
+            <LinkButton
+                href={props.nextUrl}
+                variant="map"
+                size="map"
+                disabled={!isGameOver}
+                className="fixed bottom-12 right-24 z-10">
+                {'NEXT'}
+            </LinkButton>
             <div className="fixed bottom-1 right-72 z-10 mt-10 text-xs text-white/15">{props.id}</div>
             {isMapReady && (
                 <>
