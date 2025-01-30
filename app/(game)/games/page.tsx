@@ -1,4 +1,5 @@
 import { currentUser } from '@clerk/nextjs/server';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { LinkButton } from '~/components/ui/link-button';
 import { UserGamesTable } from '~/components/users/usergames-table';
@@ -26,9 +27,19 @@ export default async function Page() {
             )}
 
             <UserGamesTable adminAccess={false} />
+
             <LinkButton href="/play" variant="outline" disabled={unplayedScenarios.length === 0}>
                 {'Continue'}
             </LinkButton>
+
+            <footer>
+                <span className="text-xs">{'Any comments? please, contact us at'}</span>{' '}
+                <Link
+                    href="mailto:communication@DataBeacon.aero?subject=Comments about T5"
+                    className="text-xs text-primary">
+                    {'communication@DataBeacon.aero'}
+                </Link>
+            </footer>
         </main>
     );
 }
