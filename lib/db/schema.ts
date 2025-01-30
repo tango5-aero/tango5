@@ -6,7 +6,8 @@ export const ScenariosTable = pgTable('scenarios', {
     releaseDate: date('release_date')
 });
 export const UsersTable = pgTable('users', {
-    id: text('id').primaryKey()
+    id: text('id').primaryKey(),
+    consent: boolean('consent').default(false).notNull()
 });
 
 export const UserGamesTable = pgTable(
