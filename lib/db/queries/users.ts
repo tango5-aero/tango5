@@ -30,6 +30,6 @@ export const getUsersPage = async (pageIndex: number, pageSize: number) => {
         return { count: 0, values: [] };
     }
 };
-export const updateUserConsent = async (id: UserSelect['id'], consent: boolean) => {
+export const updateUserConsent = async (id: UserSelect['id'], consent: UserSelect['consent']) => {
     return await db.update(UsersTable).set({ consent }).where(eq(UsersTable.id, id)).returning();
 };
