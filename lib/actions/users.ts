@@ -24,11 +24,11 @@ export async function getUserInfo() {
     }
     return await getUser(user.id);
 }
-export async function giveConsent() {
+export async function updateConsent(consent: boolean) {
     const user = await currentUser();
 
     if (!user) {
         return;
     }
-    return await updateUserConsent(user.id);
+    return await updateUserConsent(user.id, consent);
 }

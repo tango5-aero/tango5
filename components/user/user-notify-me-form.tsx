@@ -1,20 +1,23 @@
 'use client';
 
-import { giveConsent } from '~/lib/actions/users';
-import { Button } from '../ui/button';
-import { PropsWithoutRef } from 'react';
+import { PropsWithoutRef, useState } from 'react';
+import { updateConsent } from '~/lib/actions/users';
 
 const UserNotifyMeForm = (props: PropsWithoutRef<{ consent: boolean }>) => {
+    const [consent, setConsent] = useState(props.consent);
+
+    const onChangeConsent = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const consent = e.target.checked;
+        setConsent(consent);
+        updateConsent(consent);
+    };
+
     return (
         <div className="flex flex-row gap-5">
-            {props.consent ? (
-                <h3 className="text-xl">{'You are already subscribed for new scenarios'}</h3>
-            ) : (
-                <>
-                    <h3 className="text-xl">{'Keep me posted for new scenarios'}</h3>
-                    <Button onClick={giveConsent}>Notify me!</Button>
-                </>
-            )}
+            <label className="hover:cursor-pointer">
+                <input className="hover:cursor-pointer" type="checkbox" checked={consent} onChange={onChangeConsent} />{' '}
+                {'Notify me on updates and new scenarios'}
+            </label>
         </div>
     );
 };
