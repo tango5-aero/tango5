@@ -10,7 +10,8 @@ export async function getUsersPage(pageIndex: number, pageSize: number) {
         async (pageIndex, pageSize) => getDBUsersPage(pageIndex, pageSize),
         [cacheTags.users, pageIndex.toString(), pageSize.toString()],
         {
-            tags: [cacheTags.users]
+            tags: [cacheTags.users],
+            revalidate: 60
         }
     );
 
