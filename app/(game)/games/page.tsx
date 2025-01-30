@@ -32,14 +32,14 @@ export default async function Page() {
                 {'Continue'}
             </LinkButton>
 
-            <div className="mt-10">
-                <span className="text-xs">{'Any comments? please, contact us'}</span>{' '}
+            <footer>
+                <span className="text-xs">{'Any comments? please, contact us at'}</span>{' '}
                 <Link
                     href="mailto:communication@DataBeacon.aero?subject=Comments about T5"
                     className="text-xs text-primary">
                     {'communication@DataBeacon.aero'}
                 </Link>
-            </div>
+            </footer>
         </main>
     );
 }
