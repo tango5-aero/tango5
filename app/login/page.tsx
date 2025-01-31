@@ -8,7 +8,7 @@ export default async function Page() {
     const user = await currentUser();
 
     if (user) {
-        redirect('/games');
+        redirect('/play');
     }
 
     return (

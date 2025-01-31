@@ -85,7 +85,7 @@ export const columns: ColumnDef<ScenarioParsed>[] = [
 
             return (
                 <div className="flex flex-row gap-2">
-                    <Link href={`/play/${id}`}>
+                    <Link href={`/backstage/play/${id}`}>
                         <PlayIcon size={'1rem'} />
                     </Link>
                     <ScenarioReleaseDateDialog id={id} releaseDate={releaseDate} />

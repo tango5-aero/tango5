@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, type PropsWithChildren, CSSProperties, PropsWithoutRef } from 'react';
+import { useState, useEffect, type PropsWithChildren, CSSProperties, PropsWithoutRef, useRef } from 'react';
 import MapGL, { MapProvider, Layer, Source, useMap } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
 import { featureCollection as featureCollection } from '~/lib/domain/geojson';
@@ -9,7 +9,7 @@ import { MapEvent, MapMouseEvent, MapSourceDataEvent } from 'mapbox-gl';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { destination, point, Units } from '@turf/turf';
-import { BBox } from '~/lib/domain/geometry';
+import { areDifferent, BBox } from '~/lib/domain/geometry';
 import { MAP_SOURCE_ID } from '~/lib/constants';
 
 type ScenarioMapProps = {
@@ -122,18 +122,24 @@ const ScaleMap = (props: PropsWithoutRef<{ latitude: number }>) => {
     );
 };
 
-const ResizeEffects = (props: PropsWithoutRef<{ bounds: number[] }>) => {
+const ResizeEffects = (props: PropsWithoutRef<{ bounds: BBox }>) => {
     const { map: mapRef } = useMap();
+    const mapBounds = useRef(props.bounds);
 
     useEffect(() => {
         const map = mapRef?.getMap();
 
         if (map) {
-            const fitBounds = () => map.fitBounds(scaleBbox(props.bounds as [number, number, number, number]));
+            const fitBounds = () => map.fitBounds(scaleBbox(props.bounds));
             const resize = () => map.resize.bind(map);
 
             window.addEventListener('resize', fitBounds);
             window.addEventListener('resize', resize);
+
+            if (mapBounds.current && areDifferent(mapBounds.current, props.bounds)) {
+                mapBounds.current = props.bounds;
+                fitBounds();
+            }
 
             return () => {
                 window.removeEventListener('resize', fitBounds);

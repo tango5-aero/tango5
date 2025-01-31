@@ -3,10 +3,12 @@
 import { PropsWithoutRef } from 'react';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { GAME_INDICATOR_SIZE, GAME_INDICATOR_STROKE_WIDTH, GAME_INDICATOR_TRAIL_STROKE_WIDTH } from '~/lib/constants';
+import { cn } from '~/lib/utils';
 
 type GameCountdownProps = {
     initialCount: number;
     running: boolean;
+    className?: string;
     onComplete: () => void;
 };
 
@@ -20,7 +22,7 @@ const renderTime = ({ remainingTime }: { remainingTime: number }) => {
 
 const GameCountdown = (props: PropsWithoutRef<GameCountdownProps>) => {
     return (
-        <div className="fixed left-36 top-5 z-10 flex items-center justify-center transition-all hover:scale-110">
+        <div className={cn('flex items-center justify-center', props.className)}>
             <div
                 className={`fixed rounded-full bg-primary-foreground dark:bg-primary`}
                 style={{ width: `${BG_SIZE}px`, height: `${BG_SIZE}px` }}></div>
