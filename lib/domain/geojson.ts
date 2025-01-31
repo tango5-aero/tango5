@@ -1,6 +1,6 @@
 import type { FeatureCollection, LineString, Point, Polygon } from 'geojson';
 import { closestBorder, expand, toBBox, toPolygon } from './geometry';
-import { Movable, spread } from './spreader';
+import { Movable, overlap, spread } from './spreader';
 import { GeometryTypes } from '~/components/scenario/scenario-map';
 import { circle } from '@turf/turf';
 import { Scenario } from './scenario';
@@ -155,7 +155,19 @@ export function featureCollection(
     }
 
     const pairs = reveal
-        ? scenario.solution.map((pcd) => [pcd.firstFlight.id, pcd.secondFlight.id]).concat(selectedPairs)
+        ? scenario.solution
+              .map((pcd) => [pcd.firstFlight.id, pcd.secondFlight.id])
+              .concat(
+                  // Add the pair if it is not in the solution to avoid duplicates
+                  selectedPairs.filter(
+                      (pair) =>
+                          !scenario.solution.some(
+                              (pcd) =>
+                                  (pcd.firstFlight.id === pair[0] && pcd.secondFlight.id === pair[1]) ||
+                                  (pcd.secondFlight.id === pair[0] && pcd.firstFlight.id === pair[1])
+                          )
+                  )
+              )
         : selectedPairs;
 
     for (const pair of pairs) {
@@ -213,13 +225,26 @@ export function featureCollection(
                     ? (flightViewSpace[0] - otherFlightViewSpace[0]) / (flightViewSpace[1] - otherFlightViewSpace[1])
                     : -1;
 
-            const labelCenter = (
+            // Two possible options to place the label depending on the slope of the line
+            // Default over the line (- height)
+            // If it collides, place it under the line (+ height)
+            const labelCenters = (
                 ratio > 0
-                    ? [flightsMidPoint[0] + width, flightsMidPoint[1] - height]
-                    : [flightsMidPoint[0] - width, flightsMidPoint[1] - height]
-            ) as [number, number];
+                    ? [
+                          [flightsMidPoint[0] + width, flightsMidPoint[1] - height],
+                          [flightsMidPoint[0] - width, flightsMidPoint[1] + height]
+                      ]
+                    : [
+                          [flightsMidPoint[0] - width, flightsMidPoint[1] - height],
+                          [flightsMidPoint[0] + width, flightsMidPoint[1] + height]
+                      ]
+            ) as [[number, number], [number, number]];
 
-            const label = expand(labelCenter, width, height);
+            const labels = [expand(labelCenters[0], width, height), expand(labelCenters[1], width, height)];
+            const overlapFirst = nonOverlapping.some((bbox) => overlap(bbox, toBBox(labels[0])));
+            // If the first label overlaps, use the second one
+            const label = overlapFirst ? labels[1] : labels[0];
+            const labelCenter = overlapFirst ? labelCenters[1] : labelCenters[0];
 
             const coordinates = [label.map((point) => unproject(point))];
 

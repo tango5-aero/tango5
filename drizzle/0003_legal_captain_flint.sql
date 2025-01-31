@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "consent" boolean DEFAULT false NOT NULL;

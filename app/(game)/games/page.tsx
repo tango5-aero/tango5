@@ -1,7 +1,10 @@
 import { currentUser } from '@clerk/nextjs/server';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { UserNotifyMeForm } from '~/components/user/user-notify-me-form';
 import { LinkButton } from '~/components/ui/link-button';
 import { UserGamesTable } from '~/components/users/usergames-table';
+import { getUserInfo } from '~/lib/actions/users';
 import { getUnplayedScenarios } from '~/lib/db/queries';
 
 export default async function Page() {
@@ -10,6 +13,7 @@ export default async function Page() {
     if (!user) {
         redirect('/');
     }
+    const userInfo = await getUserInfo();
 
     const unplayedScenarios = await getUnplayedScenarios(user.id);
 
@@ -26,9 +30,21 @@ export default async function Page() {
             )}
 
             <UserGamesTable adminAccess={false} />
+
             <LinkButton href="/play" variant="outline" disabled={unplayedScenarios.length === 0}>
                 {'Continue'}
             </LinkButton>
+
+            <UserNotifyMeForm consent={userInfo?.consent ?? false} />
+
+            <footer>
+                <span className="text-xs">{'Any comments? please, contact us at'}</span>{' '}
+                <Link
+                    href="mailto:communication@DataBeacon.aero?subject=Comments about T5"
+                    className="text-xs text-primary">
+                    {'communication@DataBeacon.aero'}
+                </Link>
+            </footer>
         </main>
     );
 }
