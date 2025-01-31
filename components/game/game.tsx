@@ -1,21 +1,20 @@
 'use client';
 
-import { Loader2 } from 'lucide-react';
-import { Duration } from 'luxon';
 import { useRouter } from 'next/navigation';
-import posthog from 'posthog-js';
 import { PropsWithoutRef, startTransition, useActionState, useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { GameCountdown } from '~/components/game/game-countdown';
-import { GameProgress } from '~/components/game/game-progress';
-import { ScenarioMap } from '~/components/scenario/scenario-map';
-import { Button } from '~/components/ui/button';
+import posthog from 'posthog-js';
+import { Duration } from 'luxon';
 import { completeUserGame } from '~/lib/actions';
 import { GAME_TIMEOUT_MS, TIME_TO_REMOVE_FAILED_PAIRS_MS } from '~/lib/constants';
 import { Pcd } from '~/lib/domain/pcd';
 import { Scenario } from '~/lib/domain/scenario';
 import { ScenarioParsed } from '~/lib/types';
-import { GameExitButton } from './game-exit-button';
+import { GameCountdown } from '~/components/game/game-countdown';
+import { GameExitButton } from '~/components/game/game-exit-button';
+import { GameNextButton } from '~/components/game/game-next-button';
+import { GameProgress } from '~/components/game/game-progress';
+import { ScenarioMap } from '~/components/scenario/scenario-map';
 
 type GameProps = {
     scenario: ScenarioParsed;
@@ -182,37 +181,43 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
 
     return (
         <main>
-            <GameExitButton href={props.backstageAccess ? '/backstage/scenarios' : '/games'} />
-            {!props.backstageAccess && (
-                <Button
-                    variant="map"
-                    size="map"
-                    disabled={gameSuccess === null || pending}
-                    className="fixed bottom-12 right-24 z-10"
-                    onClick={nextScenario}>
-                    {pending && <Loader2 className="animate-spin" />}
-                    {'NEXT'}
-                </Button>
-            )}
             <div className="fixed bottom-1 right-72 z-10 mt-10 text-xs text-white/15">{scenario.id}</div>
+
+            <GameExitButton
+                href={props.backstageAccess ? '/backstage/scenarios' : '/games'}
+                className="fixed right-16 top-5 z-10 cursor-pointer text-white/60"
+            />
+
+            {!props.backstageAccess && (
+                <>
+                    <div className="fixed right-32 top-6 z-10 select-none text-white/50">
+                        Remaining scenarios: {unplayedScenarios}
+                    </div>
+                    <GameNextButton
+                        className="fixed bottom-12 right-24 z-10"
+                        disabled={gameSuccess === null}
+                        loading={pending}
+                        onClick={nextScenario}
+                    />
+                </>
+            )}
+
             {isMapReady && (
                 <>
                     <GameProgress
+                        className="fixed left-16 top-5 z-10 transition-all hover:scale-110"
                         total={scenario.data.solution.length}
                         progress={scenario.data.numberCorrect(selectedPairs)}
                     />
                     <GameCountdown
+                        className="fixed left-36 top-5 z-10 transition-all hover:scale-110"
                         initialCount={GAME_TIMEOUT_MS / 1000}
                         running={gameSuccess === null}
                         onComplete={() => setGameSuccess(false)}
                     />
-                    {props.backstageAccess && (
-                        <div className="fixed right-32 top-6 z-10 select-none text-white/50">
-                            Remaining scenarios: {unplayedScenarios}
-                        </div>
-                    )}
                 </>
             )}
+
             <ScenarioMap
                 style={{ width: '100%', height: '100dvh' }}
                 scenario={scenario.data}
