@@ -1,21 +1,26 @@
 'use client';
 
+import { Loader2 } from 'lucide-react';
+import { Duration } from 'luxon';
+import { useRouter } from 'next/navigation';
 import posthog from 'posthog-js';
-import { PropsWithoutRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { PropsWithoutRef, startTransition, useActionState, useCallback, useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
+import { GameCountdown } from '~/components/game/game-countdown';
+import { GameProgress } from '~/components/game/game-progress';
 import { ScenarioMap } from '~/components/scenario/scenario-map';
-import { LinkButton } from '~/components/ui/link-button';
+import { Button } from '~/components/ui/button';
 import { completeUserGame } from '~/lib/actions';
 import { GAME_TIMEOUT_MS, TIME_TO_REMOVE_FAILED_PAIRS_MS } from '~/lib/constants';
 import { Pcd } from '~/lib/domain/pcd';
-import { Scenario, ScenarioData } from '~/lib/domain/scenario';
-import { GameCountdown } from './game-countdown';
-import { GameProgress } from './game-progress';
+import { Scenario } from '~/lib/domain/scenario';
+import { ScenarioParsed } from '~/lib/types';
+import { GameExitButton } from './game-exit-button';
 
 type GameProps = {
-    id: number;
+    scenario: ScenarioParsed;
     unplayedScenarios?: number;
-    scenarioData: ScenarioData;
-    nextUrl?: string;
+    backstageAccess?: boolean;
 };
 
 const posthogEvents = {
@@ -24,14 +29,27 @@ const posthogEvents = {
 };
 
 const Game = (props: PropsWithoutRef<GameProps>) => {
-    const scenario = useMemo(() => new Scenario(props.scenarioData), [props.scenarioData]);
+    const { replace } = useRouter();
+    const [scenario, setScenario] = useState({
+        ...props.scenario,
+        data: new Scenario(props.scenario.data)
+    });
+    const [unplayedScenarios, setUnplayedScenarios] = useState(
+        props.unplayedScenarios !== undefined ? props.unplayedScenarios - 1 : undefined
+    );
 
     // Game related state
     const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
     const [isMapReady, setIsMapReady] = useState(false);
-    const [isGameOver, setGameOver] = useState(false);
+    const [gameSuccess, setGameSuccess] = useState<boolean | null>(null); // true if game is won, false if lost, null if not finished
     const selectedPairsRef = useRef(selectedPairs);
+
+    const [state, action, pending] = useActionState(completeUserGame, {
+        scenario: props.scenario,
+        pendingScenarios: props.unplayedScenarios ?? 0,
+        error: false
+    });
 
     const gameStartTimeMs = useRef<number | undefined>(undefined);
 
@@ -40,35 +58,41 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
             gameStartTimeMs.current = performance.now();
 
             posthog.capture(posthogEvents.gameStart, {
-                scenarioId: props.id
+                scenarioId: scenario.id
             });
         }
-    }, [props.id, isMapReady]);
+    }, [scenario.id, isMapReady]);
 
     useEffect(() => {
-        if (isGameOver) {
-            const elapsed = gameStartTimeMs.current ? performance.now() - gameStartTimeMs.current : 0;
-            const gameSuccess = scenario.isSolution(selectedPairs);
+        if (gameSuccess === null) return;
+        if (props.backstageAccess) return;
 
-            completeUserGame(props.id, elapsed, gameSuccess);
+        const elapsed = gameStartTimeMs.current ? performance.now() - gameStartTimeMs.current : 0;
 
-            posthog.capture(posthogEvents.gameFinish, {
-                scenarioId: props.id,
-                playTime: elapsed,
+        startTransition(async () => {
+            action({
+                scenarioId: scenario.id,
+                playTime: Duration.fromMillis(elapsed).toString(),
                 success: gameSuccess
             });
-        }
-    }, [scenario, isGameOver, props.id, selectedPairs]);
+        });
+
+        posthog.capture(posthogEvents.gameFinish, {
+            scenarioId: scenario.id,
+            playTime: elapsed,
+            success: gameSuccess
+        });
+    }, [scenario, gameSuccess, action, props.backstageAccess]);
 
     useEffect(() => {
-        if (scenario.isSolution(selectedPairs)) {
-            setGameOver(true);
+        if (scenario.data.isSolution(selectedPairs)) {
+            setGameSuccess(true);
         }
     }, [scenario, selectedPairs]);
 
     const isClear = useCallback(
         (pair: [string, string]) => {
-            const pcd = scenario.pcds.find(
+            const pcd = scenario.data.pcds.find(
                 (pcd) =>
                     (pcd.firstFlight.id === pair[0] && pcd.secondFlight.id === pair[1]) ||
                     (pcd.firstFlight.id === pair[1] && pcd.secondFlight.id === pair[0])
@@ -78,7 +102,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
                 new Pcd(pcd.firstFlight, pcd.secondFlight, pcd.minDistanceNM, pcd.timeToMinDistanceMs).isSafe
             );
         },
-        [scenario.pcds]
+        [scenario.data.pcds]
     );
 
     useEffect(() => {
@@ -91,13 +115,38 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
         }
     }, [selectedPairs, isClear]);
 
-    const selectFlight = (id: string) => {
-        // if the game is over do not allow further interactions
-        if (isGameOver) {
+    const nextScenario = () => {
+        if (state.error) {
+            toast.error(state.errorMessage);
+            return;
+        }
+        if (!state.scenario && state.pendingScenarios === 0) {
+            replace('/games');
             return;
         }
 
-        const flight = props.scenarioData.flights.find((flight) => flight.id === id);
+        // Reset timer and game state
+        gameStartTimeMs.current = undefined;
+
+        setSelectedFlight(null);
+        setSelectedPairs([]);
+        setIsMapReady(false);
+        setGameSuccess(null);
+        setUnplayedScenarios(state.pendingScenarios - 1);
+
+        setScenario({
+            ...state.scenario,
+            data: new Scenario(state.scenario.data)
+        });
+    };
+
+    const selectFlight = (id: string) => {
+        // if the game is over do not allow further interactions
+        if (gameSuccess !== null) {
+            return;
+        }
+
+        const flight = scenario.data.flights.find((flight) => flight.id === id);
 
         // this should never happen, fail silently
         if (!flight) return;
@@ -133,39 +182,44 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
 
     return (
         <main>
-            {props.nextUrl && (
-                <LinkButton
-                    href={props.nextUrl}
+            <GameExitButton href={props.backstageAccess ? '/backstage/scenarios' : '/games'} />
+            {!props.backstageAccess && (
+                <Button
                     variant="map"
                     size="map"
-                    disabled={!isGameOver}
-                    className="fixed bottom-12 right-24 z-10">
+                    disabled={gameSuccess === null || pending}
+                    className="fixed bottom-12 right-24 z-10"
+                    onClick={nextScenario}>
+                    {pending && <Loader2 className="animate-spin" />}
                     {'NEXT'}
-                </LinkButton>
+                </Button>
             )}
-            <div className="fixed bottom-1 right-72 z-10 mt-10 text-xs text-white/15">{props.id}</div>
+            <div className="fixed bottom-1 right-72 z-10 mt-10 text-xs text-white/15">{scenario.id}</div>
             {isMapReady && (
                 <>
-                    <GameProgress total={scenario.solution.length} progress={scenario.numberCorrect(selectedPairs)} />
+                    <GameProgress
+                        total={scenario.data.solution.length}
+                        progress={scenario.data.numberCorrect(selectedPairs)}
+                    />
                     <GameCountdown
                         initialCount={GAME_TIMEOUT_MS / 1000}
-                        running={!isGameOver}
-                        onComplete={() => setGameOver(true)}
+                        running={gameSuccess === null}
+                        onComplete={() => setGameSuccess(false)}
                     />
-                    {props.unplayedScenarios !== undefined && (
+                    {props.backstageAccess && (
                         <div className="fixed right-32 top-6 z-10 select-none text-white/50">
-                            Remaining scenarios: {props.unplayedScenarios}
+                            Remaining scenarios: {unplayedScenarios}
                         </div>
                     )}
                 </>
             )}
             <ScenarioMap
                 style={{ width: '100%', height: '100dvh' }}
-                scenario={scenario}
+                scenario={scenario.data}
                 selectFlight={selectFlight}
                 selectedFlight={selectedFlight}
                 selectedPairs={selectedPairs}
-                isGameOver={isGameOver}
+                isGameOver={gameSuccess !== null}
                 onMapReady={() => setIsMapReady(true)}
             />
         </main>
