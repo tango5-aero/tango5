@@ -24,12 +24,12 @@ export async function completeUserGame(
     const { scenarioId, playTime, success } = payload;
 
     if (!user) {
-        return { scenario: undefined, error: true, errorMessage: 'User not found' };
+        return { error: true, errorMessage: 'User not found' };
     }
 
     const userGameScenarios = new Set((await getUserGames(user.id)).map((ug) => ug.scenarioId));
     if (userGameScenarios.has(scenarioId)) {
-        return { scenario: undefined, error: true, errorMessage: `Scenario ${scenarioId} has already been played` };
+        return { error: true, errorMessage: `Scenario ${scenarioId} has already been played` };
     }
 
     const userGame: UserGameInsert = {
@@ -42,7 +42,7 @@ export async function completeUserGame(
     const res = await writeUserGame(userGame);
 
     if (res.length === 0) {
-        return { scenario: undefined, error: true, errorMessage: 'Error saving user game' };
+        return { error: true, errorMessage: 'Error saving user game' };
     }
 
     const unplayedScenarios = await getUnplayedScenarios(user.id);
@@ -54,12 +54,7 @@ export async function completeUserGame(
     const scenario = await getRandom(unplayedScenarios.map((s) => s.id));
 
     if (!scenario) {
-        return {
-            scenario: undefined,
-            pendingScenarios: unplayedScenarios.length,
-            error: true,
-            errorMessage: 'Error getting next scenario'
-        };
+        return { error: true, errorMessage: 'Error getting next scenario' };
     }
 
     return { scenario, pendingScenarios: unplayedScenarios.length, error: false };
