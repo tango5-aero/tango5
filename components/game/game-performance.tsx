@@ -22,22 +22,22 @@ const GamePerformanceStat = (
 export async function GamePerformance() {
     const performance = await getCurrentUserGamesPerformance();
 
-    if (!performance) {
+    if (!performance || performance.total === 0) {
         return null;
     }
 
-    const { succeeded, playTimeAvg } = performance;
+    const { succeeded, total, playTimeAvg } = performance;
 
-    const average = playTimeAvg ? Duration.fromISOTime(playTimeAvg).toFormat('s') : '-';
+    const computedAverage = playTimeAvg ? Number(Duration.fromISOTime(playTimeAvg).toFormat('s.SSS')).toFixed(2) : '-';
 
     return (
         <section className="flex items-center justify-center gap-x-5">
             <GamePerformanceStat
                 icon={succeeded > 0 ? CircleCheck : XCircle}
-                stat={`${succeeded}/${performance.total}`}
-                description="scenarios completed"
+                stat={`${succeeded}/${total}`}
+                description="resolved scenarios"
             />
-            <GamePerformanceStat icon={Clock3} stat={`${average}`} description="seconds on average" />
+            <GamePerformanceStat icon={Clock3} stat={`${computedAverage}`} description="seconds on average" />
         </section>
     );
 }
