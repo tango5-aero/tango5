@@ -174,3 +174,7 @@ export function distance(anchor: Point2D, point: Point2D): number {
 
     return Math.sqrt((x - x1) ** 2 + (y - y1) ** 2);
 }
+
+export function areDifferent(a: BBox, b: BBox): boolean {
+    return a.some((v, i) => v !== b[i]);
+}
