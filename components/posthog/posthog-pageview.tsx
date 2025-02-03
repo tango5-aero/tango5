@@ -1,15 +1,34 @@
 // Adapted from https://posthog.com/docs/libraries/next-js#capturing-pageviews
+// and https://clerk.com/blog/how-to-use-clerk-with-posthog-identify-in-nextjs
 
 'use client';
 
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, Suspense } from 'react';
 import { usePostHog } from 'posthog-js/react';
+import { useAuth, useUser } from '@clerk/nextjs';
 
 function PostHogPageView(): null {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const posthog = usePostHog();
+
+    const { isSignedIn, userId } = useAuth();
+    const { user } = useUser();
+
+    // Identify users between clerk and PpstHog
+    useEffect(() => {
+        if (isSignedIn && userId && user && !posthog._isIdentified()) {
+            posthog.identify(userId, {
+                email: user.primaryEmailAddress?.emailAddress,
+                username: user.username
+            });
+        }
+
+        if (!isSignedIn && posthog._isIdentified()) {
+            posthog.reset();
+        }
+    }, [posthog, user, isSignedIn, userId]);
 
     // Track pageviews
     useEffect(() => {
