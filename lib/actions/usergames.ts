@@ -8,7 +8,8 @@ import {
     writeUserGame,
     deleteUserGames,
     getUserGamesPage as getDBUserGamesPage,
-    getCurrentUserGamesPage as getDBCurrentUserGamesPage
+    getCurrentUserGamesPage as getDBCurrentUserGamesPage,
+    getCurrentUserGamesPerformance as getDBCurrentUserGamesPerformance
 } from '~/lib/db/queries';
 import { UserGameInsert, UserGameSelect } from '~/lib/types';
 import { ActionState } from '.';
@@ -78,4 +79,8 @@ export async function getUserGamesPage(pageIndex: number, pageSize: number) {
 
 export async function getCurrentUserGamesPage(pageIndex: number, pageSize: number) {
     return await getDBCurrentUserGamesPage(pageIndex, pageSize);
+}
+
+export async function getCurrentUserGamesPerformance() {
+    return await getDBCurrentUserGamesPerformance();
 }
