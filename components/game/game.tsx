@@ -56,11 +56,13 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
         if (isMapReady && typeof gameStartTimeMs.current === 'undefined') {
             gameStartTimeMs.current = performance.now();
 
+            if (props.backstageAccess) return;
+
             posthog.capture(posthogEvents.gameStart, {
                 scenarioId: scenario.id
             });
         }
-    }, [scenario.id, isMapReady]);
+    }, [scenario.id, isMapReady, props.backstageAccess]);
 
     useEffect(() => {
         if (gameSuccess === null) return;
@@ -119,12 +121,14 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
             toast.error(state.errorMessage);
             return;
         }
+
+        // There are no more scenarios to play, redirect to games page
         if (!state.scenario && state.pendingScenarios === 0) {
             replace('/games');
             return;
         }
 
-        // Reset timer and game state
+        // Preparing next scenario, reset timer and game state
         gameStartTimeMs.current = undefined;
 
         setSelectedFlight(null);
