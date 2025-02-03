@@ -118,7 +118,8 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
 
     const handleNextScenario = () => {
         if (nextScenarioState.error) {
-            toast.error(nextScenarioState.errorMessage);
+            toast.error('Something went wrong, could not load next scenario');
+            replace('/games');
             return;
         }
 
