@@ -44,7 +44,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
     const [gameSuccess, setGameSuccess] = useState<boolean | null>(null); // true if game is won, false if lost, null if not finished
     const selectedPairsRef = useRef(selectedPairs);
 
-    const [state, action, pending] = useActionState(completeUserGame, {
+    const [nextScenarioState, completeGameAction, completionPending] = useActionState(completeUserGame, {
         scenario: props.scenario,
         pendingScenarios: props.unplayedScenarios ?? 0,
         error: false
@@ -71,7 +71,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
         const elapsed = gameStartTimeMs.current ? performance.now() - gameStartTimeMs.current : 0;
 
         startTransition(async () => {
-            action({
+            completeGameAction({
                 scenarioId: scenario.id,
                 playTime: Duration.fromMillis(elapsed).toString(),
                 success: gameSuccess
@@ -83,7 +83,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
             playTime: elapsed,
             success: gameSuccess
         });
-    }, [scenario, gameSuccess, action, props.backstageAccess]);
+    }, [scenario, gameSuccess, completeGameAction, props.backstageAccess]);
 
     useEffect(() => {
         if (scenario.data.isSolution(selectedPairs)) {
@@ -117,13 +117,15 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
     }, [selectedPairs, isClear]);
 
     const nextScenario = () => {
-        if (state.error) {
-            toast.error(state.errorMessage);
+        if (nextScenarioState.error) {
+            toast.error(nextScenarioState.errorMessage);
             return;
         }
 
+        const { scenario: nextScenario, pendingScenarios } = nextScenarioState;
+
         // There are no more scenarios to play, redirect to games page
-        if (!state.scenario && state.pendingScenarios === 0) {
+        if (!nextScenario && pendingScenarios === 0) {
             replace('/games');
             return;
         }
@@ -135,11 +137,11 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
         setSelectedPairs([]);
         setIsMapReady(false);
         setGameSuccess(null);
-        setUnplayedScenarios(state.pendingScenarios - 1);
+        setUnplayedScenarios(pendingScenarios - 1);
 
         setScenario({
-            ...state.scenario,
-            data: new Scenario(state.scenario.data)
+            ...nextScenario,
+            data: new Scenario(nextScenario.data)
         });
     };
 
@@ -200,7 +202,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
                     <GameNextButton
                         className="fixed bottom-12 right-24 z-10"
                         disabled={gameSuccess === null}
-                        loading={pending}
+                        loading={completionPending}
                         onClick={nextScenario}
                     />
                 </>
