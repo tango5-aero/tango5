@@ -53,7 +53,7 @@ export default async function Page() {
                 <span className="text-xs">{'Any comments? please, contact us at'}</span>{' '}
                 <Link
                     href="mailto:communication@DataBeacon.aero?subject=Comments about T5"
-                    className="text-xs text-primary">
+                    className="text-xs text-primary hover:underline">
                     {'communication@DataBeacon.aero'}
                 </Link>
             </footer>
