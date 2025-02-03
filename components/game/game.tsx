@@ -116,7 +116,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
         }
     }, [selectedPairs, isClear]);
 
-    const nextScenario = () => {
+    const handleNextScenario = () => {
         if (nextScenarioState.error) {
             toast.error(nextScenarioState.errorMessage);
             return;
@@ -203,7 +203,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
                         className="fixed bottom-12 right-24 z-10"
                         disabled={gameSuccess === null}
                         loading={completionPending}
-                        onClick={nextScenario}
+                        onClick={handleNextScenario}
                     />
                 </>
             )}
