@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { VideoBackground } from '~/components/ui/video-background';
 import { WelcomeTango5Title } from '~/components/ui/welcome-tango5-title';
+import { MapBackground } from '~/components/ui/map-background';
 
 export default async function Page() {
     return (
@@ -24,71 +24,95 @@ export default async function Page() {
                         Air Traffic Control training tool
                     </p>
                     <p className="mb-5 w-[700px] text-left font-BarlowLight text-3xl leading-10">
-                        Whether you’re aspiring to be an air traffic controller or just want to understand how air
-                        traffic is managed, Tango5 is your ultimate online hub for all things ATC!
+                        Whether you&apos;re dreaming of a career as an air traffic controller or simply curious about
+                        how air traffic is controlled, Tango5 is your premier online destination for all things Air
+                        Traffic Control (ATC).
                     </p>
                     <div className="flex flex-row gap-9">
                         <Link
-                            href="/login"
+                            href="/waitlist"
                             className="rounded-full border-2 border-map px-8 py-2 font-Barlow text-2xl font-bold leading-7 text-map shadow hover:bg-map/85">
                             {'Join our waitlist'}
-                            <img src="/images/arrow-empty.svg" alt="Join our waitlist" className="ml-3 inline-block" />
+                            <Image
+                                width="31"
+                                height="25"
+                                src="/images/arrow-empty.svg"
+                                alt="Join our waitlist"
+                                className="ml-3 inline-block"
+                            />
                         </Link>
                         <Link
                             href="/login"
                             className="rounded-full bg-map px-8 py-2 font-BarlowBold text-2xl font-bold leading-7 text-map-foreground shadow hover:bg-map/85">
                             {'Log in'}
-                            <img src="/images/arrow-full.svg" alt="Log in" className="ml-3 inline-block" />
+                            <Image
+                                width="31"
+                                height="25"
+                                src="/images/arrow-full.svg"
+                                alt="Log in"
+                                className="ml-3 inline-block"
+                            />
                         </Link>
                     </div>
                     <div className="mt-20">
-                        <p className="text-center font-Barlow text-4xl">Un título que hable de</p>
-                        <p className="text-center font-BarlowBold text-4xl">a quién va dirigido esto</p>
+                        <p className="text-center font-Barlow text-4xl">Who is it for?</p>
                     </div>
                     <div className="mt-8 flex w-full flex-row justify-between">
-                        <div className="box h-64 w-64 rounded-3xl bg-translucent p-7 xl:h-[22rem] xl:w-[22rem] xl:px-9 xl:py-11">
-                            <Image
-                                src="/images/candidates.svg"
-                                alt="ATCO Candidates"
-                                className="mb-3 h-16 w-16 xl:mb-5 xl:h-24 xl:w-24"
-                                width="64"
-                                height="64"
-                            />
-                            <p className="mb-3 font-Barlow text-xl leading-6 xl:pr-20 xl:text-3xl xl:leading-8">
-                                ATCO Candidates
-                            </p>
-                            <p className="font-BarlowLight leading-5 xl:text-xl xl:leading-6">
-                                Lorem fistrum pecador nisi et se calle ustée papaar papaar va usté muy cargadoo.
-                            </p>
-                        </div>
-                        <div className="box h-64 w-64 rounded-3xl bg-translucent p-7 xl:h-[22rem] xl:w-[22rem] xl:px-9 xl:py-11">
-                            <Image
-                                src="/images/enthusiasts.svg"
-                                alt="Aviation enthusiasts"
-                                className="mb-3 h-16 w-16 xl:mb-5 xl:h-24 xl:w-24"
-                                width="64"
-                                height="64"
-                            />
-                            <p className="mb-3 font-Barlow text-xl leading-6 xl:pr-14 xl:text-3xl xl:leading-8">
-                                Aviation enthusiasts
-                            </p>
-                            <p className="font-BarlowLight leading-5 xl:text-xl xl:leading-6">
-                                Lorem fistrum pecador nisi et se calle ustée papaar papaar va usté muy cargadoo.
+                        <div className="box h-[17rem] w-[17rem] rounded-3xl bg-translucent p-6 xl:h-[22rem] xl:w-[22rem] xl:p-9 2xl:h-96 2xl:w-96">
+                            <div className="mb-3 flex flex-row items-end gap-4 xl:mb-5 2xl:mb-9">
+                                <Image
+                                    src="/images/candidates.svg"
+                                    alt="ATCO Candidates"
+                                    className="h-14 w-14 xl:h-20 xl:w-20 2xl:h-24 2xl:w-24"
+                                    width="64"
+                                    height="64"
+                                />
+                                <span className="xl:pr-18 font-Barlow text-2xl leading-6 xl:text-3xl xl:leading-7 2xl:text-4xl 2xl:leading-8">
+                                    ATCO Candidates
+                                </span>
+                            </div>
+                            <p className="font-BarlowLight text-sm leading-5 xl:text-xl xl:leading-6">
+                                Tango5 offers aspiring air traffic controllers a comprehensive training tool to prepare
+                                for exams, gain valuable experience, and become familiar with the world of Air Traffic
+                                Control (ATC).
                             </p>
                         </div>
-                        <div className="box h-64 w-64 rounded-3xl bg-translucent p-7 xl:h-[22rem] xl:w-[22rem] xl:px-9 xl:py-11">
-                            <Image
-                                src="/images/candidates.svg"
-                                alt="Students and graduates"
-                                className="mb-3 h-16 w-16 xl:mb-5 xl:h-24 xl:w-24"
-                                width="64"
-                                height="64"
-                            />
-                            <p className="mb-3 font-Barlow text-xl leading-6 xl:text-3xl xl:leading-8">
-                                Students and graduates
+                        <div className="box h-[17rem] w-[17rem] rounded-3xl bg-translucent p-6 xl:h-[22rem] xl:w-[22rem] xl:p-9 2xl:h-96 2xl:w-96">
+                            <div className="mb-3 flex flex-row items-end gap-4 xl:mb-5 2xl:mb-9">
+                                <Image
+                                    src="/images/enthusiasts.svg"
+                                    alt="Aviation enthusiasts"
+                                    className="h-14 w-14 xl:h-20 xl:w-20 2xl:h-24 2xl:w-24"
+                                    width="64"
+                                    height="64"
+                                />
+                                <span className="xl:pr-18 font-Barlow text-2xl leading-6 xl:text-3xl xl:leading-7 2xl:text-4xl 2xl:leading-8">
+                                    Aviation enthusiasts
+                                </span>
+                            </div>
+                            <p className="font-BarlowLight text-sm leading-5 xl:text-xl xl:leading-6">
+                                Tango5 provides a unique opportunity to delve into the intricate world of Air Traffic
+                                Control (ATC), offering insights and knowledge that will deepen their understanding and
+                                appreciation of the aviation industry.
                             </p>
-                            <p className="font-BarlowLight leading-5 xl:text-xl xl:leading-6">
-                                Lorem fistrum pecador nisi et se calle ustée papaar papaar va usté muy cargadoo.
+                        </div>
+                        <div className="box h-[17rem] w-[17rem] rounded-3xl bg-translucent p-6 xl:h-[22rem] xl:w-[22rem] xl:p-9 2xl:h-96 2xl:w-96">
+                            <div className="mb-3 flex flex-row items-end gap-4 xl:mb-5 2xl:mb-9">
+                                <Image
+                                    src="/images/students.svg"
+                                    alt="Students and graduates"
+                                    className="h-14 w-14 xl:h-20 xl:w-20 2xl:h-24 2xl:w-24"
+                                    width="64"
+                                    height="64"
+                                />
+                                <span className="xl:pr-18 font-Barlow text-2xl leading-6 xl:text-3xl xl:leading-7 2xl:text-4xl 2xl:leading-8">
+                                    Students and graduates
+                                </span>
+                            </div>
+                            <p className="font-BarlowLight text-sm leading-5 xl:text-xl xl:leading-6">
+                                Tango5 offers a practical and insightful tool to further their understanding of Air
+                                Traffic Control (ATC) operations, providing a unique perspective on the integration of
+                                technology and engineering in the aviation industry.
                             </p>
                         </div>
                     </div>
@@ -120,7 +144,7 @@ export default async function Page() {
                         </Link>
                     </div>
                 </footer>
-                <VideoBackground />
+                <MapBackground />
             </main>
         </>
     );
