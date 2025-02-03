@@ -24,6 +24,10 @@ function PostHogPageView(): null {
                 username: user.username
             });
         }
+
+        if (!isSignedIn && posthog._isIdentified()) {
+            posthog.reset();
+        }
     }, [posthog, user, isSignedIn, userId]);
 
     // Track pageviews
