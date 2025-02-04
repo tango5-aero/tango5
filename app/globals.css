@@ -117,10 +117,4 @@ body {
         background: url('/images/map.jpg') no-repeat center center;
         background-size: cover;
     }
-    .flight-background {
-        background: url('/images/flight.svg') no-repeat bottom right;
-        background-size: contain;
-        background-blend-mode: soft-light;
-        isolation: isolate;
-    }
 }
