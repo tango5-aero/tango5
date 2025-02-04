@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { WelcomeTango5Title } from '~/components/ui/welcome-tango5-title';
-import { MapBackground } from '~/components/ui/map-background';
+import { FlightBackground } from '~/components/ui/flight-background';
 
 export default async function Page() {
     return (
@@ -15,8 +15,8 @@ export default async function Page() {
                     Please resize your browser window or switch to a device with a larger screen.
                 </p>
             </main>
-            <main className="max-lg:hidden">
-                <div className="relative z-20 flex flex-col items-center gap-2 p-6 md:p-20">
+            <main className="map-background max-lg:hidden">
+                <div className="relative flex flex-col items-center gap-2 p-6 md:p-20">
                     <WelcomeTango5Title />
                     <p className="w-[716px] text-center font-BarlowLight text-5xl">
                         A professional enroute
@@ -54,10 +54,10 @@ export default async function Page() {
                             />
                         </Link>
                     </div>
-                    <div className="mt-20">
+                    <div className="mt-40">
                         <p className="text-center font-Barlow text-4xl">Who is it for?</p>
                     </div>
-                    <div className="mt-8 flex w-full flex-row justify-between">
+                    <div className="isolate z-20 mt-8 flex w-full flex-row justify-between">
                         <div className="box h-[17rem] w-[17rem] rounded-3xl bg-translucent p-6 xl:h-[22rem] xl:w-[22rem] xl:p-9 2xl:h-96 2xl:w-96">
                             <div className="mb-3 flex flex-row items-end gap-4 xl:mb-5 2xl:mb-9">
                                 <Image
@@ -126,6 +126,7 @@ export default async function Page() {
                             </Link>
                         </p>
                     </div>
+                    <FlightBackground />
                 </div>
                 <footer className="flex h-40 w-full flex-row items-center justify-between border-t border-t-map bg-translucent p-6 md:p-20">
                     <div className="flex flex-row justify-start gap-4">
@@ -144,7 +145,6 @@ export default async function Page() {
                         </Link>
                     </div>
                 </footer>
-                <MapBackground />
             </main>
         </>
     );
