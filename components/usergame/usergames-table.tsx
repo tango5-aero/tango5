@@ -27,7 +27,7 @@ export const userColumns: ColumnDef<UserGameRow>[] = [
     {
         accessorKey: 'scenarioId',
         header: () => <div className="text-center">Scenario</div>,
-        cell: ({ row }) => <div className="text-center">{`#${row.original.id}`}</div>
+        cell: ({ row }) => <div className="text-center">{`#${row.original.scenarioId}`}</div>
     },
     {
         accessorKey: 'playTime',
@@ -50,15 +50,13 @@ export const userColumns: ColumnDef<UserGameRow>[] = [
 export const adminColumns: ColumnDef<UserGameRow>[] = [
     {
         accessorKey: 'id',
-        header: () => <div className="text-center">ID</div>
+        header: () => <div className="text-center">Game</div>
     },
     {
         accessorKey: 'userId',
         header: () => <div className="text-center">User</div>,
         cell: ({ row }) => (
-            <div
-                className="max-w-20 overflow-hidden text-ellipsis text-center md:max-w-32 lg:max-w-none lg:overflow-auto"
-                title={row.original.userId}>
+            <div className="max-w-20 overflow-hidden text-ellipsis text-center md:max-w-32 lg:max-w-none lg:overflow-auto">
                 {row.original.userId}
             </div>
         )
