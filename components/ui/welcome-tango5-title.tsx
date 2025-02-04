@@ -10,7 +10,9 @@ const WelcomeTango5Title = () => {
                 className="absolute bottom-0 left-0"
                 alt="5"
             />
-            <span className="font-BarlowLight text-6xl leading-10">Welcome to</span>
+            <span className="font-BarlowLight text-6xl leading-10 text-background dark:text-foreground">
+                Welcome to
+            </span>
             <Image src="/images/tango5.svg" width="304" height="63" alt="Tango5" />
         </div>
     );
