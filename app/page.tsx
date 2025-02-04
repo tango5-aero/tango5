@@ -59,7 +59,7 @@ export default async function Page() {
                     </div>
                     <div className="isolate z-20 mt-8 flex w-full flex-row justify-between">
                         <div className="box h-[17rem] w-[17rem] rounded-3xl bg-translucent p-6 xl:h-[22rem] xl:w-[22rem] xl:p-9 2xl:h-96 2xl:w-96">
-                            <div className="mb-3 flex flex-row items-end gap-4 xl:mb-5 2xl:mb-9">
+                            <div className="mb-5 flex flex-row items-end gap-4 2xl:mb-9">
                                 <Image
                                     src="/images/candidates.svg"
                                     alt="ATCO Candidates"
@@ -71,14 +71,13 @@ export default async function Page() {
                                     ATCO Candidates
                                 </span>
                             </div>
-                            <p className="font-BarlowLight text-sm leading-5 xl:text-xl xl:leading-6">
-                                Tango5 offers aspiring air traffic controllers a comprehensive training tool to prepare
-                                for exams, gain valuable experience, and become familiar with the world of Air Traffic
-                                Control (ATC).
+                            <p className="font-BarlowLight text-lg leading-6 xl:text-xl xl:leading-7">
+                                A training tool to prepare for exams, gain valuable experience, and become familiar with
+                                the world of Air Traffic Control.
                             </p>
                         </div>
                         <div className="box h-[17rem] w-[17rem] rounded-3xl bg-translucent p-6 xl:h-[22rem] xl:w-[22rem] xl:p-9 2xl:h-96 2xl:w-96">
-                            <div className="mb-3 flex flex-row items-end gap-4 xl:mb-5 2xl:mb-9">
+                            <div className="mb-5 flex flex-row items-end gap-4 2xl:mb-9">
                                 <Image
                                     src="/images/enthusiasts.svg"
                                     alt="Aviation enthusiasts"
@@ -90,14 +89,13 @@ export default async function Page() {
                                     Aviation enthusiasts
                                 </span>
                             </div>
-                            <p className="font-BarlowLight text-sm leading-5 xl:text-xl xl:leading-6">
-                                Tango5 provides a unique opportunity to delve into the intricate world of Air Traffic
-                                Control (ATC), offering insights and knowledge that will deepen their understanding and
-                                appreciation of the aviation industry.
+                            <p className="font-BarlowLight text-lg leading-6 xl:text-xl xl:leading-7">
+                                Explore the intricate world of Air Traffic Control, we offer insights and knowledge to
+                                enhance understanding and appreciation of the aviation industry.
                             </p>
                         </div>
                         <div className="box h-[17rem] w-[17rem] rounded-3xl bg-translucent p-6 xl:h-[22rem] xl:w-[22rem] xl:p-9 2xl:h-96 2xl:w-96">
-                            <div className="mb-3 flex flex-row items-end gap-4 xl:mb-5 2xl:mb-9">
+                            <div className="mb-5 flex flex-row items-end gap-4 2xl:mb-9">
                                 <Image
                                     src="/images/students.svg"
                                     alt="Students and graduates"
@@ -109,10 +107,9 @@ export default async function Page() {
                                     Students and graduates
                                 </span>
                             </div>
-                            <p className="font-BarlowLight text-sm leading-5 xl:text-xl xl:leading-6">
-                                Tango5 offers a practical and insightful tool to further their understanding of Air
-                                Traffic Control (ATC) operations, providing a unique perspective on the integration of
-                                technology and engineering in the aviation industry.
+                            <p className="font-BarlowLight text-lg leading-6 xl:text-xl xl:leading-7">
+                                Tango5 provides further understanding of ATC operations, providing a unique perspective
+                                on the integration of technology in the aviation industry.
                             </p>
                         </div>
                     </div>
