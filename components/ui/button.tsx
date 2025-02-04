@@ -15,7 +15,8 @@ const buttonVariants = cva(
                 secondary: 'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
                 ghost: 'hover:bg-accent hover:text-accent-foreground',
                 link: 'text-primary underline-offset-4 hover:underline',
-                map: 'bg-map text-2xl text-map-foreground font-BarlowBold font-bold shadow hover:bg-map/85 rounded-full'
+                map: 'bg-map text-2xl text-map-foreground font-BarlowBold font-bold shadow hover:bg-map/85 rounded-full',
+                outlineMap: 'text-2xl border-2 border-map text-map font-BarlowLight shadow hover:bg-map/85 rounded-full'
             },
             size: {
                 default: 'h-9 px-4 py-2',

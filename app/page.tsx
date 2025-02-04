@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { WelcomeTango5Title } from '~/components/ui/welcome-tango5-title';
 import { FlightBackground } from '~/components/ui/flight-background';
+import { LinkButton } from '~/components/ui/link-button';
 
 export default async function Page() {
     return (
@@ -29,9 +30,7 @@ export default async function Page() {
                         Traffic Control (ATC).
                     </p>
                     <div className="flex flex-row gap-9">
-                        <Link
-                            href="/waitlist"
-                            className="rounded-full border-2 border-map px-8 py-2 font-Barlow text-2xl font-bold leading-7 text-map shadow hover:bg-map/85">
+                        <LinkButton href="/waitlist" variant="outlineMap">
                             {'Join our waitlist'}
                             <Image
                                 width="31"
@@ -40,10 +39,8 @@ export default async function Page() {
                                 alt="Join our waitlist"
                                 className="ml-3 inline-block"
                             />
-                        </Link>
-                        <Link
-                            href="/login"
-                            className="rounded-full bg-map px-8 py-2 font-BarlowBold text-2xl font-bold leading-7 text-map-foreground shadow hover:bg-map/85">
+                        </LinkButton>
+                        <LinkButton href="/login" variant="map">
                             {'Log in'}
                             <Image
                                 width="31"
@@ -52,7 +49,7 @@ export default async function Page() {
                                 alt="Log in"
                                 className="ml-3 inline-block"
                             />
-                        </Link>
+                        </LinkButton>
                     </div>
                     <div className="mt-40">
                         <p className="text-center font-Barlow text-4xl">Who is it for?</p>
