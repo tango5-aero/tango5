@@ -43,7 +43,7 @@ body {
         --sidebar-ring: 217.2 91.2% 59.8%;
         --primary--map: 188 10% 67%;
         --primary-foreground--map: 240 10% 3.9%;
-        --translucent-background: rgba(2, 44, 62, 0.6);
+        --translucent-background: 198 94% 13% / 0.6;
     }
     .dark {
         --background: 240 10% 3.9%;
@@ -80,7 +80,7 @@ body {
         --sidebar-ring: 217.2 91.2% 59.8%;
         --primary--map: 188 10% 67%;
         --primary-foreground--map: 222.86 15.56% 8.82%;
-        --translucent-background: rgba(2, 44, 62, 0.6);
+        --translucent-background: 198 94% 13% / 0.6;
     }
 }
 
