@@ -4,14 +4,15 @@ import { currentUser } from '@clerk/nextjs/server';
 import { unstable_cache } from 'next/cache';
 import { cacheTags } from '~/lib/constants';
 import {
+    getUserGames,
+    getUnplayedScenarios,
+    getRandom,
+    writeUserGame,
     deleteUserGame as deleteDBUserGame,
     deleteUserGames,
-    getCurrentUserGamesPage as getDBCurrentUserGamesPage,
     getUserGamesPage as getDBUserGamesPage,
-    getRandom,
-    getUnplayedScenarios,
-    getUserGames,
-    writeUserGame
+    getCurrentUserGamesPage as getDBCurrentUserGamesPage,
+    getCurrentUserGamesPerformance as getDBCurrentUserGamesPerformance
 } from '~/lib/db/queries';
 import { UserGameInsert, UserGameSelect } from '~/lib/types';
 import { ActionScenarioState, ActionState } from '.';
@@ -96,4 +97,8 @@ export async function getUserGamesPage(pageIndex: number, pageSize: number) {
 
 export async function getCurrentUserGamesPage(pageIndex: number, pageSize: number) {
     return await getDBCurrentUserGamesPage(pageIndex, pageSize);
+}
+
+export async function getCurrentUserGamesPerformance() {
+    return await getDBCurrentUserGamesPerformance();
 }
