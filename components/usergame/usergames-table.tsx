@@ -3,7 +3,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
 import { PropsWithoutRef } from 'react';
-import { UserGameDeleteDialog } from '~/components/user-game/usergame-delete-dialog';
+import { UserGameDeleteDialog } from '~/components/usergame/usergame-delete-dialog';
 import { usePagination } from '~/hooks/use-pagination';
 import { getCurrentUserGamesPage, getUserGamesPage } from '~/lib/actions';
 import { useTableApi } from '~/hooks/use-table-api';

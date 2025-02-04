@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { UserNotifyMeForm } from '~/components/user/user-notify-me-form';
 import { LinkButton } from '~/components/ui/link-button';
-import { UserGamesTable } from '~/components/users/usergames-table';
+import { UserGamesTable } from '~/components/usergame/usergames-table';
 import { getUserInfo } from '~/lib/actions/users';
 import { getUnplayedScenarios } from '~/lib/db/queries';
 
