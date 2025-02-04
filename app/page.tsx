@@ -30,7 +30,7 @@ export default async function Page() {
                         Traffic Control (ATC).
                     </p>
                     <div className="flex flex-row gap-9">
-                        <LinkButton href="/waitlist" variant="outlineMap">
+                        <LinkButton href="/waitlist" variant="outlineMap" className="px-5 py-6">
                             {'Join our waitlist'}
                             <Image
                                 width="31"
@@ -40,7 +40,7 @@ export default async function Page() {
                                 className="ml-3 inline-block"
                             />
                         </LinkButton>
-                        <LinkButton href="/login" variant="map">
+                        <LinkButton href="/login" variant="map" className="px-5 py-6">
                             {'Log in'}
                             <Image
                                 width="31"
