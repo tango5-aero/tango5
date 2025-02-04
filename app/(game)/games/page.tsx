@@ -1,9 +1,12 @@
 import { currentUser } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { UserNotifyMeForm } from '~/components/user/user-notify-me-form';
+import { Suspense } from 'react';
+import { GamePerformance } from '~/components/game/game-performance';
 import { LinkButton } from '~/components/ui/link-button';
 import { UserGamesTable } from '~/components/usergame/usergames-table';
+import { LoadingSpinner } from '~/components/ui/loading-spinner';
+import { UserNotifyMeForm } from '~/components/user/user-notify-me-form';
 import { getUserInfo } from '~/lib/actions/users';
 import { getUnplayedScenarios } from '~/lib/db/queries';
 
@@ -29,6 +32,15 @@ export default async function Page() {
                 <h3 className="text-xl">{`Keep playing to complete ${unplayedScenarios.length} remaining scenarios`}</h3>
             )}
 
+            <Suspense
+                fallback={
+                    <div className="flex h-[90px] items-center justify-center">
+                        <LoadingSpinner />
+                    </div>
+                }>
+                <GamePerformance />
+            </Suspense>
+
             <UserGamesTable adminAccess={false} />
 
             <LinkButton href="/play" variant="outline" disabled={unplayedScenarios.length === 0}>
@@ -41,7 +53,7 @@ export default async function Page() {
                 <span className="text-xs">{'Any comments? please, contact us at'}</span>{' '}
                 <Link
                     href="mailto:communication@DataBeacon.aero?subject=Comments about T5"
-                    className="text-xs text-primary">
+                    className="text-xs text-primary hover:underline">
                     {'communication@DataBeacon.aero'}
                 </Link>
             </footer>
