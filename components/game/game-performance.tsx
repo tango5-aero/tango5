@@ -1,7 +1,7 @@
-import { PropsWithoutRef, ComponentType } from 'react';
-import { LucideProps, CircleCheck, XCircle, Clock3 } from 'lucide-react';
+import { CircleCheck, Clock3, LucideProps, StarIcon, XCircle } from 'lucide-react';
+import { ComponentType, PropsWithoutRef } from 'react';
 import { getCurrentUserGamesPerformance } from '~/lib/actions';
-import { Duration } from 'luxon';
+import { formatDuration } from '~/lib/utils';
 
 const GamePerformanceStat = (
     props: PropsWithoutRef<{ icon: ComponentType<LucideProps>; stat: string; description: string }>
@@ -26,9 +26,10 @@ export async function GamePerformance() {
         return null;
     }
 
-    const { succeeded, total, playTimeAvg } = performance;
+    const { succeeded, total, playTimeAvg, playTimeMin, bestScenarioId } = performance;
 
-    const computedAverage = playTimeAvg ? Number(Duration.fromISOTime(playTimeAvg).toFormat('s.SSS')).toFixed(2) : '-';
+    const computedAverage = playTimeAvg ? formatDuration(playTimeAvg) : '-';
+    const computedMin = playTimeMin ? formatDuration(playTimeMin) : '-';
 
     return (
         <section className="flex items-center justify-center gap-x-5">
@@ -37,7 +38,12 @@ export async function GamePerformance() {
                 stat={`${succeeded}/${total}`}
                 description="resolved scenarios"
             />
-            <GamePerformanceStat icon={Clock3} stat={`${computedAverage}`} description="seconds on average" />
+            <GamePerformanceStat icon={Clock3} stat={computedAverage} description="seconds on average" />
+            <GamePerformanceStat
+                icon={StarIcon}
+                stat={computedMin}
+                description={`best time ${bestScenarioId ? `(#${bestScenarioId})` : ''}`}
+            />
         </section>
     );
 }
