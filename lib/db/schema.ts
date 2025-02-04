@@ -1,9 +1,9 @@
-import { boolean, date, integer, interval, pgTable, serial, text, unique } from 'drizzle-orm/pg-core';
+import { boolean, integer, interval, pgTable, serial, text, unique } from 'drizzle-orm/pg-core';
 
 export const ScenariosTable = pgTable('scenarios', {
     id: serial('id').primaryKey(),
     data: text('data').notNull(),
-    releaseDate: date('release_date')
+    active: boolean('active').default(false).notNull()
 });
 export const UsersTable = pgTable('users', {
     id: text('id').primaryKey(),

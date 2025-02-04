@@ -1,4 +1,4 @@
-import { count, eq, inArray, notInArray, sql } from 'drizzle-orm';
+import { count, and, eq, inArray, notInArray, sql } from 'drizzle-orm';
 import { scenarioSchema } from '~/lib/domain/scenario';
 import { db } from '~/lib/db';
 import { ScenariosTable, UserGamesTable } from '~/lib/db/schema';
@@ -25,7 +25,7 @@ export const getUnplayedScenarios = async (userId: UserGameInsert['userId']) => 
         .with(sq)
         .select()
         .from(ScenariosTable)
-        .where(notInArray(ScenariosTable.id, db.select().from(sq)));
+        .where(and(notInArray(ScenariosTable.id, db.select().from(sq)), eq(ScenariosTable.active, true)));
 };
 
 export const getRandom = async (ids?: ScenarioParsed['id'][]) => {
@@ -36,6 +36,7 @@ export const getRandom = async (ids?: ScenarioParsed['id'][]) => {
     }
 
     const res = await query
+        .where(eq(ScenariosTable.active, true))
         .orderBy(sql`RANDOM()`)
         .limit(1)
         .execute();
@@ -48,15 +49,6 @@ export const getRandom = async (ids?: ScenarioParsed['id'][]) => {
 export const writeScenarios = async (scenariosData: Array<ScenarioParsed['data']>) => {
     const data = scenariosData.map((scenarioData) => ({ data: JSON.stringify(scenarioData) }));
     const res = await db.insert(ScenariosTable).values(data).returning();
-    return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
-};
-
-export const updateScenarioReleaseDate = async (
-    id: ScenarioParsed['id'],
-    releaseDate: ScenarioParsed['releaseDate']
-) => {
-    const res = await db.update(ScenariosTable).set({ releaseDate }).where(eq(ScenariosTable.id, id)).returning();
-
     return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
 };
 
@@ -80,5 +72,13 @@ export const getScenariosPage = async (pageIndex: number, pageSize: number) => {
         };
     } catch {
         return { count: 0, values: [] };
+    }
+};
+
+export const changeScenarioVisibility = async (id: number, active: boolean) => {
+    try {
+        return await db.update(ScenariosTable).set({ active: active }).where(eq(ScenariosTable.id, id)).returning();
+    } catch {
+        return [];
     }
 };

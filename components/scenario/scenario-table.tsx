@@ -6,7 +6,6 @@ import { type ScenarioData } from '~/lib/domain/scenario';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
 import { Download, PlayIcon } from 'lucide-react';
-import { ScenarioReleaseDateDialog } from './scenario-release-date-dialog';
 import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
 import { getScenariosPage } from '~/lib/actions';
@@ -15,6 +14,7 @@ import { ScenarioUploadDialog } from './scenario-upload-dialog';
 import { Flight } from '~/lib/domain/flight';
 import { Pcd } from '~/lib/domain/pcd';
 import { ScenarioParsed } from '~/lib/types';
+import { ScenarioActiveCheckbox } from './scenario-active-checkbox';
 
 export const columns: ColumnDef<ScenarioParsed>[] = [
     {
@@ -68,11 +68,16 @@ export const columns: ColumnDef<ScenarioParsed>[] = [
         }
     },
     {
-        accessorKey: 'releaseDate',
-        header: () => <div className="text-right">Release Date</div>,
+        accessorKey: 'active',
+        header: () => <div className="text-right">Active</div>,
         cell: ({ row }) => {
-            const releaseDate = row.getValue('releaseDate') as string;
-            return <div className="text-center font-medium">{releaseDate ?? '-'}</div>;
+            const active = row.getValue('active') as boolean;
+            const id = row.getValue('id') as number;
+            return (
+                <div className="mr-2 flex justify-end">
+                    <ScenarioActiveCheckbox id={id} checked={active} />
+                </div>
+            );
         }
     },
     {
@@ -80,15 +85,13 @@ export const columns: ColumnDef<ScenarioParsed>[] = [
         header: () => <div className="text-right">Actions</div>,
         cell: ({ row }) => {
             const id = row.getValue('id') as number;
-            const releaseDate = row.getValue('releaseDate') as string;
             const data = row.getValue('data') as ScenarioData;
 
             return (
-                <div className="flex flex-row gap-2">
+                <div className="flex flex-row justify-end gap-2">
                     <Link href={`/backstage/play/${id}`}>
                         <PlayIcon size={'1rem'} />
                     </Link>
-                    <ScenarioReleaseDateDialog id={id} releaseDate={releaseDate} />
                     <a
                         title={`Download scenario #${id}`}
                         href={`data:application/json,${JSON.stringify(data)}`}
