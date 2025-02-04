@@ -1,5 +1,5 @@
 import { currentUser } from '@clerk/nextjs/server';
-import { and, avg, count, eq } from 'drizzle-orm';
+import { and, avg, count, eq, min } from 'drizzle-orm';
 import { db } from '~/lib/db';
 import { UserGamesTable } from '~/lib/db/schema';
 import { UserGameInsert, UserGameSelect } from '~/lib/types';
@@ -83,16 +83,36 @@ export const getCurrentUserGamesPerformance = async () => {
         return;
     }
 
-    const succeeded = await db
-        .select({ value: count(), playTimeAvg: avg(UserGamesTable.playTime) })
+    const [succeeded] = await db
+        .select({
+            value: count(),
+            playTimeAvg: avg(UserGamesTable.playTime),
+            playTimeMin: min(UserGamesTable.playTime)
+        })
         .from(UserGamesTable)
         .where(and(eq(UserGamesTable.userId, user.id), eq(UserGamesTable.success, true)));
 
-    const total = await db.select({ value: count() }).from(UserGamesTable).where(eq(UserGamesTable.userId, user.id));
+    const [total] = await db.select({ value: count() }).from(UserGamesTable).where(eq(UserGamesTable.userId, user.id));
+
+    let bestGame;
+    if (succeeded?.playTimeMin) {
+        [bestGame] = await db
+            .select({ id: UserGamesTable.id })
+            .from(UserGamesTable)
+            .where(
+                and(
+                    eq(UserGamesTable.userId, user.id),
+                    eq(UserGamesTable.success, true),
+                    eq(UserGamesTable.playTime, succeeded.playTimeMin)
+                )
+            );
+    }
 
     return {
-        succeeded: succeeded[0]?.value,
-        total: total[0]?.value,
-        playTimeAvg: succeeded[0]?.playTimeAvg
+        succeeded: succeeded?.value,
+        total: total?.value,
+        playTimeAvg: succeeded?.playTimeAvg,
+        playTimeMin: succeeded?.playTimeMin,
+        bestScenarioId: bestGame?.id
     };
 };

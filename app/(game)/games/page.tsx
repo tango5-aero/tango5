@@ -4,9 +4,9 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { GamePerformance } from '~/components/game/game-performance';
 import { LinkButton } from '~/components/ui/link-button';
+import { UserGamesTable } from '~/components/usergame/usergames-table';
 import { LoadingSpinner } from '~/components/ui/loading-spinner';
 import { UserNotifyMeForm } from '~/components/user/user-notify-me-form';
-import { UserGamesTable } from '~/components/users/usergames-table';
 import { getUserInfo } from '~/lib/actions/users';
 import { getUnplayedScenarios } from '~/lib/db/queries';
 

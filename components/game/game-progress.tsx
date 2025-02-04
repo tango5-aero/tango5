@@ -1,7 +1,7 @@
 'use client';
 
 import { PropsWithoutRef } from 'react';
-import { CircleCountdown } from './circle-countdown';
+import { CircleCountdown } from '~/components/ui/circle-countdown';
 import { GAME_INDICATOR_SIZE, GAME_INDICATOR_TRAIL_STROKE_WIDTH } from '~/lib/constants';
 import { cn } from '~/lib/utils';
 

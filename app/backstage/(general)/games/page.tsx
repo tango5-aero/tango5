@@ -1,4 +1,4 @@
-import { UserGamesTable } from '~/components/users/usergames-table';
+import { UserGamesTable } from '~/components/usergame/usergames-table';
 
 export default async function App() {
     return (
