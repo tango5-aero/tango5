@@ -1,5 +1,5 @@
 import { currentUser } from '@clerk/nextjs/server';
-import { count, eq } from 'drizzle-orm';
+import { and, avg, count, eq } from 'drizzle-orm';
 import { db } from '~/lib/db';
 import { UserGamesTable } from '~/lib/db/schema';
 import { UserGameInsert, UserGameSelect } from '~/lib/types';
@@ -74,4 +74,25 @@ export const getCurrentUserGamesPage = async (pageIndex: number, pageSize: numbe
     } catch {
         return { count: 0, values: [] };
     }
+};
+
+export const getCurrentUserGamesPerformance = async () => {
+    const user = await currentUser();
+
+    if (!user) {
+        return;
+    }
+
+    const succeeded = await db
+        .select({ value: count(), playTimeAvg: avg(UserGamesTable.playTime) })
+        .from(UserGamesTable)
+        .where(and(eq(UserGamesTable.userId, user.id), eq(UserGamesTable.success, true)));
+
+    const total = await db.select({ value: count() }).from(UserGamesTable).where(eq(UserGamesTable.userId, user.id));
+
+    return {
+        succeeded: succeeded[0]?.value,
+        total: total[0]?.value,
+        playTimeAvg: succeeded[0]?.playTimeAvg
+    };
 };
