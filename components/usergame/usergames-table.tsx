@@ -25,7 +25,7 @@ type UserGamesTableProps = {
 export const userColumns: ColumnDef<UserGameRow>[] = [
     {
         accessorKey: 'scenarioId',
-        header: () => <div className="text-center">Scenario #</div>,
+        header: () => <div className="text-center">Scenario</div>,
         cell: ({ row }) => <div className="text-center">{`#${row.original.id}`}</div>
     },
     {
@@ -35,7 +35,7 @@ export const userColumns: ColumnDef<UserGameRow>[] = [
     },
     {
         accessorKey: 'success',
-        header: () => <div className="text-center">Succeded?</div>,
+        header: () => <div className="text-center">Succeded</div>,
         cell: ({ row }) => (
             <div className="flex justify-center text-center">
                 {row.original.success ? <CircleCheck /> : <CircleX />}
@@ -51,7 +51,7 @@ export const adminColumns: ColumnDef<UserGameRow>[] = [
     },
     {
         accessorKey: 'userId',
-        header: () => <div className="text-center">User ID</div>,
+        header: () => <div className="text-center">User</div>,
         cell: ({ row }) => (
             <div
                 className="max-w-20 overflow-hidden text-ellipsis text-center md:max-w-32 lg:max-w-none lg:overflow-auto"
@@ -63,7 +63,7 @@ export const adminColumns: ColumnDef<UserGameRow>[] = [
     ...userColumns,
     {
         accessorKey: 'action',
-        header: () => <div className="text-center">Action</div>,
+        header: () => <div className="text-center">Action(s)</div>,
         cell: ({ row }) => (
             <div className="flex justify-center">
                 <UserGameDeleteDialog id={row.original.id} />
