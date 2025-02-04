@@ -1,15 +1,15 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { DataTable } from '~/components/ui/data-table';
+import { CircleCheck, CircleX } from 'lucide-react';
 import { PropsWithoutRef } from 'react';
+import { DataTable } from '~/components/ui/data-table';
 import { UserGameDeleteDialog } from '~/components/usergame/usergame-delete-dialog';
 import { usePagination } from '~/hooks/use-pagination';
-import { getCurrentUserGamesPage, getUserGamesPage } from '~/lib/actions';
 import { useTableApi } from '~/hooks/use-table-api';
 import { TableContext } from '~/hooks/use-table-context';
-import { CircleCheck, CircleX } from 'lucide-react';
-import { Duration } from 'luxon';
+import { getCurrentUserGamesPage, getUserGamesPage } from '~/lib/actions';
+import { formatDuration } from '~/lib/utils';
 
 type UserGameRow = {
     id: number;
@@ -31,11 +31,9 @@ export const userColumns: ColumnDef<UserGameRow>[] = [
     },
     {
         accessorKey: 'playTime',
-        header: () => <div className="text-center">Play Time</div>,
+        header: () => <div className="text-center">Time (seconds)</div>,
         cell: ({ row }) => (
-            <div className="text-center">
-                {row.original.success ? Duration.fromISOTime(row.original.playTime).toFormat("ss's'") : 'N/A'}
-            </div>
+            <div className="text-center">{row.original.success ? formatDuration(row.original.playTime) : 'N/A'}</div>
         )
     },
     {
