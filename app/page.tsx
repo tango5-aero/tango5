@@ -137,7 +137,7 @@ export default async function Page() {
                         <p className="font-BarlowLight text-sm">© 2025 DataBeacon</p>
                     </div>
                     <div className="flex w-48 justify-end">
-                        <Link href="linkedin" target="_blank">
+                        <Link href="https://www.linkedin.com/company/databeaconaero/" target="_blank">
                             <Image src="/images/linkedin.svg" width="38" height="38" alt="LinkedIn" />
                         </Link>
                     </div>
