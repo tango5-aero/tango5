@@ -9,6 +9,7 @@ import { getCurrentUserGamesPage, getUserGamesPage } from '~/lib/actions';
 import { useTableApi } from '~/hooks/use-table-api';
 import { TableContext } from '~/hooks/use-table-context';
 import { CircleCheck, CircleX } from 'lucide-react';
+import { Duration } from 'luxon';
 
 type UserGameRow = {
     id: number;
@@ -31,7 +32,11 @@ export const userColumns: ColumnDef<UserGameRow>[] = [
     {
         accessorKey: 'playTime',
         header: () => <div className="text-center">Play Time</div>,
-        cell: ({ row }) => <div className="text-center">{row.original.success ? row.original.playTime : 'N/A'}</div>
+        cell: ({ row }) => (
+            <div className="text-center">
+                {row.original.success ? Duration.fromISOTime(row.original.playTime).toFormat("ss's'") : 'N/A'}
+            </div>
+        )
     },
     {
         accessorKey: 'success',
