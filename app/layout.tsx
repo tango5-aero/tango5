@@ -14,7 +14,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     }
 
     return (
-        <ClerkProvider>
+        <ClerkProvider waitlistUrl="/waitlist" signUpUrl="/login">
             <html
                 lang="en"
                 suppressHydrationWarning /* https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app */
