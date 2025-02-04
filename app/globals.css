@@ -43,6 +43,7 @@ body {
         --sidebar-ring: 217.2 91.2% 59.8%;
         --primary--map: 188 10% 67%;
         --primary-foreground--map: 240 10% 3.9%;
+        --translucent-background: 198 94% 13% / 0.6;
     }
     .dark {
         --background: 240 10% 3.9%;
@@ -79,6 +80,7 @@ body {
         --sidebar-ring: 217.2 91.2% 59.8%;
         --primary--map: 188 10% 67%;
         --primary-foreground--map: 222.86 15.56% 8.82%;
+        --translucent-background: 198 94% 13% / 0.6;
     }
 }
 
@@ -105,5 +107,14 @@ body {
     }
     body {
         @apply bg-background text-foreground;
+    }
+    .box {
+        box-shadow:
+            inset 0px 0px 29px #a5b3b55f,
+            -3px 2px 6px #011b26;
+    }
+    .map-background {
+        background: url('/images/map.jpg') no-repeat center center;
+        background-size: cover;
     }
 }
