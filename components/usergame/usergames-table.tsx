@@ -8,6 +8,7 @@ import { usePagination } from '~/hooks/use-pagination';
 import { getCurrentUserGamesPage, getUserGamesPage } from '~/lib/actions';
 import { useTableApi } from '~/hooks/use-table-api';
 import { TableContext } from '~/hooks/use-table-context';
+import { CircleCheck, CircleX } from 'lucide-react';
 
 type UserGameRow = {
     id: number;
@@ -24,16 +25,24 @@ type UserGamesTableProps = {
 export const userColumns: ColumnDef<UserGameRow>[] = [
     {
         accessorKey: 'scenarioId',
-        header: () => <div className="text-center">Scenario ID</div>
+        header: () => <div className="text-center">Scenario #</div>,
+        cell: ({ row }) => <div className="text-center">{`#${row.original.id}`}</div>
     },
     {
         accessorKey: 'playTime',
-        header: () => <div className="text-center">Play Time</div>
+        header: () => <div className="text-center">Play Time</div>,
+        cell: ({ row }) => (
+            <div className="flex justify-end text-center">{row.original.success ? row.original.playTime : 'N/A'}</div>
+        )
     },
     {
         accessorKey: 'success',
         header: () => <div className="text-center">Succeded?</div>,
-        cell: ({ row }) => <div className="text-center">{row.original.success ? '✅' : '❌'}</div>
+        cell: ({ row }) => (
+            <div className="flex justify-center text-center">
+                {row.original.success ? <CircleCheck /> : <CircleX />}
+            </div>
+        )
     }
 ];
 
@@ -53,36 +62,15 @@ export const adminColumns: ColumnDef<UserGameRow>[] = [
             </div>
         )
     },
-    {
-        accessorKey: 'scenarioId',
-        header: () => <div className="text-center">Scenario ID</div>
-    },
-    {
-        accessorKey: 'playTime',
-        header: () => <div className="text-center">Play Time</div>,
-        cell: ({ row }) => {
-            const playTime = row.getValue('playTime') as string;
-
-            return <div className="flex justify-end">{playTime}</div>;
-        }
-    },
-    {
-        accessorKey: 'success',
-        header: () => <div className="text-center">Succeded?</div>,
-        cell: ({ row }) => <div className="text-center">{row.original.success ? '✅' : '❌'}</div>
-    },
+    ...userColumns,
     {
         accessorKey: 'action',
         header: () => <div className="text-center">Action</div>,
-        cell: ({ row }) => {
-            const id = row.getValue('id') as number;
-
-            return (
-                <div className="flex justify-center">
-                    <UserGameDeleteDialog id={id} />
-                </div>
-            );
-        }
+        cell: ({ row }) => (
+            <div className="flex justify-center">
+                <UserGameDeleteDialog id={row.original.id} />
+            </div>
+        )
     }
 ];
 
