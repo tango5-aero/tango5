@@ -1,6 +1,7 @@
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { Game } from '~/components/game/game';
+import { SmallScreensProtection } from '~/components/ui/small-screens-protection';
 import { getRandom, getUnplayedScenarios } from '~/lib/db/queries';
 
 export default async function Page() {
@@ -24,5 +25,9 @@ export default async function Page() {
         redirect('/games');
     }
 
-    return <Game scenario={scenario} unplayedScenarios={unplayedScenarios.length} />;
+    return (
+        <SmallScreensProtection>
+            <Game scenario={scenario} unplayedScenarios={unplayedScenarios.length} />
+        </SmallScreensProtection>
+    );
 }
