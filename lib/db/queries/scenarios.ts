@@ -75,9 +75,9 @@ export const getScenariosPage = async (pageIndex: number, pageSize: number) => {
     }
 };
 
-export const changeScenarioVisibility = async (id: number, active: boolean) => {
+export const changeScenarioVisibility = async (id: ScenarioParsed['id'], active: ScenarioParsed['active']) => {
     try {
-        return await db.update(ScenariosTable).set({ active: active }).where(eq(ScenariosTable.id, id)).returning();
+        return await db.update(ScenariosTable).set({ active }).where(eq(ScenariosTable.id, id)).returning();
     } catch {
         return [];
     }
