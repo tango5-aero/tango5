@@ -38,14 +38,14 @@ export default async function DashBoardLayout({ children }: PropsWithChildren) {
                         <SidebarMenu>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild tooltip={'play'}>
-                                    <Link href={'/play'}>
+                                    <Link href={'/app/play'}>
                                         <Play />
                                         <span>{'Play'}</span>
                                     </Link>
                                 </SidebarMenuButton>
 
                                 <SidebarMenuButton asChild tooltip={'scores'}>
-                                    <Link href={'/scores'}>
+                                    <Link href={'/app/scores'}>
                                         <Gamepad2 />
                                         <span>{'Scores'}</span>
                                     </Link>

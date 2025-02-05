@@ -191,7 +191,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
             <div className="fixed bottom-1 right-72 z-10 mt-10 text-xs text-white/15">{scenario.id}</div>
 
             <GameExitButton
-                href={props.backstageAccess ? '/backstage/scenarios' : '/scores'}
+                href={props.backstageAccess ? '/backstage/scenarios' : '/app/scores'}
                 className="fixed right-16 top-5 z-10 cursor-pointer text-white/60"
             />
 
