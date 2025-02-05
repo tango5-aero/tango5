@@ -2,9 +2,12 @@
 
 import { ActionState } from '.';
 import { ScenarioData, scenarioSchema } from '~/lib/domain/scenario';
-import { writeScenarios, updateScenarioReleaseDate } from '~/lib/db/queries';
-import { deleteScenario as deleteDBScenario, getScenariosPage as getDBScenariosPage } from '~/lib/db/queries';
-import { format } from 'date-fns';
+import { writeScenarios } from '~/lib/db/queries';
+import {
+    deleteScenario as deleteDBScenario,
+    getScenariosPage as getDBScenariosPage,
+    changeScenarioVisibility as changeDBScenarioVisibility
+} from '~/lib/db/queries';
 import { unstable_cache } from 'next/cache';
 import { cacheTags } from '../constants';
 import { ScenarioParsed } from '~/lib/types';
@@ -48,25 +51,6 @@ export async function createScenario(
     return { message: `Scenario${result.length > 1 && 's'} created`, error: false };
 }
 
-export async function setScenarioReleaseDate(
-    _prevState: ActionState,
-    payload: Pick<ScenarioParsed, 'id' | 'releaseDate'>
-): Promise<ActionState> {
-    const { id, releaseDate } = payload;
-    const result = await updateScenarioReleaseDate(id, releaseDate);
-
-    if (result.length === 0) {
-        return { message: `Scenario #${id} not found`, error: true };
-    }
-
-    return {
-        message: releaseDate
-            ? `Set a new release date for scenario #${id} - ${format(releaseDate, 'PPP')}`
-            : `Cleared release date for scenario #${id}`,
-        error: false
-    };
-}
-
 export async function deleteScenario(_prevState: ActionState, id: ScenarioParsed['id']): Promise<ActionState> {
     const result = await deleteDBScenario(id);
 
@@ -87,4 +71,18 @@ export async function getScenariosPage(pageIndex: number, pageSize: number) {
     );
 
     return await getCachedScenariosPage(pageIndex, pageSize);
+}
+
+export async function changeScenarioVisibility(
+    _prevState: ActionState,
+    payload: { id: number; active: boolean }
+): Promise<ActionState> {
+    const state = payload.active ? 'active' : 'inactive';
+    const result = await changeDBScenarioVisibility(payload.id, payload.active);
+
+    if (result.length === 0) {
+        return { message: `Scenario #${payload.id} not found`, error: true };
+    }
+
+    return { message: `Scenario #${payload.id} is now ${state}`, error: false };
 }
