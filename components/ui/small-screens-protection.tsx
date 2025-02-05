@@ -3,13 +3,16 @@ import { PropsWithChildren, useEffect, useState } from 'react';
 import { BREAKPOINT_SMALL_SCREEN } from '~/lib/constants';
 
 const SmallScreensProtection = (props: PropsWithChildren) => {
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+    const [screenWidth, setScreenWidth] = useState<number>();
 
     useEffect(() => {
+        setScreenWidth(window.innerWidth);
         const handleWindowResize = () => setScreenWidth(window.innerWidth);
         window.addEventListener('resize', handleWindowResize);
         return () => window.removeEventListener('resize', handleWindowResize);
     }, []);
+
+    if (!screenWidth) return;
 
     return (
         <>

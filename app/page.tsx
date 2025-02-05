@@ -10,16 +10,7 @@ export default async function Page() {
 
     return (
         <>
-            <main className="flex h-[100dvh] flex-col items-center justify-center gap-6 px-5 lg:hidden">
-                <h2 className="text-xl sm:text-2xl">Screen Size Not Supported</h2>
-                <p className="text-pretty text-sm sm:text-base">
-                    This application requires a minimum screen width of 1024 pixels to function properly.
-                </p>
-                <p className="text-pretty text-sm sm:text-base">
-                    Please resize your browser window or switch to a device with a larger screen.
-                </p>
-            </main>
-            <main className="map-background max-lg:hidden">
+            <main className="map-background">
                 <div className="relative flex flex-col items-center gap-2 p-6 md:p-20">
                     <WelcomeTango5Title />
                     <p className="w-[716px] text-center font-BarlowLight text-5xl text-background dark:text-foreground">
