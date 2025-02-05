@@ -5,6 +5,7 @@
     "scripts": {
         "drizzle": "drizzle-kit",
         "seed": "NODE_ENV=development tsx ./lib/db/tools/seed.ts",
+        "migrate": "npm run drizzle migrate",
         "dev": "next dev --turbopack",
         "build": "next build && drizzle-kit migrate",
         "start": "next start",

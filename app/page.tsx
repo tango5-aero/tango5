@@ -3,8 +3,11 @@ import Image from 'next/image';
 import { WelcomeTango5Title } from '~/components/ui/welcome-tango5-title';
 import { FlightBackground } from '~/components/ui/flight-background';
 import { LinkButton } from '~/components/ui/link-button';
+import { currentUser } from '@clerk/nextjs/server';
 
 export default async function Page() {
+    const user = await currentUser();
+
     return (
         <>
             <main className="flex h-[100dvh] flex-col items-center justify-center gap-6 px-5 lg:hidden">
@@ -29,28 +32,16 @@ export default async function Page() {
                         how air traffic is controlled, Tango5 is your premier online destination for all things Air
                         Traffic Control (ATC).
                     </p>
-                    <div className="flex flex-row gap-9">
-                        <LinkButton href="/waitlist" variant="outlineMap" className="px-5 py-6">
-                            {'Join our waitlist'}
-                            <Image
-                                width="31"
-                                height="25"
-                                src="/images/arrow-empty.svg"
-                                alt="Join our waitlist"
-                                className="ml-3 inline-block"
-                            />
-                        </LinkButton>
-                        <LinkButton href="/login" variant="map" className="px-5 py-6">
-                            {'Log in'}
-                            <Image
-                                width="31"
-                                height="25"
-                                src="/images/arrow-full.svg"
-                                alt="Log in"
-                                className="ml-3 inline-block"
-                            />
-                        </LinkButton>
-                    </div>
+                    <LinkButton href={user ? '/play' : '/login'} variant="map" className="px-5 py-6">
+                        {user ? 'Get started' : 'Log in'}
+                        <Image
+                            width="31"
+                            height="25"
+                            src="/images/arrow-full.svg"
+                            alt="play or login"
+                            className="ml-3 inline-block"
+                        />
+                    </LinkButton>
                     <div className="mt-40">
                         <p className="text-center font-Barlow text-4xl text-background dark:text-foreground">
                             Who is it for?
