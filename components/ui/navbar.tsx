@@ -1,4 +1,5 @@
 import { SignedIn, SignedOut, SignIn, UserButton } from '@clerk/nextjs';
+import Image from 'next/image';
 import Link from 'next/link';
 
 const Navbar = () => {
@@ -8,9 +9,7 @@ const Navbar = () => {
                 <div className="container mx-auto">
                     <div className="flex items-center justify-between">
                         <div>
-                            <Link href="/app" className="text-2xl font-bold text-white">
-                                Game
-                            </Link>
+                            <Image src="/images/tango5.svg" width={120} height={30} alt={'Tango5'} />
                         </div>
                         <div className="flex flex-row gap-4">
                             <Link href="/" className="text-white">
