@@ -23,7 +23,7 @@ export default async function Page() {
                         how air traffic is controlled, Tango5 is your premier online destination for all things Air
                         Traffic Control (ATC).
                     </p>
-                    <LinkButton href={user ? '/play' : '/login'} variant="map" className="px-5 py-6">
+                    <LinkButton href={user ? '/app/play' : '/login'} variant="map" className="px-5 py-6">
                         {user ? 'Get started' : 'Log in'}
                         <Image
                             width="31"

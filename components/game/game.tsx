@@ -119,7 +119,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
     const handleNextScenario = () => {
         if (nextScenarioState.error) {
             toast.error('Something went wrong, could not load next scenario');
-            replace('/scores');
+            replace('/app/scores');
             return;
         }
 
@@ -127,7 +127,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
 
         // There are no more scenarios to play, redirect to games page
         if (!nextScenario && pendingScenarios === 0) {
-            replace('/scores');
+            replace('/app/scores');
             return;
         }
 

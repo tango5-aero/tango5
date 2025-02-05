@@ -13,9 +13,13 @@ export default async function Page() {
             </div>
             <main className="relative z-20 flex h-screen flex-col items-center justify-center gap-10 p-6 md:p-10">
                 <WelcomeTango5Title />
-                <p className="font-BarlowLight text-6xl">COMING SOON</p>
                 <Link
-                    href="/play"
+                    href="/app/tutorial"
+                    className="h-12 rounded-full bg-map px-8 py-2 font-BarlowBold text-2xl font-bold leading-7 text-map-foreground shadow hover:bg-map/85">
+                    WATCH TUTORIAL
+                </Link>
+                <Link
+                    href="/app/play"
                     className="h-12 rounded-full bg-map px-8 py-2 font-BarlowBold text-2xl font-bold leading-7 text-map-foreground shadow hover:bg-map/85">
                     START
                 </Link>
