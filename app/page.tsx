@@ -4,14 +4,9 @@ import { WelcomeTango5Title } from '~/components/ui/welcome-tango5-title';
 import { FlightBackground } from '~/components/ui/flight-background';
 import { LinkButton } from '~/components/ui/link-button';
 import { currentUser } from '@clerk/nextjs/server';
-import { redirect } from 'next/navigation';
 
 export default async function Page() {
     const user = await currentUser();
-
-    if (user) {
-        redirect('/scores');
-    }
 
     return (
         <>
@@ -37,13 +32,13 @@ export default async function Page() {
                         how air traffic is controlled, Tango5 is your premier online destination for all things Air
                         Traffic Control (ATC).
                     </p>
-                    <LinkButton href="/login" variant="map" className="px-5 py-6">
-                        {'Get started'}
+                    <LinkButton href={user ? '/play' : '/login'} variant="map" className="px-5 py-6">
+                        {user ? 'Get started' : 'Log in'}
                         <Image
                             width="31"
                             height="25"
                             src="/images/arrow-full.svg"
-                            alt="get started"
+                            alt="play or login"
                             className="ml-3 inline-block"
                         />
                     </LinkButton>
