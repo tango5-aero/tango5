@@ -9,21 +9,14 @@ import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
 import { TableContext } from '~/hooks/use-table-context';
 import { getCurrentUserGamesPage, getUserGamesPage } from '~/lib/actions';
+import { UserGameSelect } from '~/lib/types';
 import { formatDuration } from '~/lib/utils';
-
-type UserGameRow = {
-    id: number;
-    userId: string;
-    scenarioId: number;
-    playTime: string;
-    success: boolean;
-};
 
 type UserGamesTableProps = {
     adminAccess: boolean;
 };
 
-export const userColumns: ColumnDef<UserGameRow>[] = [
+export const userColumns: ColumnDef<UserGameSelect>[] = [
     {
         accessorKey: 'scenarioId',
         header: () => <div className="text-center">Scenario</div>,
@@ -47,7 +40,7 @@ export const userColumns: ColumnDef<UserGameRow>[] = [
     }
 ];
 
-export const adminColumns: ColumnDef<UserGameRow>[] = [
+export const adminColumns: ColumnDef<UserGameSelect>[] = [
     {
         accessorKey: 'id',
         header: () => <div className="text-center">Game</div>
