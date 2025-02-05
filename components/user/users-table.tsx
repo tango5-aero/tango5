@@ -2,7 +2,7 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
-import { UserWipeProgressDialog } from '../user/user-wipe-progress-dialog';
+import { UserWipeProgressDialog } from '~/components/user/user-wipe-progress-dialog';
 import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
 import { getUsersPage } from '~/lib/actions/users';

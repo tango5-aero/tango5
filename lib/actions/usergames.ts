@@ -15,7 +15,7 @@ import {
     getCurrentUserGamesPerformance as getDBCurrentUserGamesPerformance
 } from '~/lib/db/queries';
 import { UserGameInsert, UserGameSelect } from '~/lib/types';
-import { ActionScenarioState, ActionState } from '.';
+import revalidateCacheTag, { ActionScenarioState, ActionState } from '.';
 
 export async function completeUserGame(
     _prevState: ActionScenarioState,
@@ -45,6 +45,9 @@ export async function completeUserGame(
     if (res.length === 0) {
         return { error: true, errorMessage: 'Error saving user game' };
     }
+
+    // After saving a new user game, invalidate cache for that entity
+    revalidateCacheTag(cacheTags.userGames);
 
     const unplayedScenarios = await getUnplayedScenarios(user.id);
 

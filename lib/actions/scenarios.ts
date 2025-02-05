@@ -9,7 +9,7 @@ import {
     changeScenarioVisibility as changeDBScenarioVisibility
 } from '~/lib/db/queries';
 import { unstable_cache } from 'next/cache';
-import { cacheTags } from '../constants';
+import { cacheTags } from '~/lib/constants';
 import { ScenarioParsed } from '~/lib/types';
 
 export async function createScenario(

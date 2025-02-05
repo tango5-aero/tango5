@@ -1,4 +1,4 @@
-import { ScenarioParsed } from '../types';
+import { ScenarioParsed } from '~/lib/types';
 import revalidateCacheTag from './cache';
 
 export * from './scenarios';
