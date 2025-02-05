@@ -1,10 +1,12 @@
-# PR Description
+<!-- List of issues resolved/canceled as a result of this PR
+resolves #
+fixes #
+closes #
+-->
 
-<!-- Explain the goal of the PR -->
+resolves #
 
-In this PR ...
-
-## How to try it
+How to try:
 
 <!-- Instructions so that how a reviewer can try this locally
      Example:
@@ -15,37 +17,8 @@ In this PR ...
 -->
 
 1.
-1.
-1.
 
-Checklist:
 
-- [ ] 🧐 it **works on my machine** (c)
-- [ ] 📋 added clear **instructions** to try it by a reviewer
 
-## 📕 Changes made
 
-<!-- Reviewing a PR without context is frustrating and
-     (a pointless) time consuming...
 
-     Be a nice contributor and take time to explain
-     what files changed, what were you trying to achieve, why?
-     explain yourself. The more you write here, the better. -->
-
--
--
-
-## Checklist
-
-- [ ] 📚 kept the **docs** updated
-- [ ] 📕 described the **changes** in this PR description
-
-## Related issues
-
-<!-- List of issues resolved/canceled as a result of this PR
-resolves #
-fixes #
-closes #
--->
-
-resolves #ID
