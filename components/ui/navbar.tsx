@@ -1,3 +1,4 @@
+import { SignedIn, SignedOut, SignIn, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 
 const Navbar = () => {
@@ -30,6 +31,12 @@ const Navbar = () => {
                             <Link href="/backstage" className="text-white">
                                 Backstage
                             </Link>
+                            <SignedOut>
+                                <SignIn routing="hash" />
+                            </SignedOut>
+                            <SignedIn>
+                                <UserButton />
+                            </SignedIn>
                         </div>
                     </div>
                 </div>
