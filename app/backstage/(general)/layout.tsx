@@ -40,14 +40,14 @@ export default async function DashBoardLayout({ children }: PropsWithChildren) {
                                 <SidebarMenuButton asChild tooltip={'play'}>
                                     <Link href={'/play'}>
                                         <Play />
-                                        <span>{'Continue'}</span>
+                                        <span>{'Play'}</span>
                                     </Link>
                                 </SidebarMenuButton>
 
-                                <SidebarMenuButton asChild tooltip={'games'}>
-                                    <Link href={'/games'}>
+                                <SidebarMenuButton asChild tooltip={'scores'}>
+                                    <Link href={'/scores'}>
                                         <Gamepad2 />
-                                        <span>{'Games'}</span>
+                                        <span>{'Scores'}</span>
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
@@ -83,10 +83,10 @@ export default async function DashBoardLayout({ children }: PropsWithChildren) {
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                                 <SidebarMenuItem>
-                                    <SidebarMenuButton asChild tooltip={'games'}>
-                                        <Link href={'/backstage/games'}>
+                                    <SidebarMenuButton asChild tooltip={'scores'}>
+                                        <Link href={'/backstage/scores'}>
                                             <List />
-                                            <span>{'Games'}</span>
+                                            <span>{'Scores'}</span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
