@@ -1,20 +1,14 @@
-import { SignedIn, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
-import Image from 'next/image';
 import { TutorialCarousel } from '~/components/ui/tutorial-carousel';
 import { VideoBackground } from '~/components/ui/video-background';
 
 export default async function Page() {
     return (
         <>
-            <div className="absolute right-5 top-5 z-40">
-                <SignedIn>
-                    <UserButton />
-                </SignedIn>
-            </div>
-            <main className="relative z-20 flex flex-col items-center justify-center gap-10 p-6 md:p-10">
-                <Image src="/images/tango5.svg" width="304" height="63" alt="Tango5" />
-                <TutorialCarousel />
+            <main className="relative z-20 flex flex-col items-center justify-center gap-10 p-12 md:p-10">
+                <div className="flex flex-col items-center gap-6">
+                    <TutorialCarousel />
+                </div>
                 <div className="flex w-full flex-col gap-2">
                     <h2 className="mb-4 w-full text-center font-BarlowBold text-4xl">FAQ</h2>
                     <details className="w-full rounded-lg border border-map p-3">
@@ -46,7 +40,7 @@ export default async function Page() {
                     START
                 </Link>
             </main>
-            <VideoBackground />
+            <VideoBackground colorBlend="light" />
         </>
     );
 }

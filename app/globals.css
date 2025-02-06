@@ -45,6 +45,7 @@ body {
         --primary--map: 188 10% 67%;
         --primary-foreground--map: 240 10% 3.9%;
         --translucent-background: 198 94% 13% / 0.6;
+        --carousel-dots: 223 16% 9%;
     }
     .dark {
         --background: 240 10% 3.9%;
@@ -82,6 +83,7 @@ body {
         --primary--map: 188 10% 67%;
         --primary-foreground--map: 222.86 15.56% 8.82%;
         --translucent-background: 198 94% 13% / 0.6;
+        --carousel-dots: 223 16% 9%;
     }
 }
 
