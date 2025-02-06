@@ -5,11 +5,11 @@ import { VideoBackground } from '~/components/ui/video-background';
 export default async function Page() {
     return (
         <>
-            <main className="relative z-20 flex flex-col items-center justify-center gap-12 p-12 md:p-10">
-                <div className="flex flex-col items-center gap-6">
+            <main className="relative z-20 flex flex-col items-center justify-center gap-12">
+                <div className="flex flex-col items-center gap-6 p-12">
                     <TutorialCarousel />
                 </div>
-                <div className="flex w-full max-w-[1364px] flex-col">
+                <div className="flex w-full flex-col">
                     <h2 className="mb-8 w-full text-center font-BarlowBold text-4xl" id="faq">
                         FAQs
                     </h2>
@@ -81,7 +81,7 @@ We might, however, make use of the anonymized data collected from your interacti
 
 const FAQAccordion = ({ question, answer }: { question: string; answer: string }) => {
     return (
-        <details className="group w-full border-b border-map bg-map-foreground px-6 py-3">
+        <details className="group w-full border-b border-map bg-map-foreground px-12 py-3">
             <summary className="flex list-none flex-row justify-between font-BarlowBold text-xl transition-[margin] duration-300 ease-in-out hover:cursor-pointer group-open:mb-3">
                 {question}
                 <div>
