@@ -6,14 +6,14 @@ import { LinkButton } from './link-button';
 import { useParams, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-const Navbar = () => {
+const Navbar = ({ BackstageAccess }: { BackstageAccess: boolean }) => {
     const pathname = usePathname();
     const params = useParams();
     const [anchor, setAnchor] = useState('');
 
     useEffect(() => {
         setAnchor(window.location.hash);
-    }, [params, window.location.hash]);
+    }, [params]);
 
     return (
         <nav className="relative z-30">
@@ -50,12 +50,14 @@ const Navbar = () => {
                         <LinkButton href="/app/play" className="text-xl" variant="map">
                             Play
                         </LinkButton>
-                        <LinkButton
-                            href="/backstage"
-                            className={`text-xl text-white ${pathname === '/backstage' ? 'font-BarlowBold' : 'font-BarlowLight'}`}
-                            variant="link">
-                            Backstage
-                        </LinkButton>
+                        {BackstageAccess && (
+                            <LinkButton
+                                href="/backstage"
+                                className={`text-xl text-white ${pathname === '/backstage' ? 'font-BarlowBold' : 'font-BarlowLight'}`}
+                                variant="link">
+                                Backstage
+                            </LinkButton>
+                        )}
                         <SignedOut>
                             <SignIn routing="hash" />
                         </SignedOut>
