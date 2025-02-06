@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { LinkButton } from './link-button';
 import { useParams, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 const Navbar = ({ BackstageAccess }: { BackstageAccess: boolean }) => {
     const pathname = usePathname();
@@ -16,19 +17,15 @@ const Navbar = ({ BackstageAccess }: { BackstageAccess: boolean }) => {
     }, [params]);
 
     return (
-        <nav className="relative z-30">
+        <nav className="fixed z-30 w-full">
             <div className="flex h-[130px] flex-col justify-center bg-navbarBG">
                 <div className="flex items-center justify-between px-12 text-xl">
                     <div>
-                        <Image src="/images/tango5-logo.svg" width={30} height={37} alt={'Tango5'} />
+                        <Link href="/">
+                            <Image src="/images/tango5-logo.svg" width={30} height={37} alt={'Tango5'} />
+                        </Link>
                     </div>
                     <div className="flex flex-row">
-                        <LinkButton
-                            href="/"
-                            className={`text-xl text-white ${pathname === '/' ? 'font-BarlowBold' : 'font-BarlowLight'}`}
-                            variant="link">
-                            Tango5
-                        </LinkButton>
                         <LinkButton
                             href="/app/tutorial"
                             className={`text-xl text-white ${pathname === '/app/tutorial' && anchor !== '#faq' ? 'font-BarlowBold' : 'font-BarlowLight'}`}
@@ -53,7 +50,7 @@ const Navbar = ({ BackstageAccess }: { BackstageAccess: boolean }) => {
                         {BackstageAccess && (
                             <LinkButton
                                 href="/backstage"
-                                className={`text-xl text-white ${pathname === '/backstage' ? 'font-BarlowBold' : 'font-BarlowLight'}`}
+                                className={`text-xl text-white ${pathname.includes('/backstage') ? 'font-BarlowBold' : 'font-BarlowLight'}`}
                                 variant="link">
                                 Backstage
                             </LinkButton>

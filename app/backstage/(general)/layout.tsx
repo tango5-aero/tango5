@@ -9,8 +9,8 @@ import {
     SidebarTrigger
 } from '~/components/ui/sidebar';
 import { PropsWithChildren } from 'react';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '~/components/ui/sidebar';
-import { SignedIn, UserButton } from '@clerk/nextjs';
+import { Sidebar, SidebarContent, SidebarFooter } from '~/components/ui/sidebar';
+import { SignedIn } from '@clerk/nextjs';
 import { Database, Users, Gamepad2, Play, List, PocketKnife } from 'lucide-react';
 import Link from 'next/link';
 import { ThemeSetting } from '~/components/theme/theme-setting';
@@ -28,13 +28,8 @@ export default async function DashBoardLayout({ children }: PropsWithChildren) {
     return (
         <>
             <Navbar BackstageAccess={true} />
-            <SidebarProvider>
-                <Sidebar variant="inset">
-                    <SidebarHeader className="m-2">
-                        <SignedIn>
-                            <UserButton />
-                        </SignedIn>
-                    </SidebarHeader>
+            <SidebarProvider className="pt-[130px]">
+                <Sidebar variant="inset" className="pt-[130px]">
                     <SidebarContent>
                         <SidebarGroup>
                             <SidebarGroupLabel>{'User'}</SidebarGroupLabel>
