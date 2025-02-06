@@ -3,7 +3,7 @@
 import { PropsWithoutRef, startTransition, useState } from 'react';
 import { resetUserProgress } from '~/lib/actions';
 import { HistoryIcon } from 'lucide-react';
-import { ActionDialog } from '../ui/action-dialog';
+import { ActionDialog } from '~/components/ui/action-dialog';
 import { useDialogAction } from '~/hooks/use-dialog-action';
 import { useTableContext } from '~/hooks/use-table-context';
 

@@ -6,6 +6,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import { tryCreateUser } from '~/lib/db/queries';
 
 import './globals.css';
+import { SmallScreensProtection } from '~/components/ui/small-screens-protection';
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
     const user = await currentUser();
@@ -14,7 +15,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     }
 
     return (
-        <ClerkProvider waitlistUrl="/waitlist" signUpUrl="/login">
+        <ClerkProvider>
             <html
                 lang="en"
                 suppressHydrationWarning /* https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app */
@@ -22,7 +23,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <body>
                     <PostHogProvider>
                         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-                            {children}
+                            <SmallScreensProtection>{children}</SmallScreensProtection>
                             <Toaster expand={true} />
                         </ThemeProvider>
                     </PostHogProvider>

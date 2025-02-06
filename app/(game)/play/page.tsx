@@ -14,14 +14,14 @@ export default async function Page() {
 
     // if no remaining scenarios take the user to summary page
     if (unplayedScenarios.length === 0) {
-        redirect('/games');
+        redirect('/scores');
     }
 
     const scenario = await getRandom(unplayedScenarios.map((s) => s.id));
 
     // this should never happen, take the user to summary page just in case
     if (!scenario) {
-        redirect('/games');
+        redirect('/scores');
     }
 
     return <Game scenario={scenario} unplayedScenarios={unplayedScenarios.length} />;

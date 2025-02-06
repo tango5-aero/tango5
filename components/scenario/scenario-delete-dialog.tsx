@@ -4,7 +4,7 @@ import { PropsWithoutRef, startTransition, useState } from 'react';
 import { deleteScenario } from '~/lib/actions';
 import { Trash2Icon } from 'lucide-react';
 import { cacheTags } from '~/lib/constants';
-import { ActionDialog } from '../ui/action-dialog';
+import { ActionDialog } from '~/components/ui/action-dialog';
 import { useDialogAction } from '~/hooks/use-dialog-action';
 import { useTableContext } from '~/hooks/use-table-context';
 

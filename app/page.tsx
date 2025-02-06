@@ -3,20 +3,14 @@ import Image from 'next/image';
 import { WelcomeTango5Title } from '~/components/ui/welcome-tango5-title';
 import { FlightBackground } from '~/components/ui/flight-background';
 import { LinkButton } from '~/components/ui/link-button';
+import { currentUser } from '@clerk/nextjs/server';
 
 export default async function Page() {
+    const user = await currentUser();
+
     return (
         <>
-            <main className="flex h-[100dvh] flex-col items-center justify-center gap-6 px-5 lg:hidden">
-                <h2 className="text-xl sm:text-2xl">Screen Size Not Supported</h2>
-                <p className="text-pretty text-sm sm:text-base">
-                    This application requires a minimum screen width of 1024 pixels to function properly.
-                </p>
-                <p className="text-pretty text-sm sm:text-base">
-                    Please resize your browser window or switch to a device with a larger screen.
-                </p>
-            </main>
-            <main className="map-background max-lg:hidden">
+            <main className="map-background">
                 <div className="relative flex flex-col items-center gap-2 p-6 md:p-20">
                     <WelcomeTango5Title />
                     <p className="w-[716px] text-center font-BarlowLight text-5xl text-background dark:text-foreground">
@@ -29,28 +23,16 @@ export default async function Page() {
                         how air traffic is controlled, Tango5 is your premier online destination for all things Air
                         Traffic Control (ATC).
                     </p>
-                    <div className="flex flex-row gap-9">
-                        <LinkButton href="/waitlist" variant="outlineMap" className="px-5 py-6">
-                            {'Join our waitlist'}
-                            <Image
-                                width="31"
-                                height="25"
-                                src="/images/arrow-empty.svg"
-                                alt="Join our waitlist"
-                                className="ml-3 inline-block"
-                            />
-                        </LinkButton>
-                        <LinkButton href="/login" variant="map" className="px-5 py-6">
-                            {'Log in'}
-                            <Image
-                                width="31"
-                                height="25"
-                                src="/images/arrow-full.svg"
-                                alt="Log in"
-                                className="ml-3 inline-block"
-                            />
-                        </LinkButton>
-                    </div>
+                    <LinkButton href={user ? '/play' : '/login'} variant="map" className="px-5 py-6">
+                        {user ? 'Get started' : 'Log in'}
+                        <Image
+                            width="31"
+                            height="25"
+                            src="/images/arrow-full.svg"
+                            alt="play or login"
+                            className="ml-3 inline-block"
+                        />
+                    </LinkButton>
                     <div className="mt-40">
                         <p className="text-center font-Barlow text-4xl text-background dark:text-foreground">
                             Who is it for?

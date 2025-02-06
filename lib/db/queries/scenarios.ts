@@ -31,12 +31,12 @@ export const getUnplayedScenarios = async (userId: UserGameInsert['userId']) => 
 export const getRandom = async (ids?: ScenarioParsed['id'][]) => {
     const query = db.select().from(ScenariosTable);
 
-    if (ids) {
-        query.where(inArray(ScenariosTable.id, ids));
-    }
+    const whereClause = ids
+        ? and(inArray(ScenariosTable.id, ids), eq(ScenariosTable.active, true))
+        : eq(ScenariosTable.active, true);
 
     const res = await query
-        .where(eq(ScenariosTable.active, true))
+        .where(whereClause)
         .orderBy(sql`RANDOM()`)
         .limit(1)
         .execute();
@@ -75,9 +75,9 @@ export const getScenariosPage = async (pageIndex: number, pageSize: number) => {
     }
 };
 
-export const changeScenarioVisibility = async (id: number, active: boolean) => {
+export const changeScenarioVisibility = async (id: ScenarioParsed['id'], active: ScenarioParsed['active']) => {
     try {
-        return await db.update(ScenariosTable).set({ active: active }).where(eq(ScenariosTable.id, id)).returning();
+        return await db.update(ScenariosTable).set({ active }).where(eq(ScenariosTable.id, id)).returning();
     } catch {
         return [];
     }

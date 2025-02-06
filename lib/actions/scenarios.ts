@@ -9,7 +9,7 @@ import {
     changeScenarioVisibility as changeDBScenarioVisibility
 } from '~/lib/db/queries';
 import { unstable_cache } from 'next/cache';
-import { cacheTags } from '../constants';
+import { cacheTags } from '~/lib/constants';
 import { ScenarioParsed } from '~/lib/types';
 
 export async function createScenario(
@@ -75,14 +75,14 @@ export async function getScenariosPage(pageIndex: number, pageSize: number) {
 
 export async function changeScenarioVisibility(
     _prevState: ActionState,
-    payload: { id: number; active: boolean }
+    payload: Pick<ScenarioParsed, 'id' | 'active'>
 ): Promise<ActionState> {
-    const state = payload.active ? 'active' : 'inactive';
-    const result = await changeDBScenarioVisibility(payload.id, payload.active);
+    const { id, active } = payload;
+    const result = await changeDBScenarioVisibility(id, active);
 
     if (result.length === 0) {
-        return { message: `Scenario #${payload.id} not found`, error: true };
+        return { message: `Scenario #${id} not found`, error: true };
     }
 
-    return { message: `Scenario #${payload.id} is now ${state}`, error: false };
+    return { message: `Scenario #${id} is now ${active ? 'active' : 'inactive'}`, error: false };
 }

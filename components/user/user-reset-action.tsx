@@ -4,7 +4,7 @@ import { PropsWithoutRef, startTransition, useState } from 'react';
 import { Button } from '~/components/ui/button';
 import { resetUserProgress } from '~/lib/actions';
 import { TimerReset } from 'lucide-react';
-import { ActionDialog } from '../ui/action-dialog';
+import { ActionDialog } from '~/components/ui/action-dialog';
 import { useDialogAction } from '~/hooks/use-dialog-action';
 
 export const UserResetAction = (props: PropsWithoutRef<{ id: string }>) => {
