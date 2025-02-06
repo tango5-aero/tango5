@@ -5,9 +5,9 @@ import { Input } from '~/components/ui/input';
 import { createScenario } from '~/lib/actions';
 import { FilePlus2 } from 'lucide-react';
 import { cacheTags } from '~/lib/constants';
-import { ActionDialog } from '../ui/action-dialog';
+import { ActionDialog } from '~/components/ui/action-dialog';
 import { useDialogAction } from '~/hooks/use-dialog-action';
-import { Button } from '../ui/button';
+import { Button } from '~/components/ui/button';
 import { useTableContext } from '~/hooks/use-table-context';
 
 export function ScenarioUploadDialog() {
