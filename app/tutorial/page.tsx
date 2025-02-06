@@ -14,57 +14,24 @@ export default async function Page() {
                         FAQs
                     </h2>
                     <FAQAccordion
-                        question="1. What is Tango5?"
-                        answer="Tango5 (or T5 for short) is a suite of tools designed to enhance and challenge your Air Traffic Control (ATC) skills."
-                    />
-                    <FAQAccordion
-                        question="2. What is the first tool of the Tango5 suite?"
-                        answer="The first Tango5 tool focuses on sharpening your eye to identify all potential conflicts before the time runs out, simulating the experience of an en-route radar Air Traffic Controller (ATCO) when identifying potential conflicts."
-                    />
-                    <FAQAccordion
-                        question="3. How does Tango5 define a potential conflict?"
+                        question="1. How does Tango5 define a potential conflict?"
                         answer="Your job in the first tool of Tango5 is to detect every time a crossing is within 9NM (Nautical Miles), which are potential conflicts that need to be monitored. The minimum acceptable separation is 5NM in most regions, such as the ones we are displaying."
                     />
                     <FAQAccordion
-                        question="4. How realistic are Tango5 scenarios?"
+                        question="2. If the legal separation is 5NM, why do controllers need to monitor below 9NM?"
+                        answer="When two aircraft get slightly above 5NM at the crossing (5-9NM), controllers need to specially monitor the pair, so that they don’t miss the legal separation due to changes of wind, speed, etc."
+                    />
+                    <FAQAccordion
+                        question="3. How realistic are Tango5 scenarios?"
                         answer="All scenarios in Tango5 represent real traffic and have been automatically curated using our tools for data analysis and conflict alert algorithms, ensuring they are based on real traffic scenarios."
                     />
                     <FAQAccordion
-                        question="5. Is Tango5 only for en-route ATC control?"
-                        answer="At this moment we are focussing on en-route. We are working on similar tools for approach control and tower."
-                    />
-                    <FAQAccordion
-                        question="6. Why is traffic in Tango5 not moving?"
+                        question="4. Why is traffic in Tango5 not moving?"
                         answer="Because of the increasing complexity. We wanted  the first tool of Tango5 to be as accessible as possible but still giving value and a challenge to experienced ATCOs. We will include this feature in future releases, stay tuned!"
                     />
                     <FAQAccordion
-                        question="7. How many scenarios are available?"
+                        question="5. How many scenarios are available?"
                         answer="We can generate tens of thousands of different scenarios from any type of surveillance data. We work with a variety of historical data which is curated to automatically select different scenarios thanks to our data processing platform Victor5."
-                    />
-                    <FAQAccordion
-                        question="8. Can Tango5 be used for professional ATC training?"
-                        answer="Yes. We are discussing with several Air Navigation Service Providers how this can support traditional training in simulators. Tango5 offers several advantages that need to be discussed with your civil aviation authority. Please, contact us at info@DataBeacon.aero if you are interested."
-                    />
-                    <FAQAccordion
-                        question="9. Can Tango5 be used for Air Traffic Control candidate selection?"
-                        answer="Yes. We are confident that if offers an easy, objective, and measurable method for assessing Air Traffic Controller skills."
-                    />
-                    <FAQAccordion
-                        question="10. How much does Tango5 cost?"
-                        answer="The current pre-release is free of use for the time being. However, as more tools and features are released, and more scenarios uploaded, this might change. "
-                    />
-                    <FAQAccordion
-                        question="11. How does Tango5 manage personal data?"
-                        answer="Yes. In no way your data will ever made public. In fact, Tango5 does not store any personal data, all personal data is managed by clerk.com  which has public data processing agreements and a strong data privacy policy. 
-We might, however, make use of the anonymized data collected from your interaction with the platform, to this end we use posthog.com you can read their security and privacy guidelines and compliance. "
-                    />
-                    <FAQAccordion
-                        question="12. Can Tango5 be localized to a particular region?"
-                        answer="Yes. The current pre-release is showing scenarios from USA air traffic. We can automatically process surveillance data from any region to offer a localized set of scenarios in different regions."
-                    />
-                    <FAQAccordion
-                        question="13. If the legal separation is 5NM, why do controllers need to monitor below 9NM?"
-                        answer="When two aircraft get slightly above 5NM at the crossing (5-9NM), controllers need to specially monitor the pair, so that they don’t miss the legal separation due to changes of wind, speed, etc."
                     />
                 </div>
 
