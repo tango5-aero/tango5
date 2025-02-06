@@ -45,6 +45,7 @@ body {
         --primary--map: 188 10% 67%;
         --primary-foreground--map: 240 10% 3.9%;
         --translucent-background: 198 94% 13% / 0.6;
+        --navbar-background: 198 95% 8%;
     }
     .dark {
         --background: 240 10% 3.9%;
@@ -82,6 +83,7 @@ body {
         --primary--map: 188 10% 67%;
         --primary-foreground--map: 222.86 15.56% 8.82%;
         --translucent-background: 198 94% 13% / 0.6;
+        --navbar-background: 198 95% 8%;
     }
 }
 
@@ -92,14 +94,17 @@ body {
     }
     @font-face {
         font-family: Barlow;
+        font-weight: 400;
         src: url('/fonts/Barlow-Regular.ttf');
     }
     @font-face {
         font-family: BarlowLight;
+        font-weight: 200;
         src: url('/fonts/Barlow-Light.ttf');
     }
     @font-face {
         font-family: BarlowBold;
+        font-weight: 500;
         src: url('/fonts/Barlow-Bold.ttf');
     }
 
