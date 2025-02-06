@@ -5,28 +5,18 @@ import { VideoBackground } from '~/components/ui/video-background';
 export default async function Page() {
     return (
         <>
-            <main className="relative z-20 flex flex-col items-center justify-center gap-10 p-12 md:p-10">
+            <main className="relative z-20 flex flex-col items-center justify-center gap-12 p-12 md:p-10">
                 <div className="flex flex-col items-center gap-6">
                     <TutorialCarousel />
                 </div>
-                <div className="flex w-full flex-col gap-2">
-                    <h2 className="mb-4 w-full text-center font-BarlowBold text-4xl">FAQ</h2>
-                    <details className="w-full rounded-lg border border-map p-3">
-                        <summary className="font-BarlowLight text-xl hover:cursor-pointer">What is Tango5?</summary>
-                        <div className="mt-4 font-BarlowLight">
-                            Tango5 (or T5 for short) is a suite of tools designed to enhance and challenge your Air
-                            Traffic Control (ATC) skills.{' '}
-                        </div>
-                    </details>
-                    <details className="w-full rounded-lg border border-map p-3">
-                        <summary className="font-BarlowLight text-xl hover:cursor-pointer">What is Tango5?</summary>
-                        <div className="mt-4 font-BarlowLight">
-                            Tango5 (or T5 for short) is a suite of tools designed to enhance and challenge your Air
-                            Traffic Control (ATC) skills.{' '}
-                        </div>
-                    </details>
-                    <details className="w-full rounded-lg border border-map p-3">
-                        <summary className="font-BarlowLight text-xl hover:cursor-pointer">What is Tango5?</summary>
+                <div className="flex w-full max-w-[1364px] flex-col gap-2">
+                    <h2 className="mb-4 w-full text-center font-BarlowBold text-4xl" id="faq">
+                        FAQ
+                    </h2>
+                    <details className="w-full rounded-full border border-map bg-map-foreground px-10 py-3">
+                        <summary className="list-none font-BarlowLight text-xl hover:cursor-pointer">
+                            What is Tango5?
+                        </summary>
                         <div className="mt-4 font-BarlowLight">
                             Tango5 (or T5 for short) is a suite of tools designed to enhance and challenge your Air
                             Traffic Control (ATC) skills.{' '}
