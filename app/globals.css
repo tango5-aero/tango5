@@ -86,23 +86,6 @@ body {
 }
 
 @layer base {
-    @font-face {
-        font-family: B612;
-        src: url('/fonts/B612-Regular.ttf');
-    }
-    @font-face {
-        font-family: Barlow;
-        src: url('/fonts/Barlow-Regular.ttf');
-    }
-    @font-face {
-        font-family: BarlowLight;
-        src: url('/fonts/Barlow-Light.ttf');
-    }
-    @font-face {
-        font-family: BarlowBold;
-        src: url('/fonts/Barlow-Bold.ttf');
-    }
-
     * {
         @apply border-border;
     }
