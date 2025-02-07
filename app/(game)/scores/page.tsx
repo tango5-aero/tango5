@@ -44,7 +44,7 @@ export default async function Page() {
             <UserGamesTable adminAccess={false} />
 
             <LinkButton href="/play" variant="outline" disabled={unplayedScenarios.length === 0}>
-                {'Continue'}
+                {'Play'}
             </LinkButton>
 
             <UserNotifyMeForm consent={userInfo?.consent ?? false} />
