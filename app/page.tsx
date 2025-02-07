@@ -37,18 +37,8 @@ export default async function Page() {
 
     return (
         <main className="relative flex min-h-screen flex-col bg-[url('/images/map.jpg')] bg-center bg-no-repeat">
-            <div className="mb-8 flex flex-col items-center gap-2 p-6">
-                <LinkButton
-                    href={user ? '/play' : '/login'}
-                    variant="map"
-                    className="mb-6 ml-auto px-5 py-6 text-xl 2xl:mb-0">
-                    <div className="flex items-center gap-2">
-                        {'PLAY'}
-                        <Image width="22" height="17" src="/images/arrow-full.svg" alt="Play Tango5" />
-                    </div>
-                </LinkButton>
-
-                <div className="justify-content mb-32 flex max-w-[1200px] items-end gap-8">
+            <div className="my-20 flex flex-col items-center gap-20 p-6">
+                <div className="justify-content flex max-w-[1200px] items-end gap-8">
                     <Image
                         src="/images/tango5-logo.svg"
                         className="h-[132px] w-[110px] xl:h-[157px] xl:w-[131px] 2xl:h-[193px] 2xl:w-[161px]"
@@ -76,18 +66,25 @@ export default async function Page() {
                     </div>
                 </div>
 
-                <p className="z-20 mb-16 text-center font-barlow text-4xl font-thin text-background dark:text-foreground xl:text-5xl 2xl:text-6xl">
+                <LinkButton href={user ? '/play' : '/login'} variant="map" className="px-6 py-8 text-3xl">
+                    <div className="flex items-center gap-2">
+                        {'PLAY'}
+                        <Image width="22" height="17" src="/images/arrow-full.svg" alt="Play Tango5" />
+                    </div>
+                </LinkButton>
+
+                <p className="z-20 text-center font-barlow text-4xl font-thin text-background dark:text-foreground xl:text-5xl 2xl:text-6xl">
                     Who is it for?
                 </p>
 
-                <div className="z-20 mb-20 flex w-full justify-center gap-4 xl:gap-8 2xl:gap-12">
-                    {boxItems.map((box, index) => (
-                        <BoxInfo key={index} {...box} />
+                <div className="z-20 flex w-full justify-center gap-4 xl:gap-8 2xl:gap-12">
+                    {boxItems.map((boxItem, index) => (
+                        <BoxInfo key={index} {...boxItem} />
                     ))}
                 </div>
             </div>
 
-            <div className="z-20 mb-40 flex items-center justify-center gap-4">
+            <div className="z-20 mb-28 mt-10 flex items-center justify-center gap-4">
                 <Image
                     src="/images/developed-by.png"
                     className="h-[80px] w-[350px] xl:h-[90px] xl:w-[392px] 2xl:h-[100px] 2xl:w-[436px]"
