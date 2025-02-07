@@ -43,7 +43,7 @@ export default async function Page() {
                     variant="map"
                     className="mb-6 ml-auto px-5 py-6 text-xl 2xl:mb-0">
                     <div className="flex items-center gap-2">
-                        {'Play'}
+                        {'PLAY'}
                         <Image width="22" height="17" src="/images/arrow-full.svg" alt="Play Tango5" />
                     </div>
                 </LinkButton>
@@ -51,7 +51,7 @@ export default async function Page() {
                 <div className="justify-content mb-32 flex max-w-[1200px] items-end gap-8">
                     <Image
                         src="/images/tango5-logo.svg"
-                        className="h-[126px] w-[105px] xl:h-[143px] xl:w-[119px] 2xl:h-[168px] 2xl:w-[140px]"
+                        className="h-[132px] w-[110px] xl:h-[157px] xl:w-[131px] 2xl:h-[193px] 2xl:w-[161px]"
                         width="140"
                         height="168"
                         alt="Tango 5 logo"

@@ -43,7 +43,7 @@ export const BoxInfo = (props: PropsWithoutRef<BoxInfoProps>) => {
             </div>
             <ChevronDown
                 className={cn(
-                    'accordion-icon mx-auto size-6 transition-transform duration-300 ease-in-out',
+                    'accordion-icon mx-auto size-6 text-gray-200 transition-transform duration-300 ease-in-out',
                     showDescription ? 'rotate-180 transform' : undefined
                 )}
             />
