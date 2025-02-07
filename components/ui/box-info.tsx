@@ -21,7 +21,7 @@ export const BoxInfo = (props: PropsWithoutRef<BoxInfoProps>) => {
     };
 
     return (
-        <div
+        <article
             className="max-h-fit max-w-[420px] flex-1 cursor-pointer rounded-3xl bg-translucent p-4 hover:brightness-125"
             onClick={toggleDescription}>
             <div className="flex items-center gap-4">
@@ -59,6 +59,6 @@ export const BoxInfo = (props: PropsWithoutRef<BoxInfoProps>) => {
                     marginTop: showDescription ? undefined : 0
                 }}
                 dangerouslySetInnerHTML={{ __html: props.description }}></div>
-        </div>
+        </article>
     );
 };
