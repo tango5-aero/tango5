@@ -12,7 +12,7 @@ export default async function Layout({ children }: PropsWithChildren) {
     }
     return (
         <>
-            <Navbar BackstageAccess={allowBackstage} />
+            <Navbar backstageAccess={allowBackstage} />
             {children}
         </>
     );

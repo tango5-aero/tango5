@@ -4,10 +4,10 @@ import { SignedIn, SignedOut, SignIn, UserButton } from '@clerk/nextjs';
 import Image from 'next/image';
 import { LinkButton } from './link-button';
 import { useParams, usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { PropsWithoutRef, useEffect, useState } from 'react';
 import Link from 'next/link';
 
-const Navbar = ({ BackstageAccess }: { BackstageAccess: boolean }) => {
+const Navbar = (props: PropsWithoutRef<{ backstageAccess: boolean }>) => {
     const pathname = usePathname();
     const params = useParams();
     const [anchor, setAnchor] = useState('');
@@ -47,7 +47,7 @@ const Navbar = ({ BackstageAccess }: { BackstageAccess: boolean }) => {
                         <LinkButton href="/app/play" className="text-xl" variant="map">
                             Play
                         </LinkButton>
-                        {BackstageAccess && (
+                        {props.backstageAccess && (
                             <LinkButton
                                 href="/backstage"
                                 className={`text-xl text-white ${pathname.includes('/backstage') ? 'font-BarlowBold' : 'font-BarlowLight'}`}

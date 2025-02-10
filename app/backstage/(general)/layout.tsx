@@ -27,7 +27,7 @@ export default async function DashBoardLayout({ children }: PropsWithChildren) {
 
     return (
         <>
-            <Navbar BackstageAccess={true} />
+            <Navbar backstageAccess={true} />
             <SidebarProvider className="pt-[130px]">
                 <Sidebar variant="inset" className="pt-[130px]">
                     <SidebarContent>
