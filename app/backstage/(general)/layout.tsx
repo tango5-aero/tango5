@@ -24,86 +24,84 @@ export default async function DashBoardLayout({ children }: PropsWithChildren) {
     }
 
     return (
-        <div className="backstage">
-            <SidebarProvider>
-                <Sidebar variant="inset">
-                    <SidebarHeader className="m-2">
-                        <SignedIn>
-                            <UserButton />
-                        </SignedIn>
-                    </SidebarHeader>
-                    <SidebarContent>
+        <SidebarProvider>
+            <Sidebar variant="inset">
+                <SidebarHeader className="m-2">
+                    <SignedIn>
+                        <UserButton />
+                    </SignedIn>
+                </SidebarHeader>
+                <SidebarContent>
+                    <SidebarGroup>
+                        <SidebarGroupLabel>{'User'}</SidebarGroupLabel>
+                        <SidebarMenu>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild tooltip={'play'}>
+                                    <Link href={'/play'}>
+                                        <Play />
+                                        <span>{'Play'}</span>
+                                    </Link>
+                                </SidebarMenuButton>
+
+                                <SidebarMenuButton asChild tooltip={'scores'}>
+                                    <Link href={'/scores'}>
+                                        <Gamepad2 />
+                                        <span>{'Scores'}</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                    </SidebarGroup>
+                    <SignedIn>
                         <SidebarGroup>
-                            <SidebarGroupLabel>{'User'}</SidebarGroupLabel>
+                            <SidebarGroupLabel>{'Admin'}</SidebarGroupLabel>
                             <SidebarMenu>
                                 <SidebarMenuItem>
-                                    <SidebarMenuButton asChild tooltip={'play'}>
-                                        <Link href={'/play'}>
-                                            <Play />
-                                            <span>{'Play'}</span>
+                                    <SidebarMenuButton asChild tooltip={'actions'}>
+                                        <Link href={'/backstage/actions'}>
+                                            <PocketKnife />
+                                            <span>{'Tools'}</span>
                                         </Link>
                                     </SidebarMenuButton>
+                                </SidebarMenuItem>
 
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild tooltip={'scenarios'}>
+                                        <Link href={'/backstage/scenarios'}>
+                                            <Database />
+                                            <span>{'Scenarios'}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild tooltip={'users'}>
+                                        <Link href={'/backstage/users'}>
+                                            <Users />
+                                            <span>{'Users'}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                <SidebarMenuItem>
                                     <SidebarMenuButton asChild tooltip={'scores'}>
-                                        <Link href={'/scores'}>
-                                            <Gamepad2 />
+                                        <Link href={'/backstage/scores'}>
+                                            <List />
                                             <span>{'Scores'}</span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             </SidebarMenu>
                         </SidebarGroup>
-                        <SignedIn>
-                            <SidebarGroup>
-                                <SidebarGroupLabel>{'Admin'}</SidebarGroupLabel>
-                                <SidebarMenu>
-                                    <SidebarMenuItem>
-                                        <SidebarMenuButton asChild tooltip={'actions'}>
-                                            <Link href={'/backstage/actions'}>
-                                                <PocketKnife />
-                                                <span>{'Tools'}</span>
-                                            </Link>
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-
-                                    <SidebarMenuItem>
-                                        <SidebarMenuButton asChild tooltip={'scenarios'}>
-                                            <Link href={'/backstage/scenarios'}>
-                                                <Database />
-                                                <span>{'Scenarios'}</span>
-                                            </Link>
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                    <SidebarMenuItem>
-                                        <SidebarMenuButton asChild tooltip={'users'}>
-                                            <Link href={'/backstage/users'}>
-                                                <Users />
-                                                <span>{'Users'}</span>
-                                            </Link>
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                    <SidebarMenuItem>
-                                        <SidebarMenuButton asChild tooltip={'scores'}>
-                                            <Link href={'/backstage/scores'}>
-                                                <List />
-                                                <span>{'Scores'}</span>
-                                            </Link>
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                </SidebarMenu>
-                            </SidebarGroup>
-                        </SignedIn>
-                    </SidebarContent>
-                </Sidebar>
-                <SidebarInset>
-                    <header className="flex h-16 shrink-0 items-center gap-2">
-                        <div className="flex items-center gap-2 px-4">
-                            <SidebarTrigger className="-ml-1" />
-                        </div>
-                    </header>
-                    {children}
-                </SidebarInset>
-            </SidebarProvider>
-        </div>
+                    </SignedIn>
+                </SidebarContent>
+            </Sidebar>
+            <SidebarInset>
+                <header className="flex h-16 shrink-0 items-center gap-2">
+                    <div className="flex items-center gap-2 px-4">
+                        <SidebarTrigger className="-ml-1" />
+                    </div>
+                </header>
+                {children}
+            </SidebarInset>
+        </SidebarProvider>
     );
 }
