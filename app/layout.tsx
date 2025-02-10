@@ -2,7 +2,6 @@ import { Barlow, B612 } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
 import { currentUser } from '@clerk/nextjs/server';
 import { tryCreateUser } from '~/lib/db/queries';
-import { ThemeProvider } from '~/components/theme/theme-provider';
 import { PostHogProvider } from '~/components/posthog/posthog-provider';
 import { Toaster } from '~/components/ui/sonner';
 import { SmallScreensProtection } from '~/components/ui/small-screens-protection';
@@ -29,17 +28,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
     return (
         <ClerkProvider>
-            <html
-                lang="en"
-                className={`${barlow.variable} ${b612.variable}`}
-                suppressHydrationWarning /* https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app */
-            >
+            <html lang="en" className={`${barlow.variable} ${b612.variable}`}>
                 <body>
                     <PostHogProvider>
-                        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-                            <SmallScreensProtection>{children}</SmallScreensProtection>
-                            <Toaster expand={true} />
-                        </ThemeProvider>
+                        <SmallScreensProtection>{children}</SmallScreensProtection>
+                        <Toaster expand={true} />
                     </PostHogProvider>
                 </body>
             </html>
