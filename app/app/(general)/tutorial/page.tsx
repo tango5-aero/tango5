@@ -1,5 +1,6 @@
 import { PropsWithoutRef } from 'react';
 import { FlightBackground } from '~/components/ui/flight-background';
+import { Footer } from '~/components/ui/footer';
 import { TutorialCarousel } from '~/components/ui/tutorial-carousel';
 
 const faqs = [
@@ -29,20 +30,21 @@ export default async function Page() {
     return (
         <>
             <main className="map-light-background relative z-20 flex flex-col items-center justify-center gap-12">
-                <div className="flex flex-col items-center gap-6 p-12">
+                <div className="mt-[130px] flex flex-col items-center gap-6 p-12">
                     <TutorialCarousel />
                 </div>
                 <div className="flex w-full flex-col">
                     <h2 className="font-BarlowBold mb-8 w-full text-center text-4xl" id="faq">
                         FAQs
                     </h2>
-                    <div className="flex flex-col items-center bg-map-foreground py-10">
+                    <div className="flex flex-col items-center bg-map-foreground px-12 py-10">
                         {faqs.map((faq, index) => (
                             <FAQAccordion key={index} question={faq.question} answer={faq.answer} />
                         ))}
                     </div>
                 </div>
             </main>
+            <Footer />
             <FlightBackground />
         </>
     );
@@ -50,7 +52,7 @@ export default async function Page() {
 
 const FAQAccordion = (props: PropsWithoutRef<{ question: string; answer: string }>) => {
     return (
-        <details className="group h-14 w-full max-w-[1364px] overflow-hidden border-b border-map px-4 py-3 transition-all duration-500 ease-out open:h-36">
+        <details className="group h-14 w-full max-w-[1300px] overflow-hidden border-b border-map px-4 py-3 transition-all duration-500 ease-out open:h-36">
             <summary className="font-BarlowBold flex list-none flex-row justify-between text-xl hover:cursor-pointer hover:text-map">
                 {props.question}
                 <div>
