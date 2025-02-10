@@ -18,7 +18,7 @@ export const GameExitButton = (props: PropsWithoutRef<GameExitButtonProps>) => {
                         <LogOutIcon className={cn(props.className)} />
                     </TooltipTrigger>
                 </Link>
-                <TooltipContent side="bottom" sideOffset={10} align="center">
+                <TooltipContent className="bg-gray-700/60" side="bottom" sideOffset={10} align="center">
                     <span className="text-sm text-white">{'Leave game'}</span>
                 </TooltipContent>
             </Tooltip>
