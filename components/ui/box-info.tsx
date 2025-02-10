@@ -8,7 +8,7 @@ import { cn } from '~/lib/utils';
 type BoxInfoProps = {
     title: string;
     subTitle: string;
-    description: string;
+    description: React.ReactNode;
     image: string;
 };
 
@@ -50,15 +50,16 @@ export const BoxInfo = (props: PropsWithoutRef<BoxInfoProps>) => {
             <div
                 ref={contentRef}
                 className={cn(
-                    'mt-5 text-pretty font-barlow font-light leading-6 text-background dark:text-foreground xl:text-lg xl:leading-7',
+                    'mt-5 space-y-5 text-pretty font-barlow font-light leading-6 text-background dark:text-foreground xl:text-lg xl:leading-7',
                     'transition-max-height overflow-hidden duration-300 ease-in-out',
                     showDescription ? 'max-h-screen' : 'max-h-0'
                 )}
                 style={{
                     maxHeight: showDescription ? contentRef.current?.scrollHeight : 0,
                     marginTop: showDescription ? undefined : 0
-                }}
-                dangerouslySetInnerHTML={{ __html: props.description }}></div>
+                }}>
+                {props.description}
+            </div>
         </article>
     );
 };

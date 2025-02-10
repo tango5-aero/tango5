@@ -9,25 +9,60 @@ const boxItems = [
     {
         title: 'ANSPs',
         subTitle: `Objective radar controller's selection`,
-        description: `<p>Tango5 could be an integral part of the potential controllers’ selection exam.</p><br /><p>It uses real traffic data, with adaptability based on desired parameters like scenario complexity, and is very easy to explain to candidates, ensuring a fair and thorough selection process.</p>`,
+        description: (
+            <>
+                <p>Tango5 could be an integral part of the potential controllers’ selection exam.</p>
+                <p>
+                    It uses real traffic data, with adaptability based on desired parameters like scenario complexity,
+                    and is very easy to explain to candidates, ensuring a fair and thorough selection process.
+                </p>
+            </>
+        ),
         image: '/images/ansps.svg'
     },
     {
         title: 'ATCO candidates',
         subTitle: 'Real skills for real exams',
-        description: `<p>For ATCO candidates, practicing with Tango5 isn’t just about passing an exam; it’s about honing your conflict detection skills with real traffic scenarios.</p><br /><p>This practical approach not only prepares you for the test but also enhances your adaptation to ATC training, ensuring your study time is invested wisely.</p>`,
+        description: (
+            <>
+                <p>
+                    For ATCO candidates, practicing with Tango5 isn’t just about passing an exam; it’s about honing your
+                    conflict detection skills with real traffic scenarios.
+                </p>
+                <p>
+                    This practical approach not only prepares you for the test but also enhances your adaptation to ATC
+                    training, ensuring your study time is invested wisely.
+                </p>
+            </>
+        ),
         image: '/images/candidates.svg'
     },
     {
         title: 'ATC students',
         subTitle: 'Less or easier SIM time with practice',
-        description: `<p>Tango5 provides a deeper understanding of ATC operations, focusing on conflict detection — one of the toughest tasks for radar controllers.</p><br /><p>It can be an integral part of training before moving to the simulator, using scenarios based on real-world situations.</p>`,
+        description: (
+            <>
+                <p>
+                    Tango5 provides a deeper understanding of ATC operations, focusing on conflict detection — one of
+                    the toughest tasks for radar controllers.
+                </p>
+                <p>
+                    It can be an integral part of training before moving to the simulator, using scenarios based on
+                    real-world situations.
+                </p>
+            </>
+        ),
         image: '/images/students.svg'
     },
     {
         title: 'Enthusiasts',
         subTitle: `Inside the controller's mind`,
-        description: `<p>For aviation enthusiasts, Tango5 offers a glimpse into how enroute radar controllers manage the skies, making the complex world of air traffic control more accessible and engaging.</p>`,
+        description: (
+            <p>
+                For aviation enthusiasts, Tango5 offers a glimpse into how enroute radar controllers manage the skies,
+                making the complex world of air traffic control more accessible and engaging.
+            </p>
+        ),
         image: '/images/enthusiasts.svg'
     }
 ];
