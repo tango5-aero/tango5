@@ -9,10 +9,8 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                B612: ['B612'],
-                Barlow: ['Barlow'],
-                BarlowLight: ['BarlowLight'],
-                BarlowBold: ['BarlowBold']
+                barlow: ['var(--font-barlow)'],
+                b612: ['var(--font-b612)']
             },
             borderRadius: {
                 lg: 'var(--radius)',
@@ -79,5 +77,6 @@ module.exports = {
             }
         }
     },
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     plugins: [require('tailwindcss-animate')]
 };

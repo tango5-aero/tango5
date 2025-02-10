@@ -88,33 +88,11 @@ body {
 }
 
 @layer base {
-    @font-face {
-        font-family: B612;
-        src: url('/fonts/B612-Regular.ttf');
-    }
-    @font-face {
-        font-family: Barlow;
-        src: url('/fonts/Barlow-Regular.ttf');
-    }
-    @font-face {
-        font-family: BarlowLight;
-        src: url('/fonts/Barlow-Light.ttf');
-    }
-    @font-face {
-        font-family: BarlowBold;
-        src: url('/fonts/Barlow-Bold.ttf');
-    }
-
     * {
         @apply border-border;
     }
     body {
         @apply bg-background text-foreground;
-    }
-    .box {
-        box-shadow:
-            inset 0px 0px 29px #a5b3b55f,
-            -3px 2px 6px #011b26;
     }
     .map-background {
         background: url('/images/map.jpg') no-repeat center center;

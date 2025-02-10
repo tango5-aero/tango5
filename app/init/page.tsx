@@ -15,12 +15,12 @@ export default async function Page() {
                 <WelcomeTango5Title />
                 <Link
                     href="/tutorial"
-                    className="h-12 rounded-full bg-map px-8 py-2 font-BarlowBold text-2xl font-bold leading-7 text-map-foreground shadow hover:bg-map/85">
+                    className="h-12 rounded-full bg-map px-8 py-2 font-barlow text-2xl font-bold leading-7 text-map-foreground shadow hover:bg-map/85">
                     WATCH TUTORIAL
                 </Link>
                 <Link
                     href="/play"
-                    className="h-12 rounded-full bg-map px-8 py-2 font-BarlowBold text-2xl font-bold leading-7 text-map-foreground shadow hover:bg-map/85">
+                    className="h-12 rounded-full bg-map px-8 py-2 font-barlow text-2xl font-bold leading-7 text-map-foreground shadow hover:bg-map/85">
                     START
                 </Link>
             </main>
