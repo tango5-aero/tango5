@@ -48,6 +48,7 @@ body {
         --primary--map: 188 10% 67%;
         --primary-foreground--map: 222.86 15.56% 8.82%;
         --translucent-background: 198 94% 13% / 0.6;
+        --navbar-background: 198 95% 8%;
         --carousel-dots: 223 16% 9%;
         --radius: 0.5rem;
     }

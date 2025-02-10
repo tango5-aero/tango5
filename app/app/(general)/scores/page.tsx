@@ -12,12 +12,10 @@ import { getUnplayedScenarios } from '~/lib/db/queries';
 
 export default async function Page() {
     const user = await currentUser();
-
     if (!user) {
         redirect('/');
     }
     const userInfo = await getUserInfo();
-
     const unplayedScenarios = await getUnplayedScenarios(user.id);
 
     const isAllDone = unplayedScenarios.length === 0;

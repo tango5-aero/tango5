@@ -1,4 +1,3 @@
-import { SignedIn, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import { VideoBackground } from '~/components/ui/video-background';
 import { WelcomeTango5Title } from '~/components/ui/welcome-tango5-title';
@@ -6,11 +5,6 @@ import { WelcomeTango5Title } from '~/components/ui/welcome-tango5-title';
 export default async function Page() {
     return (
         <>
-            <div className="absolute right-5 top-5 z-40">
-                <SignedIn>
-                    <UserButton />
-                </SignedIn>
-            </div>
             <main className="relative z-20 flex h-screen flex-col items-center justify-center gap-10 p-6 md:p-10">
                 <WelcomeTango5Title />
                 <Link

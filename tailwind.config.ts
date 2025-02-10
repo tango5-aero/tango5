@@ -73,6 +73,7 @@ module.exports = {
                     ring: 'hsl(var(--sidebar-ring))'
                 },
                 translucent: 'hsl(var(--translucent-background))',
+                navbarBG: 'hsl(var(--navbar-background))',
                 carouselDots: 'hsl(var(--carousel-dots))'
             }
         }

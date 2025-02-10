@@ -4,6 +4,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import { BoxInfo } from '~/components/ui/box-info';
 import { FlightBackground } from '~/components/ui/flight-background';
 import { LinkButton } from '~/components/ui/link-button';
+import { Footer } from '~/components/ui/footer';
 
 const boxItems = [
     {
@@ -101,7 +102,7 @@ export default async function Page() {
                     </div>
                 </section>
 
-                <LinkButton href={user ? '/play' : '/login'} variant="map" className="z-20 px-6 py-8 text-3xl">
+                <LinkButton href={user ? '/app/play' : '/login'} variant="map" className="z-20 px-6 py-8 text-3xl">
                     <div className="flex items-center gap-2">
                         {'PLAY'}
                         <Image width="22" height="17" src="/images/arrow-full.svg" alt="Play Tango5" />
@@ -144,19 +145,7 @@ export default async function Page() {
                 </div>
             </section>
 
-            <footer className="mt-auto flex w-full flex-row items-center justify-between bg-translucent px-10 py-6">
-                <Link href="https://databeacon.aero/" target="_blank">
-                    <Image src="/images/databeacon.png" width="100" height="100" alt="DataBeacon" />
-                </Link>
-                <div className="flex flex-row items-center justify-start gap-5">
-                    <p className="font-barlow text-sm font-light">© 2025 DataBeacon</p>
-                </div>
-                <div className="flex w-48 justify-end">
-                    <Link href="https://www.linkedin.com/company/databeaconaero/" target="_blank">
-                        <Image src="/images/linkedin.svg" width="30" height="30" alt="LinkedIn" />
-                    </Link>
-                </div>
-            </footer>
+            <Footer />
 
             <FlightBackground />
         </main>
