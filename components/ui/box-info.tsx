@@ -33,10 +33,8 @@ export const BoxInfo = (props: PropsWithoutRef<BoxInfoProps>) => {
                     height="64"
                 />
                 <div>
-                    <div className="font-barlow text-lg font-bold text-background dark:text-foreground xl:text-xl 2xl:text-2xl">
-                        {props.title}
-                    </div>
-                    <div className="text-md text-balance font-barlow font-light text-background dark:text-foreground xl:text-xl 2xl:text-2xl">
+                    <div className="font-barlow text-lg font-bold xl:text-xl 2xl:text-2xl">{props.title}</div>
+                    <div className="text-md text-balance font-barlow font-light xl:text-xl 2xl:text-2xl">
                         {props.subTitle}
                     </div>
                 </div>
@@ -50,7 +48,7 @@ export const BoxInfo = (props: PropsWithoutRef<BoxInfoProps>) => {
             <div
                 ref={contentRef}
                 className={cn(
-                    'mt-5 space-y-5 text-pretty font-barlow font-light leading-6 text-background dark:text-foreground xl:text-lg xl:leading-7',
+                    'mt-5 space-y-5 text-pretty font-barlow font-light leading-6 xl:text-lg xl:leading-7',
                     'transition-max-height overflow-hidden duration-300 ease-in-out',
                     showDescription ? 'max-h-screen' : 'max-h-0'
                 )}

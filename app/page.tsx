@@ -82,7 +82,7 @@ export default async function Page() {
                         alt="Tango 5 logo"
                     />
                     <div className="flex flex-col gap-4">
-                        <span className="max-w-96 font-barlow text-4xl font-thin leading-none text-background xl:text-5xl 2xl:text-6xl">
+                        <span className="max-w-96 font-barlow text-4xl font-thin leading-none xl:text-5xl 2xl:text-6xl">
                             Navigate <br /> air traffic with
                         </span>
                         <Image
@@ -93,7 +93,7 @@ export default async function Page() {
                             alt="Tango5"
                         />
                     </div>
-                    <div className="flex max-w-[600px] flex-col gap-6 text-pretty font-barlow text-2xl font-light leading-[1.2] text-background xl:text-3xl 2xl:text-[32px]">
+                    <div className="flex max-w-[600px] flex-col gap-6 text-pretty font-barlow text-2xl font-light leading-[1.2] xl:text-3xl 2xl:text-[32px]">
                         <p className="pr-10">
                             Tango 5 is an online training tool designed for those interested in air traffic control.
                         </p>
@@ -108,7 +108,7 @@ export default async function Page() {
                     </div>
                 </LinkButton>
 
-                <section className="z-20 text-center font-barlow text-4xl font-thin text-background xl:text-5xl 2xl:text-6xl">
+                <section className="z-20 text-center font-barlow text-4xl font-thin xl:text-5xl 2xl:text-6xl">
                     Who is it for?
                 </section>
 
@@ -127,7 +127,7 @@ export default async function Page() {
                     height="100"
                     alt="Tango 5: developed by DataBeacon"
                 />
-                <div className="flex flex-col gap-2.5 font-barlow text-2xl font-light text-background xl:text-3xl 2xl:text-4xl">
+                <div className="flex flex-col gap-2.5 font-barlow text-2xl font-light xl:text-3xl 2xl:text-4xl">
                     <p>Do you want to know more?</p>
                     <p>
                         <Link className="font-bold hover:underline" href="https://databeacon.aero" target="_blank">
@@ -149,7 +149,7 @@ export default async function Page() {
                     <Image src="/images/databeacon.png" width="100" height="100" alt="DataBeacon" />
                 </Link>
                 <div className="flex flex-row items-center justify-start gap-5">
-                    <p className="font-barlow text-sm font-light text-background">© 2025 DataBeacon</p>
+                    <p className="font-barlow text-sm font-light">© 2025 DataBeacon</p>
                 </div>
                 <div className="flex w-48 justify-end">
                     <Link href="https://www.linkedin.com/company/databeaconaero/" target="_blank">
