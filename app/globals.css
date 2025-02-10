@@ -65,7 +65,7 @@ body {
         background-size: cover;
     }
     .map-light-background {
-        background: url('/images/map.jpg') no-repeat center center;
+        background: url('/images/blured-map.jpg') no-repeat center center;
         background-size: cover;
         background-color: rgb(248 253 255 / 30%);
         background-blend-mode: soft-light;
