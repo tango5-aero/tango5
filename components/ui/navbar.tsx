@@ -23,20 +23,20 @@ const Navbar = (props: PropsWithoutRef<{ backstageAccess: boolean }>) => {
                         {props.backstageAccess && (
                             <LinkButton
                                 href="/backstage"
-                                className={`text-xl text-white ${pathname.includes('/backstage') ? 'font-BarlowBold' : 'font-BarlowLight'}`}
+                                className={`font-barlow text-xl text-white ${pathname.includes('/backstage') ? 'font-bold' : 'font-light'}`}
                                 variant="link">
                                 Backstage
                             </LinkButton>
                         )}
                         <LinkButton
                             href="/app/tutorial"
-                            className={`text-xl text-white ${pathname === '/app/tutorial' ? 'font-BarlowBold' : 'font-BarlowLight'}`}
+                            className={`font-barlow text-xl text-white ${pathname === '/app/tutorial' ? 'font-bold' : 'font-light'}`}
                             variant="link">
                             Tutorial
                         </LinkButton>
                         <LinkButton
                             href="/app/scores"
-                            className={`text-xl text-white ${pathname === '/app/scores' ? 'font-BarlowBold' : 'font-BarlowLight'}`}
+                            className={`font-barlow text-xl text-white ${pathname === '/app/scores' ? 'font-bold' : 'font-light'}`}
                             variant="link">
                             Scores
                         </LinkButton>

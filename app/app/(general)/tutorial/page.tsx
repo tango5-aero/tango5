@@ -56,11 +56,11 @@ const FAQAccordion = (props: PropsWithoutRef<{ question: string; answer: string 
             <summary className="font-BarlowBold flex list-none flex-row justify-between text-xl hover:cursor-pointer hover:text-map">
                 {props.question}
                 <div>
-                    <span className="font-BarlowLight text-3xl leading-5 group-open:hidden">+</span>
-                    <span className="font-BarlowLight hidden text-3xl leading-5 group-open:inline-block">-</span>
+                    <span className="font-barlow text-3xl font-light leading-5 group-open:hidden">+</span>
+                    <span className="hidden font-barlow text-3xl font-light leading-5 group-open:inline-block">-</span>
                 </div>
             </summary>
-            <div className="font-BarlowLight mt-4">{props.answer}</div>
+            <div className="mt-4 font-barlow font-light">{props.answer}</div>
         </details>
     );
 };
