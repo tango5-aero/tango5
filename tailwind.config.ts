@@ -72,7 +72,8 @@ module.exports = {
                     border: 'hsl(var(--sidebar-border))',
                     ring: 'hsl(var(--sidebar-ring))'
                 },
-                translucent: 'hsl(var(--translucent-background))'
+                translucent: 'hsl(var(--translucent-background))',
+                carouselDots: 'hsl(var(--carousel-dots))'
             }
         }
     },
