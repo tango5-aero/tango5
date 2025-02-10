@@ -1,8 +1,8 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
-export const isUserRegisteredRoute = createRouteMatcher(['/app/scores(.*)', '/app/play(.*)']);
-export const isBackstageRoute = createRouteMatcher(['/backstage(.*)']);
+const isUserRegisteredRoute = createRouteMatcher(['/app/scores(.*)', '/app/play(.*)']);
+const isBackstageRoute = createRouteMatcher(['/backstage(.*)']);
 
 export default clerkMiddleware(async (auth, req) => {
     const rootUrl = new URL('/', req.url);
