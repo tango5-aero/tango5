@@ -69,6 +69,9 @@ body {
     * {
         @apply border-border;
     }
+    body {
+        @apply bg-background text-foreground;
+    }
     .box {
         box-shadow:
             inset 0px 0px 29px #a5b3b55f,
