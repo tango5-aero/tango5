@@ -34,7 +34,7 @@ export default async function Page() {
                     <TutorialCarousel />
                 </div>
                 <div className="flex w-full flex-col">
-                    <h2 className="font-BarlowBold mb-8 w-full text-center text-4xl" id="faq">
+                    <h2 className="mb-8 w-full text-center font-barlow text-4xl font-bold" id="faq">
                         FAQs
                     </h2>
                     <div className="flex flex-col items-center bg-map-foreground px-12 py-10">
@@ -53,7 +53,7 @@ export default async function Page() {
 const FAQAccordion = (props: PropsWithoutRef<{ question: string; answer: string }>) => {
     return (
         <details className="group h-14 w-full max-w-[1300px] overflow-hidden border-b border-map px-4 py-3 transition-all duration-500 ease-out open:h-36">
-            <summary className="font-BarlowBold flex list-none flex-row justify-between text-xl hover:cursor-pointer hover:text-map">
+            <summary className="flex list-none flex-row justify-between font-barlow text-xl font-bold hover:cursor-pointer hover:text-map">
                 {props.question}
                 <div>
                     <span className="font-barlow text-3xl font-light leading-5 group-open:hidden">+</span>
