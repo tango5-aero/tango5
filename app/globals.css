@@ -61,10 +61,6 @@ body {
     body {
         @apply bg-background text-foreground;
     }
-    .map-background {
-        background: url('/images/map.jpg') no-repeat center center;
-        background-size: cover;
-    }
     .map-light-background {
         background: url('/images/blured-map.jpg') no-repeat center center;
         background-size: cover;

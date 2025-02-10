@@ -3,20 +3,20 @@ import Image from 'next/image';
 import { Carousel, useCarousel } from 'nuka-carousel';
 
 const TutorialCarousel = () => {
+    const slides = Array.from({ length: 4 }, (_, i) => i + 1);
+
     return (
         <Carousel className="max-w-[1364px]" showDots showArrows dots={<CustomDots />}>
-            <div className="carousel-slide">
-                <Image src="/images/tutorial/tutorial1.jpg" alt="Tutorial 1" width={1364} height={767} />
-            </div>
-            <div className="carousel-slide">
-                <Image src="/images/tutorial/tutorial2.jpg" alt="Tutorial 2" width={1364} height={767} />
-            </div>
-            <div className="carousel-slide">
-                <Image src="/images/tutorial/tutorial3.jpg" alt="Tutorial 3" width={1364} height={767} />
-            </div>
-            <div className="carousel-slide">
-                <Image src="/images/tutorial/tutorial3.jpg" alt="Tutorial 4" width={1364} height={767} />
-            </div>
+            {slides.map((slide) => (
+                <div key={slide} className="carousel-slide">
+                    <Image
+                        src={`/images/tutorial/tutorial${slide}.jpg`}
+                        alt={`Tutorial ${slide}`}
+                        width={1364}
+                        height={767}
+                    />
+                </div>
+            ))}
         </Carousel>
     );
 };
