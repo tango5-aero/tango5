@@ -28,7 +28,7 @@ const faqs = [
 export default async function Page() {
     return (
         <>
-            <main className="relative z-20 flex flex-col items-center justify-center gap-12">
+            <main className="map-light-background relative z-20 flex flex-col items-center justify-center gap-12">
                 <div className="flex flex-col items-center gap-6 p-12">
                     <TutorialCarousel />
                 </div>
