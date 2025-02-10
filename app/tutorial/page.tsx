@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { TutorialCarousel } from '~/components/ui/tutorial-carousel';
 import { VideoBackground } from '~/components/ui/video-background';
 
@@ -34,12 +33,6 @@ export default async function Page() {
                         answer="We can generate tens of thousands of different scenarios from any type of surveillance data. We work with a variety of historical data which is curated to automatically select different scenarios thanks to our data processing platform Victor5."
                     />
                 </div>
-
-                <Link
-                    href="/play"
-                    className="h-12 rounded-full bg-map px-8 py-2 font-BarlowBold text-2xl font-bold leading-7 text-map-foreground shadow hover:bg-map/85">
-                    START
-                </Link>
             </main>
             <VideoBackground colorBlend="light" />
         </>
