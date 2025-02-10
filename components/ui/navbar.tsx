@@ -40,7 +40,7 @@ const Navbar = (props: PropsWithoutRef<{ backstageAccess: boolean }>) => {
                             variant="link">
                             Scores
                         </LinkButton>
-                        <LinkButton href="/app/play" className="text-xl" variant="map">
+                        <LinkButton href="/app/play" className="mr-5 text-xl" variant="map">
                             Play
                         </LinkButton>
                         <SignedOut>
