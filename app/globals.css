@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+    color-scheme: dark;
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     overscroll-behavior: none;
@@ -9,45 +13,6 @@ body {
 
 @layer base {
     :root {
-        --background: 0 0% 100%;
-        --foreground: 240 10% 3.9%;
-        --card: 0 0% 100%;
-        --card-foreground: 240 10% 3.9%;
-        --popover: 0 0% 100%;
-        --popover-foreground: 240 10% 3.9%;
-        --primary: 240 5.9% 10%;
-        --primary-foreground: 188 10% 67%;
-        --secondary: 240 4.8% 95.9%;
-        --secondary-foreground: 240 5.9% 10%;
-        --muted: 240 4.8% 95.9%;
-        --muted-foreground: 240 3.8% 46.1%;
-        --accent: 240 4.8% 95.9%;
-        --accent-foreground: 240 5.9% 10%;
-        --destructive: 0 84.2% 60.2%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 240 5.9% 90%;
-        --input: 240 5.9% 90%;
-        --ring: 240 10% 3.9%;
-        --chart-1: 12 76% 61%;
-        --chart-2: 173 58% 39%;
-        --chart-3: 197 37% 24%;
-        --chart-4: 43 74% 66%;
-        --chart-5: 27 87% 67%;
-        --radius: 0.5rem;
-        --sidebar-background: 0 0% 98%;
-        --sidebar-foreground: 240 5.3% 26.1%;
-        --sidebar-primary: 240 5.9% 10%;
-        --sidebar-primary-foreground: 0 0% 98%;
-        --sidebar-accent: 240 4.8% 95.9%;
-        --sidebar-accent-foreground: 240 5.9% 10%;
-        --sidebar-border: 220 13% 91%;
-        --sidebar-ring: 217.2 91.2% 59.8%;
-        --primary--map: 188 10% 67%;
-        --primary-foreground--map: 240 10% 3.9%;
-        --translucent-background: 198 94% 13% / 0.6;
-        --navbar-background: 198 95% 8%;
-    }
-    .dark {
         --background: 240 10% 3.9%;
         --foreground: 0 0% 98%;
         --card: 240 10% 3.9%;
@@ -84,43 +49,38 @@ body {
         --primary-foreground--map: 222.86 15.56% 8.82%;
         --translucent-background: 198 94% 13% / 0.6;
         --navbar-background: 198 95% 8%;
+        --carousel-dots: 223 16% 9%;
+        --radius: 0.5rem;
     }
 }
 
 @layer base {
-    @font-face {
-        font-family: B612;
-        src: url('/fonts/B612-Regular.ttf');
-    }
-    @font-face {
-        font-family: Barlow;
-        font-weight: 400;
-        src: url('/fonts/Barlow-Regular.ttf');
-    }
-    @font-face {
-        font-family: BarlowLight;
-        font-weight: 200;
-        src: url('/fonts/Barlow-Light.ttf');
-    }
-    @font-face {
-        font-family: BarlowBold;
-        font-weight: 500;
-        src: url('/fonts/Barlow-Bold.ttf');
-    }
-
     * {
         @apply border-border;
     }
     body {
         @apply bg-background text-foreground;
     }
-    .box {
-        box-shadow:
-            inset 0px 0px 29px #a5b3b55f,
-            -3px 2px 6px #011b26;
-    }
     .map-background {
         background: url('/images/map.jpg') no-repeat center center;
         background-size: cover;
+    }
+    .map-light-background {
+        background: url('/images/blured-map.jpg') no-repeat center center;
+        background-size: cover;
+        background-color: rgb(248 253 255 / 30%);
+        background-blend-mode: soft-light;
+    }
+    .carousel-slide {
+        min-width: fit-content;
+        min-height: fit-content;
+        max-width: 1364px;
+        max-height: 767px;
+        margin: 0 auto;
+        background-repeat: no-repeat;
+        background-size: cover;
+        &:focus {
+            outline: none;
+        }
     }
 }

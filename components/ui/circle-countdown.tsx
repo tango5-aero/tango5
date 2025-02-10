@@ -13,18 +13,13 @@ const CircleCountdown = (props: PropsWithoutRef<CircleCountdownProps>) => {
     return (
         <svg width={props.size} height={props.size} viewBox={viewBox}>
             <circle
-                className="fill-primary-foreground stroke-background dark:fill-primary dark:stroke-foreground"
+                className="fill-primary stroke-current"
                 cx={props.size / 2}
                 cy={props.size / 2}
                 r={radius}
                 strokeWidth={`${props.strokeWidth}px`}
             />
-            <text
-                className="fill-secondary text-2xl font-bold dark:fill-foreground"
-                x="50%"
-                y="50%"
-                dy=".3em"
-                textAnchor="middle">
+            <text className="fill-current text-2xl font-bold" x="50%" y="50%" dy=".3em" textAnchor="middle">
                 {`${props.label}`}
             </text>
         </svg>
