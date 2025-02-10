@@ -9,7 +9,7 @@ const GamePerformanceStat = (
     const Icon = props.icon;
 
     return (
-        <article className="flex flex-col gap-2 rounded-lg border border-gray-300/80 p-4 hover:border-gray-400">
+        <article className="flex flex-col gap-2 rounded-lg border border-gray-500 p-4 hover:border-gray-300">
             <div className="flex items-end justify-center gap-2">
                 <Icon size={28} />
                 <span className="select-none text-lg font-semibold">{props.stat}</span>

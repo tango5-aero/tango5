@@ -115,9 +115,9 @@ const ScaleMap = (props: PropsWithoutRef<{ latitude: number }>) => {
 
     return (
         <div className={`fixed left-60 top-7 z-30`} style={{ width: `${width}px` }}>
-            <div className="text-center text-sm text-secondary dark:text-primary">5NM</div>
-            <div className="h-[5px] w-full border-b-[1px] border-l-[1px] border-r-[1px] dark:border-primary"></div>
-            <div className="h-1 w-full border-l-[1px] border-r-[1px] dark:border-primary"></div>
+            <div className="text-center text-sm text-secondary">5NM</div>
+            <div className="h-[5px] w-full border-b-[1px] border-l-[1px] border-r-[1px]"></div>
+            <div className="h-1 w-full border-l-[1px] border-r-[1px]"></div>
         </div>
     );
 };
