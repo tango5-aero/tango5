@@ -1,5 +1,6 @@
+import { PropsWithoutRef } from 'react';
+import { FlightBackground } from '~/components/ui/flight-background';
 import { TutorialCarousel } from '~/components/ui/tutorial-carousel';
-import { VideoBackground } from '~/components/ui/video-background';
 
 const faqs = [
     {
@@ -42,22 +43,22 @@ export default async function Page() {
                     </div>
                 </div>
             </main>
-            <VideoBackground colorBlend="light" />
+            <FlightBackground />
         </>
     );
 }
 
-const FAQAccordion = ({ question, answer }: { question: string; answer: string }) => {
+const FAQAccordion = (props: PropsWithoutRef<{ question: string; answer: string }>) => {
     return (
-        <details className="group w-full max-w-[1364px] border-b border-map px-4 py-3">
-            <summary className="flex list-none flex-row justify-between font-BarlowBold text-xl transition-[margin] duration-300 ease-in-out hover:cursor-pointer hover:text-map group-open:mb-3">
-                {question}
+        <details className="group h-14 w-full max-w-[1364px] overflow-hidden border-b border-map px-4 py-3 transition-all duration-500 ease-out open:h-36">
+            <summary className="flex list-none flex-row justify-between font-BarlowBold text-xl hover:cursor-pointer hover:text-map">
+                {props.question}
                 <div>
                     <span className="font-BarlowLight text-3xl leading-5 group-open:hidden">+</span>
                     <span className="hidden font-BarlowLight text-3xl leading-5 group-open:inline-block">-</span>
                 </div>
             </summary>
-            <div className="mt-4 font-BarlowLight">{answer}</div>
+            <div className="mt-4 font-BarlowLight">{props.answer}</div>
         </details>
     );
 };
