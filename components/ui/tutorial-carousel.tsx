@@ -5,10 +5,18 @@ import { Carousel, useCarousel } from 'nuka-carousel';
 const TutorialCarousel = () => {
     return (
         <Carousel className="max-w-[1364px]" showDots showArrows dots={<CustomDots />}>
-            <Image src="/images/tutorial/tutorial1.jpg" alt="Tutorial 1" width={1364} height={767} />
-            <Image src="/images/tutorial/tutorial2.jpg" alt="Tutorial 2" width={1364} height={767} />
-            <Image src="/images/tutorial/tutorial3.jpg" alt="Tutorial 3" width={1364} height={767} />
-            <Image src="/images/tutorial/tutorial3.jpg" alt="Tutorial 4" width={1364} height={767} />
+            <div className="carousel-slide">
+                <Image src="/images/tutorial/tutorial1.jpg" alt="Tutorial 1" width={1364} height={767} />
+            </div>
+            <div className="carousel-slide">
+                <Image src="/images/tutorial/tutorial2.jpg" alt="Tutorial 2" width={1364} height={767} />
+            </div>
+            <div className="carousel-slide">
+                <Image src="/images/tutorial/tutorial3.jpg" alt="Tutorial 3" width={1364} height={767} />
+            </div>
+            <div className="carousel-slide">
+                <Image src="/images/tutorial/tutorial3.jpg" alt="Tutorial 4" width={1364} height={767} />
+            </div>
         </Carousel>
     );
 };

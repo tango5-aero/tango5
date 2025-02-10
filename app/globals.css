@@ -126,4 +126,16 @@ body {
         background-color: rgb(248 253 255 / 30%);
         background-blend-mode: soft-light;
     }
+    .carousel-slide {
+        min-width: fit-content;
+        min-height: fit-content;
+        max-width: 1364px;
+        max-height: 767px;
+        margin: 0 auto;
+        background-repeat: no-repeat;
+        background-size: cover;
+        &:focus {
+            outline: none;
+        }
+    }
 }
