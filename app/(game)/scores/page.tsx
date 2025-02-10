@@ -20,7 +20,7 @@ export default async function Page() {
 
     const unplayedScenarios = await getUnplayedScenarios(user.id);
 
-    const isAllDone = unplayedScenarios.length == 0;
+    const isAllDone = unplayedScenarios.length === 0;
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center gap-6 p-6 md:p-10">
@@ -44,7 +44,7 @@ export default async function Page() {
             <UserGamesTable adminAccess={false} />
 
             <LinkButton href="/play" variant="outline" disabled={unplayedScenarios.length === 0}>
-                {'Continue'}
+                {'Play'}
             </LinkButton>
 
             <UserNotifyMeForm consent={userInfo?.consent ?? false} />
