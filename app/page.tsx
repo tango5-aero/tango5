@@ -101,7 +101,7 @@ export default async function Page() {
                     </div>
                 </section>
 
-                <LinkButton href={user ? '/play' : '/login'} variant="map" className="z-20 px-6 py-8 text-3xl">
+                <LinkButton href={user ? '/app/play' : '/login'} variant="map" className="z-20 px-6 py-8 text-3xl">
                     <div className="flex items-center gap-2">
                         {'PLAY'}
                         <Image width="22" height="17" src="/images/arrow-full.svg" alt="Play Tango5" />

@@ -9,7 +9,7 @@ import {
     SidebarTrigger
 } from '~/components/ui/sidebar';
 import { PropsWithChildren } from 'react';
-import { Sidebar, SidebarContent, SidebarFooter } from '~/components/ui/sidebar';
+import { Sidebar, SidebarContent } from '~/components/ui/sidebar';
 import { SignedIn } from '@clerk/nextjs';
 import { Database, Users, Gamepad2, Play, List, PocketKnife } from 'lucide-react';
 import Link from 'next/link';
@@ -50,6 +50,46 @@ export default async function DashBoardLayout({ children }: PropsWithChildren) {
                                 </SidebarMenuItem>
                             </SidebarMenu>
                         </SidebarGroup>
+                        <SignedIn>
+                            <SidebarGroup>
+                                <SidebarGroupLabel>{'Admin'}</SidebarGroupLabel>
+                                <SidebarMenu>
+                                    <SidebarMenuItem>
+                                        <SidebarMenuButton asChild tooltip={'actions'}>
+                                            <Link href={'/backstage/actions'}>
+                                                <PocketKnife />
+                                                <span>{'Tools'}</span>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+
+                                    <SidebarMenuItem>
+                                        <SidebarMenuButton asChild tooltip={'scenarios'}>
+                                            <Link href={'/backstage/scenarios'}>
+                                                <Database />
+                                                <span>{'Scenarios'}</span>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                    <SidebarMenuItem>
+                                        <SidebarMenuButton asChild tooltip={'users'}>
+                                            <Link href={'/backstage/users'}>
+                                                <Users />
+                                                <span>{'Users'}</span>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                    <SidebarMenuItem>
+                                        <SidebarMenuButton asChild tooltip={'scores'}>
+                                            <Link href={'/backstage/scores'}>
+                                                <List />
+                                                <span>{'Scores'}</span>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                </SidebarMenu>
+                            </SidebarGroup>
+                        </SignedIn>
                     </SidebarContent>
                 </Sidebar>
                 <SidebarInset>
