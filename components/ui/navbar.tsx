@@ -25,7 +25,7 @@ const Navbar = (props: PropsWithoutRef<{ backstageAccess: boolean }>) => {
                             <Image src="/images/tango5-logo.svg" width={30} height={37} alt={'Tango5'} />
                         </Link>
                     </div>
-                    <div className="flex flex-row">
+                    <div className="flex flex-row gap-1">
                         <LinkButton
                             href="/app/tutorial"
                             className={`text-xl text-white ${pathname === '/app/tutorial' && anchor !== '#faq' ? 'font-BarlowBold' : 'font-BarlowLight'}`}
