@@ -13,7 +13,7 @@ type GameProgressProps = {
 
 const GameProgress = (props: PropsWithoutRef<GameProgressProps>) => {
     return (
-        <div className={cn('select-none text-lg text-secondary dark:text-primary', props.className)}>
+        <div className={cn('select-none text-lg text-secondary', props.className)}>
             <CircularProgressWithLabel progress={props.progress} total={props.total} />
         </div>
     );

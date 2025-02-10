@@ -17,14 +17,14 @@ const BG_SIZE = GAME_INDICATOR_SIZE - GAME_INDICATOR_TRAIL_STROKE_WIDTH;
 const COUNTDOWN_COLOR = '#fff';
 
 const renderTime = ({ remainingTime }: { remainingTime: number }) => {
-    return <div className="select-none text-2xl font-bold text-secondary dark:text-foreground">{remainingTime}</div>;
+    return <div className="select-none text-2xl font-bold text-secondary">{remainingTime}</div>;
 };
 
 const GameCountdown = (props: PropsWithoutRef<GameCountdownProps>) => {
     return (
         <div className={cn('flex items-center justify-center', props.className)}>
             <div
-                className={`fixed rounded-full bg-primary-foreground dark:bg-primary`}
+                className={`fixed rounded-full bg-primary-foreground`}
                 style={{ width: `${BG_SIZE}px`, height: `${BG_SIZE}px` }}></div>
             <CountdownCircleTimer
                 isPlaying={props.running}

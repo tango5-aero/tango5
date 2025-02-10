@@ -13,12 +13,12 @@ export default async function Page() {
             <main className="map-background">
                 <div className="relative flex flex-col items-center gap-2 p-6 md:p-20">
                     <WelcomeTango5Title />
-                    <p className="w-[716px] text-center font-BarlowLight text-5xl text-background dark:text-foreground">
+                    <p className="w-[716px] text-center font-BarlowLight text-5xl text-background">
                         A professional enroute
                         <br />
                         Air Traffic Control training tool
                     </p>
-                    <p className="mb-5 w-[700px] text-left font-BarlowLight text-3xl leading-10 text-background dark:text-foreground">
+                    <p className="mb-5 w-[700px] text-left font-BarlowLight text-3xl leading-10 text-background">
                         Whether you&apos;re dreaming of a career as an air traffic controller or simply curious about
                         how air traffic is controlled, Tango5 is your premier online destination for all things Air
                         Traffic Control (ATC).
@@ -34,9 +34,7 @@ export default async function Page() {
                         />
                     </LinkButton>
                     <div className="mt-40">
-                        <p className="text-center font-Barlow text-4xl text-background dark:text-foreground">
-                            Who is it for?
-                        </p>
+                        <p className="text-center font-Barlow text-4xl text-background">Who is it for?</p>
                     </div>
                     <div className="isolate z-20 mt-8 flex w-full flex-row justify-between">
                         <div className="box h-[17rem] w-[17rem] rounded-3xl bg-translucent p-6 xl:h-[22rem] xl:w-[22rem] xl:p-9 2xl:h-96 2xl:w-96">
@@ -48,11 +46,11 @@ export default async function Page() {
                                     width="64"
                                     height="64"
                                 />
-                                <span className="xl:pr-18 font-Barlow text-2xl leading-6 text-background dark:text-foreground xl:text-3xl xl:leading-7 2xl:text-4xl 2xl:leading-8">
+                                <span className="xl:pr-18 font-Barlow text-2xl leading-6 text-background xl:text-3xl xl:leading-7 2xl:text-4xl 2xl:leading-8">
                                     ATCO Candidates
                                 </span>
                             </div>
-                            <p className="font-BarlowLight text-lg leading-6 text-background dark:text-foreground xl:text-xl xl:leading-7">
+                            <p className="font-BarlowLight text-lg leading-6 text-background xl:text-xl xl:leading-7">
                                 A training tool to prepare for exams, gain valuable experience, and become familiar with
                                 the world of Air Traffic Control.
                             </p>
@@ -66,11 +64,11 @@ export default async function Page() {
                                     width="64"
                                     height="64"
                                 />
-                                <span className="xl:pr-18 font-Barlow text-2xl leading-6 text-background dark:text-foreground xl:text-3xl xl:leading-7 2xl:text-4xl 2xl:leading-8">
+                                <span className="xl:pr-18 font-Barlow text-2xl leading-6 text-background xl:text-3xl xl:leading-7 2xl:text-4xl 2xl:leading-8">
                                     Aviation enthusiasts
                                 </span>
                             </div>
-                            <p className="font-BarlowLight text-lg leading-6 text-background dark:text-foreground xl:text-xl xl:leading-7">
+                            <p className="font-BarlowLight text-lg leading-6 text-background xl:text-xl xl:leading-7">
                                 Explore the intricate world of Air Traffic Control, we offer insights and knowledge to
                                 enhance understanding and appreciation of the aviation industry.
                             </p>
@@ -84,24 +82,22 @@ export default async function Page() {
                                     width="64"
                                     height="64"
                                 />
-                                <span className="xl:pr-18 font-Barlow text-2xl leading-6 text-background dark:text-foreground xl:text-3xl xl:leading-7 2xl:text-4xl 2xl:leading-8">
+                                <span className="xl:pr-18 font-Barlow text-2xl leading-6 text-background xl:text-3xl xl:leading-7 2xl:text-4xl 2xl:leading-8">
                                     Students and graduates
                                 </span>
                             </div>
-                            <p className="font-BarlowLight text-lg leading-6 text-background dark:text-foreground xl:text-xl xl:leading-7">
+                            <p className="font-BarlowLight text-lg leading-6 text-background xl:text-xl xl:leading-7">
                                 Tango5 provides further understanding of ATC operations, providing a unique perspective
                                 on the integration of technology in the aviation industry.
                             </p>
                         </div>
                     </div>
                     <div className="mt-20">
-                        <p className="text-center font-Barlow text-4xl text-background dark:text-foreground">
-                            Do you want to know more?
-                        </p>
+                        <p className="text-center font-Barlow text-4xl text-background">Do you want to know more?</p>
                         <p className="text-center">
                             <Link
                                 href={'mailto:communication@DataBeacon.aero'}
-                                className="font-BarlowBold text-3xl text-background hover:underline dark:text-foreground">
+                                className="font-BarlowBold text-3xl text-background hover:underline">
                                 Contact Us
                             </Link>
                         </p>
@@ -117,9 +113,7 @@ export default async function Page() {
                         <Link href="https://databeacon.aero/" target="_blank">
                             <Image src="/images/databeacon.png" width="100" height="100" alt="DataBeacon" />
                         </Link>
-                        <p className="font-BarlowLight text-sm text-background dark:text-foreground">
-                            © 2025 DataBeacon
-                        </p>
+                        <p className="font-BarlowLight text-sm text-background">© 2025 DataBeacon</p>
                     </div>
                     <div className="flex w-48 justify-end">
                         <Link href="https://www.linkedin.com/company/databeaconaero/" target="_blank">
