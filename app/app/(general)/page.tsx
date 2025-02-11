@@ -15,7 +15,7 @@ export default async function Page() {
                 <Link
                     href="/app/play"
                     className="h-12 rounded-full bg-map px-8 py-2 font-barlow text-2xl font-bold leading-7 text-map-foreground shadow hover:bg-map/85">
-                    START
+                    PLAY
                 </Link>
             </main>
             <VideoBackground />
