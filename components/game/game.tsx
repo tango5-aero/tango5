@@ -11,10 +11,11 @@ import { Pcd } from '~/lib/domain/pcd';
 import { Scenario } from '~/lib/domain/scenario';
 import { ScenarioParsed } from '~/lib/types';
 import { GameCountdown } from '~/components/game/game-countdown';
-import { GameExitButton } from '~/components/game/game-exit-button';
+import { IconButton } from '~/components/ui/icon-button';
 import { GameNextButton } from '~/components/game/game-next-button';
 import { GameProgress } from '~/components/game/game-progress';
 import { ScenarioMap } from '~/components/scenario/scenario-map';
+import Image from 'next/image';
 
 type GameProps = {
     scenario: ScenarioParsed;
@@ -190,14 +191,29 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
         <main>
             <div className="fixed bottom-1 right-72 z-10 mt-10 text-xs text-white/15">{scenario.id}</div>
 
-            <GameExitButton
-                href={props.backstageAccess ? '/backstage/scenarios' : '/app/scores'}
-                className="fixed right-16 top-5 z-10 cursor-pointer text-white/60"
-            />
+            <IconButton href={'/app/tutorial'}>
+                <Image
+                    src="/images/question.svg"
+                    width={27}
+                    height={27}
+                    alt="Exit game"
+                    className="border-carousel-dots button-shadow fixed right-[180px] top-6 z-10 h-[38px] w-[38px] cursor-pointer rounded-full border bg-map p-1 hover:bg-sidebar-foreground"
+                />
+            </IconButton>
+
+            <IconButton href={props.backstageAccess ? '/backstage/scenarios' : '/app/scores'}>
+                <Image
+                    src="/images/gear.svg"
+                    width={27}
+                    height={27}
+                    alt="Exit game"
+                    className="border-carousel-dots button-shadow fixed right-[108px] top-6 z-10 h-[38px] w-[38px] cursor-pointer rounded-full border bg-map p-1 hover:bg-sidebar-foreground"
+                />
+            </IconButton>
 
             {!props.backstageAccess && (
                 <>
-                    <div className="fixed right-32 top-6 z-10 select-none text-white/50">
+                    <div className="fixed right-60 top-7 z-10 mt-[3px] select-none font-barlow font-light text-map">
                         Remaining scenarios: {unplayedScenarios}
                     </div>
                     <GameNextButton

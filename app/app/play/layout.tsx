@@ -5,7 +5,7 @@ import { PropsWithChildren } from 'react';
 export default function DashBoardLayout({ children }: PropsWithChildren) {
     return (
         <>
-            <div className="fixed right-4 top-5 z-10">
+            <div className="map-login fixed right-10 top-6 z-10">
                 <SignedOut>
                     <SignIn routing="hash" />
                 </SignedOut>
