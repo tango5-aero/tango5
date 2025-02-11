@@ -79,6 +79,9 @@ body {
             outline: none;
         }
     }
+    details summary::-webkit-details-marker {
+        display: none;
+    }
 }
 
 .cl-avatarBox.cl-userButtonAvatarBox {
