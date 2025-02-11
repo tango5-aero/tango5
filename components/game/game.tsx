@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { PropsWithoutRef, startTransition, useActionState, useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import posthog from 'posthog-js';
@@ -28,6 +28,8 @@ const posthogEvents = {
 };
 
 const Game = (props: PropsWithoutRef<GameProps>) => {
+    const searchParams = useSearchParams();
+    const shouldShowSolution = searchParams.get('solution') === 'true';
     const { replace } = useRouter();
     const [scenario, setScenario] = useState({
         ...props.scenario,
@@ -86,10 +88,10 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
     }, [scenario, gameSuccess, completeGameAction, props.backstageAccess]);
 
     useEffect(() => {
-        if (scenario.data.isSolution(selectedPairs)) {
+        if (scenario.data.isSolution(selectedPairs) || shouldShowSolution) {
             setGameSuccess(true);
         }
-    }, [scenario, selectedPairs]);
+    }, [scenario, selectedPairs, shouldShowSolution]);
 
     const isClear = useCallback(
         (pair: [string, string]) => {

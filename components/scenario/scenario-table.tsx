@@ -5,7 +5,7 @@ import { ScenarioDeleteDialog } from '~/components/scenario/scenario-delete-dial
 import { type ScenarioData } from '~/lib/domain/scenario';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
-import { Download, PlayIcon } from 'lucide-react';
+import { Download, PlayIcon, EyeIcon } from 'lucide-react';
 import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
 import { getScenariosPage } from '~/lib/actions';
@@ -91,6 +91,9 @@ export const columns: ColumnDef<ScenarioParsed>[] = [
                 <div className="flex flex-row justify-end gap-2">
                     <Link href={`/backstage/play/${id}`}>
                         <PlayIcon size={'1rem'} />
+                    </Link>
+                    <Link href={`/backstage/play/${id}?solution=true`}>
+                        <EyeIcon size={'1rem'} />
                     </Link>
                     <a
                         title={`Download scenario #${id}`}
