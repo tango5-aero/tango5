@@ -9,6 +9,9 @@ const Footer = () => {
             </Link>
             <div className="flex flex-row items-center justify-start gap-5">
                 <p className="font-barlow text-sm font-light">© 2025 DataBeacon</p>
+                <Link className="font-barlow text-sm font-light" href="/privacy-policy">
+                    Privacy Policy
+                </Link>
             </div>
             <div className="flex w-48 justify-end">
                 <Link href="https://www.linkedin.com/company/databeaconaero/" target="_blank">
