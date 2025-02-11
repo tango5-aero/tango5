@@ -191,7 +191,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
         <main>
             <div className="fixed bottom-1 right-72 z-10 mt-10 text-xs text-white/15">{scenario.id}</div>
 
-            <IconButton href={'/app/tutorial'}>
+            <IconButton href={'/app/tutorial'} hoverText={'Help'}>
                 <Image
                     src="/images/question.svg"
                     width={27}
@@ -201,7 +201,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
                 />
             </IconButton>
 
-            <IconButton href={props.backstageAccess ? '/backstage/scenarios' : '/app/scores'}>
+            <IconButton href={props.backstageAccess ? '/backstage/scenarios' : '/app/scores'} hoverText={'Options'}>
                 <Image
                     src="/images/gear.svg"
                     width={27}
