@@ -30,14 +30,14 @@ export default async function Page() {
     return (
         <>
             <main className="map-light-background relative z-20 flex flex-col items-center justify-center gap-12">
-                <div className="mt-[130px] flex flex-col items-center gap-6 p-12">
+                <div className="mt-[80px] flex flex-col items-center gap-6 p-12">
                     <TutorialCarousel />
                 </div>
-                <div className="flex w-full flex-col">
-                    <h2 className="mb-8 w-full text-center font-barlow text-4xl font-bold" id="faq">
+                <div className="flex w-full flex-col bg-map-foreground pt-6">
+                    <h2 className="w-full text-center font-barlow text-4xl font-bold" id="faq">
                         FAQs
                     </h2>
-                    <div className="flex flex-col items-center bg-map-foreground px-12 py-10">
+                    <div className="flex flex-col items-center px-12 py-10">
                         {faqs.map((faq, index) => (
                             <FAQAccordion key={index} question={faq.question} answer={faq.answer} />
                         ))}

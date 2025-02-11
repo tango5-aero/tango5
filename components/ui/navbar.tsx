@@ -12,7 +12,7 @@ const Navbar = (props: PropsWithoutRef<{ backstageAccess: boolean }>) => {
 
     return (
         <nav className="fixed z-30 w-full">
-            <div className="flex h-[130px] flex-col justify-center bg-navbarBG">
+            <div className="flex h-[80px] flex-col justify-center bg-navbarBG">
                 <div className="flex items-center justify-between px-12 text-xl">
                     <div>
                         <Link href="/">
