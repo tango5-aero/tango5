@@ -197,7 +197,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
                     width={27}
                     height={27}
                     alt="Exit game"
-                    className="border-carousel-dots button-shadow fixed right-36 top-6 z-10 h-[38px] w-[38px] cursor-pointer rounded-full border bg-map p-1 hover:bg-sidebar-foreground"
+                    className="border-carousel-dots button-shadow fixed right-[180px] top-6 z-10 h-[38px] w-[38px] cursor-pointer rounded-full border bg-map p-1 hover:bg-sidebar-foreground"
                 />
             </IconButton>
 
@@ -207,13 +207,13 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
                     width={27}
                     height={27}
                     alt="Exit game"
-                    className="border-carousel-dots button-shadow fixed right-20 top-6 z-10 h-[38px] w-[38px] cursor-pointer rounded-full border bg-map p-1 hover:bg-sidebar-foreground"
+                    className="border-carousel-dots button-shadow fixed right-[108px] top-6 z-10 h-[38px] w-[38px] cursor-pointer rounded-full border bg-map p-1 hover:bg-sidebar-foreground"
                 />
             </IconButton>
 
             {!props.backstageAccess && (
                 <>
-                    <div className="fixed right-52 top-7 z-10 mt-[3px] select-none font-barlow font-light text-map">
+                    <div className="fixed right-60 top-7 z-10 mt-[3px] select-none font-barlow font-light text-map">
                         Remaining scenarios: {unplayedScenarios}
                     </div>
                     <GameNextButton
