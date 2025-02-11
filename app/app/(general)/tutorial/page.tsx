@@ -30,7 +30,7 @@ export default async function Page() {
     return (
         <>
             <main className="map-light-background relative z-20 flex flex-col items-center justify-center gap-12">
-                <div className="mt-[130px] flex flex-col items-center gap-6 p-12">
+                <div className="mt-[80px] flex flex-col items-center gap-6 p-12">
                     <TutorialCarousel />
                 </div>
                 <div className="flex w-full flex-col">

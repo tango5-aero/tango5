@@ -27,8 +27,8 @@ export default async function DashBoardLayout({ children }: PropsWithChildren) {
     return (
         <>
             <Navbar backstageAccess={true} />
-            <SidebarProvider className="pt-[130px]">
-                <Sidebar variant="inset" className="pt-[130px]">
+            <SidebarProvider className="pt-[80px]">
+                <Sidebar variant="inset" className="pt-[80px]">
                     <SidebarContent>
                         <SidebarGroup>
                             <SidebarGroupLabel>{'User'}</SidebarGroupLabel>
