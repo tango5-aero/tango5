@@ -206,7 +206,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
                     src="/images/gear.svg"
                     width={27}
                     height={27}
-                    alt="Check scores"
+                    alt="Options"
                     className="border-carousel-dots button-shadow fixed right-[108px] top-6 z-10 h-[38px] w-[38px] cursor-pointer rounded-full border bg-map p-1 hover:bg-sidebar-foreground"
                 />
             </IconButton>
