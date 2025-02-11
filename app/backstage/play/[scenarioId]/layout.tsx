@@ -13,7 +13,7 @@ export default async function DashboardLayout({ children }: PropsWithChildren) {
 
     return (
         <>
-            <div className="map-login fixed right-4 top-5 z-10">
+            <div className="map-login fixed right-4 top-6 z-10">
                 <SignedIn>
                     <UserButton />
                 </SignedIn>
