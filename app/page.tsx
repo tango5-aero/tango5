@@ -72,7 +72,7 @@ export default async function Page() {
     const user = await currentUser();
 
     return (
-        <main className="relative flex min-h-screen flex-col bg-[url('/images/map.jpg')] bg-center bg-no-repeat">
+        <main className="relative flex flex-col bg-[url('/images/map.jpg')] bg-center bg-no-repeat">
             <div className="my-20 flex flex-col items-center gap-20 p-6">
                 <section className="justify-content flex max-w-[1200px] items-end gap-8">
                     <Image
@@ -104,7 +104,7 @@ export default async function Page() {
 
                 <LinkButton href={user ? '/app/play' : '/login'} variant="map" className="z-20 px-6 py-8 text-3xl">
                     <div className="flex items-center gap-2">
-                        {'PLAY'}
+                        {'Play'}
                         <Image width="22" height="17" src="/images/arrow-full.svg" alt="Play Tango5" />
                     </div>
                 </LinkButton>
