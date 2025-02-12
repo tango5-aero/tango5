@@ -27,7 +27,7 @@ export const UserWipeProgressDialog = (props: PropsWithoutRef<{ id: string }>) =
             title={'Reset user'}
             description={`Are you sure you want to reset the user's progress? This action cannot be undone.`}
             pending={pending}
-            dialogTrigger={<HistoryIcon size={'1rem'} />}
+            dialogTrigger={<HistoryIcon size={20} />}
             confirmButtonVariant={'destructive'}
             onConfirm={handleConfirm}
         />
