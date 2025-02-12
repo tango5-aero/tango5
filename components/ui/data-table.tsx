@@ -11,6 +11,8 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DataTablePagination } from './data-table-pagination';
 import { LoadingSpinner } from './loading-spinner';
+import { cn } from '~/lib/utils';
+import { useTableContext } from '~/hooks/use-table-context';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -45,15 +47,24 @@ export function DataTable<TData, TValue>({
         onPaginationChange
     });
 
+    const { variant } = useTableContext();
+
     return (
-        <div className="rounded-md border">
+        <div className={cn(variant === 'tango5' ? 'space-y-3 rounded-3xl bg-map px-5 py-2' : 'rounded-md border')}>
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
+                        <TableRow
+                            key={headerGroup.id}
+                            className={cn(variant === 'tango5' && '!border-b-[2px] border-gray-300 hover:bg-inherit')}>
                             {headerGroup.headers.map((header) => {
                                 return (
-                                    <TableHead key={header.id}>
+                                    <TableHead
+                                        key={header.id}
+                                        className={cn(
+                                            variant === 'tango5' &&
+                                                'py-3 font-barlow text-2xl font-bold uppercase text-gray-900'
+                                        )}>
                                         {header.isPlaceholder
                                             ? null
                                             : flexRender(header.column.columnDef.header, header.getContext())}
@@ -77,9 +88,15 @@ export function DataTable<TData, TValue>({
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && 'selected'}
+                                    className={cn(
+                                        variant === 'tango5' &&
+                                            '!border-b border-gray-300 font-barlow text-xl font-light text-gray-900 hover:bg-inherit'
+                                    )}>
                                     {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
+                                        <TableCell key={cell.id} className={cn(variant === 'tango5' && 'px-16')}>
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                         </TableCell>
                                     ))}

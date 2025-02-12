@@ -1,13 +1,10 @@
 import { currentUser } from '@clerk/nextjs/server';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { GamePerformance } from '~/components/game/game-performance';
 import { LinkButton } from '~/components/ui/link-button';
 import { UserGamesTable } from '~/components/usergame/usergames-table';
 import { LoadingSpinner } from '~/components/ui/loading-spinner';
-import { UserNotifyMeForm } from '~/components/user/user-notify-me-form';
-import { getUserInfo } from '~/lib/actions/users';
 import { getUnplayedScenarios } from '~/lib/db/queries';
 
 export default async function Page() {
@@ -15,21 +12,10 @@ export default async function Page() {
     if (!user) {
         redirect('/');
     }
-    const userInfo = await getUserInfo();
-    const unplayedScenarios = await getUnplayedScenarios(user.id);
-
-    const isAllDone = unplayedScenarios.length === 0;
+    const unplayedScenarios = (await getUnplayedScenarios(user.id)).length;
 
     return (
-        <main className="flex min-h-screen flex-col items-center justify-center gap-6 p-6 !pt-[80px] md:p-10">
-            {isAllDone && <h1 className="text-3xl">{'You have completed all available scenarios'}</h1>}
-            {isAllDone && <h3 className="text-xl">{'Return later to access new scenarios'}</h3>}
-
-            {!isAllDone && <h1 className="text-3xl">{`You have available scenarios`}</h1>}
-            {!isAllDone && (
-                <h3 className="text-xl">{`Keep playing to complete ${unplayedScenarios.length} remaining scenarios`}</h3>
-            )}
-
+        <main className="map-light-background flex flex-col items-center justify-center gap-6 px-6 pb-8 pt-[100px] md:px-10 md:pb-12">
             <Suspense
                 fallback={
                     <div className="flex h-[90px] items-center justify-center">
@@ -39,22 +25,23 @@ export default async function Page() {
                 <GamePerformance />
             </Suspense>
 
-            <UserGamesTable adminAccess={false} />
+            <section className="mt-6">
+                <UserGamesTable adminAccess={false} />
+            </section>
 
-            <LinkButton href="/app/play" variant="outline" disabled={unplayedScenarios.length === 0}>
+            {unplayedScenarios > 0 ? (
+                <p className="font-barlow text-xl font-light text-gray-300">
+                    {`You have ${unplayedScenarios} new scenario${unplayedScenarios !== 1 ? 's' : ''}`}
+                </p>
+            ) : (
+                <p className="font-barlow text-xl font-light text-gray-300">
+                    {'Well done! You have completed all the scenarios'}
+                </p>
+            )}
+
+            <LinkButton href="/app/play" variant="map" size="map" disabled={unplayedScenarios === 0}>
                 {'Play'}
             </LinkButton>
-
-            <UserNotifyMeForm consent={userInfo?.consent ?? false} />
-
-            <footer>
-                <span className="text-xs">{'Any comments? please, contact us at'}</span>{' '}
-                <Link
-                    href="mailto:communication@DataBeacon.aero?subject=Comments about T5"
-                    className="text-xs text-primary hover:underline">
-                    {'communication@DataBeacon.aero'}
-                </Link>
-            </footer>
         </main>
     );
 }
