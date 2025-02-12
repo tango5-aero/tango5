@@ -21,13 +21,8 @@ const SupportButton = () => {
         setShowMessage(false);
     };
 
-    const handleFormSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        const form = e.currentTarget;
-        const message = form.message.value as typeof form.elements & {
-            message: { value: string };
-        };
+    const handleFormSubmit = (formData: FormData) => {
+        const { message } = Object.fromEntries(formData.entries());
         posthog.capture(eventName, {
             $survey_id: surveyID,
             $survey_response: message
@@ -55,7 +50,7 @@ const SupportButton = () => {
                             <p className="pb-3 pt-1 font-barlow text-xl font-bold text-map-foreground">
                                 What can we do for you?
                             </p>
-                            <form onSubmit={handleFormSubmit}>
+                            <form action={handleFormSubmit}>
                                 <Textarea
                                     id="supportInput"
                                     name="message"
