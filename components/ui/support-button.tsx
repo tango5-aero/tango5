@@ -27,7 +27,7 @@ const SupportButton = () => {
         const message = form.message.value as typeof form.elements & {
             message: { value: string };
         };
-        posthog.capture('survey sent', {
+        posthog.capture('support-form-sent', {
             $survey_id: surveyID,
             $survey_response: message
         });
