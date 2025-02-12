@@ -1,6 +1,5 @@
 import { PropsWithoutRef } from 'react';
 import { FlightBackground } from '~/components/ui/flight-background';
-import { Footer } from '~/components/ui/footer';
 import { TutorialCarousel } from '~/components/ui/tutorial-carousel';
 
 const faqs = [
@@ -44,7 +43,6 @@ export default async function Page() {
                     </div>
                 </div>
             </main>
-            <Footer />
             <FlightBackground />
         </>
     );

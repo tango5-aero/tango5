@@ -19,7 +19,7 @@ export const GameNextButton = (props: PropsWithoutRef<GameNextButtonProps>) => {
             className={cn(props.className)}
             onClick={props.onClick}>
             {props.loading && <Loader2 className="animate-spin" />}
-            {'NEXT'}
+            {'Next'}
         </Button>
     );
 };

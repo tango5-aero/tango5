@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { CircleCheck, CircleX } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import { PropsWithoutRef } from 'react';
 import { DataTable } from '~/components/ui/data-table';
 import { UserGameDeleteDialog } from '~/components/usergame/usergame-delete-dialog';
@@ -16,7 +16,7 @@ type UserGamesTableProps = {
     adminAccess: boolean;
 };
 
-export const userColumns: ColumnDef<UserGameSelect>[] = [
+const userColumns: ColumnDef<UserGameSelect>[] = [
     {
         accessorKey: 'scenarioId',
         header: () => <div className="text-center">Scenario</div>,
@@ -24,23 +24,27 @@ export const userColumns: ColumnDef<UserGameSelect>[] = [
     },
     {
         accessorKey: 'playTime',
-        header: () => <div className="text-center">Time (seconds)</div>,
+        header: () => <div className="text-center">Seconds</div>,
         cell: ({ row }) => (
             <div className="text-center">{row.original.success ? formatDuration(row.original.playTime) : 'N/A'}</div>
         )
     },
     {
         accessorKey: 'success',
-        header: () => <div className="text-center">Succeded</div>,
+        header: () => <div className="text-center">Success</div>,
         cell: ({ row }) => (
             <div className="flex justify-center text-center">
-                {row.original.success ? <CircleCheck /> : <CircleX />}
+                {row.original.success ? (
+                    <Check className="size-6 rounded-full bg-black p-1 text-white" size={20} />
+                ) : (
+                    <X className="size-6 rounded-full bg-white p-1 text-black" size={20} />
+                )}
             </div>
         )
     }
 ];
 
-export const adminColumns: ColumnDef<UserGameSelect>[] = [
+const adminColumns: ColumnDef<UserGameSelect>[] = [
     {
         accessorKey: 'id',
         header: () => <div className="text-center">Game</div>
@@ -76,7 +80,7 @@ export const UserGamesTable = (props: PropsWithoutRef<UserGamesTableProps>) => {
     );
 
     return (
-        <TableContext value={{ forceRefresh }}>
+        <TableContext value={{ forceRefresh, variant: props.adminAccess ? 'default' : 'tango5' }}>
             <DataTable
                 data={data}
                 rowCount={rowCount}

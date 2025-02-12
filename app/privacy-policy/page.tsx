@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export default function Page() {
     return (
-        <main className="min-h-screen bg-[url('/images/map.jpg')] bg-center bg-no-repeat p-52 font-barlow">
+        <main className="bg-[url('/images/map.jpg')] bg-center bg-no-repeat p-52 font-barlow">
             <Image
                 src="/images/tango5-logo.svg"
                 className="h-[132px] w-[110px] xl:h-[157px] xl:w-[131px] 2xl:h-[193px] 2xl:w-[161px]"
@@ -12,6 +12,7 @@ export default function Page() {
                 height="168"
                 alt="Tango 5 logo"
             />
+            <br />
             <h1 className="text-3xl font-bold">Tango5 Privacy Policy</h1>
             <br />
 

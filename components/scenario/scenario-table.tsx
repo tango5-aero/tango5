@@ -113,7 +113,7 @@ export const ScenariosTable = () => {
     const { data, rowCount, loading, forceRefresh } = useTableApi(getScenariosPage, limit, offset);
 
     return (
-        <TableContext value={{ forceRefresh }}>
+        <TableContext value={{ forceRefresh, variant: 'default' }}>
             <DataTable
                 data={data}
                 rowCount={rowCount}

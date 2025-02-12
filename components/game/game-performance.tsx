@@ -1,20 +1,14 @@
-import { CircleCheck, Clock3, LucideProps, XCircle } from 'lucide-react';
-import { ComponentType, PropsWithoutRef } from 'react';
+import { PropsWithoutRef } from 'react';
 import { getCurrentUserGamesPerformance } from '~/lib/actions';
 import { formatDuration } from '~/lib/utils';
 
-const GamePerformanceStat = (
-    props: PropsWithoutRef<{ icon: ComponentType<LucideProps>; stat: string; description: string }>
-) => {
-    const Icon = props.icon;
-
+const GamePerformanceStat = (props: PropsWithoutRef<{ stat: string; description: string }>) => {
     return (
-        <article className="flex flex-col gap-2 rounded-lg border border-gray-500 p-4 hover:border-gray-300">
-            <div className="flex items-end justify-center gap-2">
-                <Icon size={28} />
-                <span className="select-none text-lg font-semibold">{props.stat}</span>
+        <article className="flex max-w-[350px] select-none items-center gap-3 rounded-full bg-navbarBG py-5 pl-8 hover:brightness-125">
+            <div className="font-barlow text-6xl">{props.stat}</div>
+            <div className="max-w-fit text-balance font-barlow text-3xl font-light uppercase text-[#A4B2B4]">
+                {props.description}
             </div>
-            <span className="w-full select-none text-center font-mono text-sm">{props.description}</span>
         </article>
     );
 };
@@ -31,13 +25,9 @@ export async function GamePerformance() {
     const computedAverage = playTimeAvg ? formatDuration(playTimeAvg) : '-';
 
     return (
-        <section className="flex items-center justify-center gap-x-5">
-            <GamePerformanceStat
-                icon={succeeded > 0 ? CircleCheck : XCircle}
-                stat={`${succeeded}/${total}`}
-                description="resolved scenarios"
-            />
-            <GamePerformanceStat icon={Clock3} stat={computedAverage} description="seconds on average" />
+        <section className="flex items-center justify-center gap-x-10">
+            <GamePerformanceStat stat={`${succeeded}/${total}`} description="resolved scenarios" />
+            <GamePerformanceStat stat={computedAverage} description="seconds on average" />
         </section>
     );
 }
