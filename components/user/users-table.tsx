@@ -1,6 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
+import { CircleCheck, XCircle } from 'lucide-react';
 import { DataTable } from '~/components/ui/data-table';
 import { UserWipeProgressDialog } from '~/components/user/user-wipe-progress-dialog';
 import { usePagination } from '~/hooks/use-pagination';
@@ -17,7 +18,11 @@ export const columns: ColumnDef<UserSelect>[] = [
     {
         accessorKey: 'consent',
         header: () => <div className="text-center">consent</div>,
-        cell: ({ row }) => <div className="text-center">{row.original.consent ? '✅' : '❌'}</div>
+        cell: ({ row }) => (
+            <div className="flex justify-center">
+                {row.original.consent ? <CircleCheck size={20} /> : <XCircle size={20} />}
+            </div>
+        )
     },
     {
         accessorKey: 'actions',
@@ -25,7 +30,11 @@ export const columns: ColumnDef<UserSelect>[] = [
         cell: ({ row }) => {
             const id = row.getValue('id') as string;
 
-            return <UserWipeProgressDialog id={id} />;
+            return (
+                <div className="flex justify-center">
+                    <UserWipeProgressDialog id={id} />
+                </div>
+            );
         }
     }
 ];
@@ -35,7 +44,7 @@ export const UsersTable = () => {
     const { data, rowCount, loading, forceRefresh } = useTableApi(getUsersPage, limit, offset);
 
     return (
-        <TableContext value={{ forceRefresh }}>
+        <TableContext value={{ forceRefresh, variant: 'default' }}>
             <DataTable
                 data={data}
                 rowCount={rowCount}

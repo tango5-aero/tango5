@@ -1,6 +1,7 @@
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { PropsWithChildren } from 'react';
+import { Footer } from '~/components/ui/footer';
 import { Navbar } from '~/components/ui/navbar';
 
 export default async function Layout({ children }: PropsWithChildren) {
@@ -14,6 +15,7 @@ export default async function Layout({ children }: PropsWithChildren) {
         <>
             <Navbar backstageAccess={allowBackstage} />
             {children}
+            <Footer />
         </>
     );
 }
