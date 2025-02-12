@@ -104,8 +104,13 @@ export function DataTable<TData, TValue>({
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    No results.
+                                <TableCell
+                                    colSpan={columns.length}
+                                    className={cn(
+                                        'h-24 text-center',
+                                        variant === 'tango5' && 'font-barlow text-xl font-light text-gray-900'
+                                    )}>
+                                    {'No results'}
                                 </TableCell>
                             </TableRow>
                         )}
