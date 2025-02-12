@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Textarea } from './textarea';
 
 const surveyID = '0194f50b-fb21-0000-9514-087ad94e5984';
+const eventName = 'survey sent'; // It's required to have the name 'survey sent' to register the data in surveys in PostHog
 
 const SupportButton = () => {
     const posthog = usePostHog();
@@ -27,7 +28,7 @@ const SupportButton = () => {
         const message = form.message.value as typeof form.elements & {
             message: { value: string };
         };
-        posthog.capture('support-form-sent', {
+        posthog.capture(eventName, {
             $survey_id: surveyID,
             $survey_response: message
         });
