@@ -2,7 +2,7 @@
 
 import { useContext, createContext } from 'react';
 
-type Context = { forceRefresh: () => void };
+type Context = { forceRefresh: () => void; variant: 'default' | 'tango5' };
 
 export const TableContext = createContext<Context | undefined>(undefined);
 
