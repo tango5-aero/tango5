@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { PropsWithChildren } from 'react';
 import { Footer } from '~/components/ui/footer';
 import { Navbar } from '~/components/ui/navbar';
+import { SupportButton } from '~/components/ui/support-button';
 
 export default async function Layout({ children }: PropsWithChildren) {
     const user = await currentUser();
@@ -13,6 +14,7 @@ export default async function Layout({ children }: PropsWithChildren) {
     }
     return (
         <>
+            <SupportButton />
             <Navbar backstageAccess={allowBackstage} />
             {children}
             <Footer />
