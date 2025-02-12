@@ -219,7 +219,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
                         Remaining scenarios: {unplayedScenarios}
                     </div>
                     <GameNextButton
-                        className="fixed bottom-12 right-24 z-10"
+                        className="fixed bottom-12 right-24 z-10 px-8"
                         disabled={gameSuccess === null}
                         loading={completionPending}
                         onClick={handleNextScenario}
