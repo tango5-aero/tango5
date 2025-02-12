@@ -90,7 +90,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
                 <Button
                     variant="outline"
                     className={cn(
-                        'size-8 p-0',
+                        'h-8 w-8 p-0',
                         variant === 'tango5' && 'size-6 rounded-full border-gray-300 bg-inherit'
                     )}
                     onClick={() => table.setPageIndex(table.getPageCount() - 1)}
