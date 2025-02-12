@@ -93,7 +93,7 @@ export function DataTable<TData, TValue>({
                                     data-state={row.getIsSelected() && 'selected'}
                                     className={cn(
                                         variant === 'tango5' &&
-                                            '!border-b border-gray-300 font-barlow text-xl font-light text-gray-900 hover:bg-inherit'
+                                            '!border-b border-gray-300 font-barlow text-xl font-light text-gray-900 hover:bg-muted/15'
                                     )}>
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id} className={cn(variant === 'tango5' && 'px-16')}>
