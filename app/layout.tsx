@@ -29,7 +29,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     return (
         <ClerkProvider>
             <html lang="en" className={`${barlow.variable} ${b612.variable}`}>
-                <link rel="icon" href="/images/tango5-logo.svg" sizes="any" />
+                <link rel="icon" href="/images/icon.svg" type="image/svg" />
+                <link rel="icon" href="/images/icon-light.svg" type="image/svg" media="(prefers-color-scheme: dark)" />
                 <body>
                     <PostHogProvider>
                         <SmallScreensProtection>{children}</SmallScreensProtection>
