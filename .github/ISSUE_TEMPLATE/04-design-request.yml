@@ -1,7 +1,7 @@
 name: Design Request
 description: Request a UI related change or report any issue with the design.
 title: "[Design]: "
-labels: [:art:]
+labels: [":art:"]
 projects: ["tango5-aero/1"]
 type: task
 body:
