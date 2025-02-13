@@ -76,7 +76,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
         startTransition(async () => {
             completeGameAction({
                 scenarioId: scenario.id,
-                playTime: Duration.fromMillis(elapsed).toString(),
+                playTime: gameSuccess ? Duration.fromMillis(elapsed).toString() : null,
                 success: gameSuccess
             });
         });
