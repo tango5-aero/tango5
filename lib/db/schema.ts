@@ -25,7 +25,7 @@ export const UserGamesTable = pgTable(
         scenarioId: integer('scenario_id')
             .references(() => ScenariosTable.id, { onDelete: 'cascade' })
             .notNull(),
-        playTime: interval('play_time').notNull(),
+        playTime: interval('play_time'),
         success: boolean('success').notNull(),
         createdAt,
         updatedAt

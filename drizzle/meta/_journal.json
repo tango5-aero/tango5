@@ -43,6 +43,13 @@
             "when": 1739264646295,
             "tag": "0005_wild_quasimodo",
             "breakpoints": true
+        },
+        {
+            "idx": 6,
+            "version": "7",
+            "when": 1739435700890,
+            "tag": "0006_simple_patch",
+            "breakpoints": true
         }
     ]
 }
