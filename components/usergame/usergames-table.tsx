@@ -26,7 +26,9 @@ const userColumns: ColumnDef<UserGameSelect>[] = [
         accessorKey: 'playTime',
         header: () => <div className="text-center">Seconds</div>,
         cell: ({ row }) => (
-            <div className="text-center">{row.original.success ? formatDuration(row.original.playTime) : 'N/A'}</div>
+            <div className="text-center">
+                {row.original.success && row.original.playTime ? formatDuration(row.original.playTime) : 'N/A'}
+            </div>
         )
     },
     {
