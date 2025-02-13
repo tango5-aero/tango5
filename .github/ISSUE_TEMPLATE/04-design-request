@@ -1,0 +1,19 @@
+name: Design Request
+description: Request a UI related change or report any issue with the design.
+title: "[Design]: "
+labels: [:art:]
+projects: ["tango5-aero/1"]
+type: task
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this report!
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      placeholder: Explain the request or the issue briefly and share any screenshots if necessary
+    validations:
+      required: true
+
