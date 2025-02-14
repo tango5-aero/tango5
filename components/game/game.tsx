@@ -194,13 +194,9 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
             <div className="fixed bottom-1 right-72 z-10 mt-10 text-xs text-white/15">{scenario.id}</div>
 
             <IconButton href={'/app/tutorial'} hoverText={'Help'}>
-                <Image
-                    src="/images/question.svg"
-                    width={27}
-                    height={27}
-                    alt="Help"
-                    className="border-carousel-dots button-shadow fixed right-[180px] top-6 z-10 h-[38px] w-[38px] cursor-pointer rounded-full border bg-map p-1 hover:bg-sidebar-foreground"
-                />
+                <div className="border-carousel-dots button-shadow fixed right-[180px] top-6 z-10 flex w-[38px] cursor-pointer items-center justify-center rounded-full border bg-map font-barlow text-3xl text-secondary hover:bg-sidebar-foreground">
+                    ?
+                </div>
             </IconButton>
 
             <IconButton href={props.backstageAccess ? '/backstage/scenarios' : '/app/scores'} hoverText={'Options'}>
