@@ -13,10 +13,10 @@ import { TableContext } from '~/hooks/use-table-context';
 import { ScenarioUploadDialog } from './scenario-upload-dialog';
 import { Flight } from '~/lib/domain/flight';
 import { Pcd } from '~/lib/domain/pcd';
-import { ScenarioParsed } from '~/lib/types';
+import { ScenarioSelect } from '~/lib/types';
 import { ScenarioActiveCheckbox } from './scenario-active-checkbox';
 
-export const columns: ColumnDef<ScenarioParsed>[] = [
+export const columns: ColumnDef<ScenarioSelect>[] = [
     {
         accessorKey: 'id',
         header: () => <div className="text-right">ID</div>
