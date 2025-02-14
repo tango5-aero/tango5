@@ -1,9 +1,10 @@
-import { boolean, integer, interval, pgTable, serial, text, unique } from 'drizzle-orm/pg-core';
+import { boolean, integer, interval, jsonb, pgTable, serial, text, unique } from 'drizzle-orm/pg-core';
 import { createdAt, updatedAt } from './schemaHelpers';
+import { ScenarioData } from '../domain/scenario';
 
 export const ScenariosTable = pgTable('scenarios', {
     id: serial('id').primaryKey(),
-    data: text('data').notNull(),
+    data: jsonb('data').$type<ScenarioData>().notNull(),
     active: boolean('active').default(false).notNull(),
     createdAt,
     updatedAt

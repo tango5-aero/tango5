@@ -9,7 +9,7 @@ import { completeUserGame } from '~/lib/actions';
 import { GAME_TIMEOUT_MS, TIME_TO_REMOVE_FAILED_PAIRS_MS } from '~/lib/constants';
 import { Pcd } from '~/lib/domain/pcd';
 import { Scenario } from '~/lib/domain/scenario';
-import { ScenarioParsed } from '~/lib/types';
+import { ScenarioSelect } from '~/lib/types';
 import { GameCountdown } from '~/components/game/game-countdown';
 import { IconButton } from '~/components/ui/icon-button';
 import { GameNextButton } from '~/components/game/game-next-button';
@@ -18,7 +18,7 @@ import { ScenarioMap } from '~/components/scenario/scenario-map';
 import Image from 'next/image';
 
 type GameProps = {
-    scenario: ScenarioParsed;
+    scenario: ScenarioSelect;
     unplayedScenarios?: number;
     backstageAccess?: boolean;
 };

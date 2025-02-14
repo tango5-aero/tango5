@@ -1,17 +1,14 @@
 import { count, and, eq, inArray, notInArray, sql } from 'drizzle-orm';
-import { scenarioSchema } from '~/lib/domain/scenario';
 import { db } from '~/lib/db';
 import { ScenariosTable, UserGamesTable } from '~/lib/db/schema';
-import { ScenarioParsed, UserGameInsert } from '~/lib/types';
+import { ScenarioSelect, UserGameInsert } from '~/lib/types';
 
 export const getScenarios = async () => {
-    const res = await db.query.ScenariosTable.findMany();
-    return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
+    return await db.query.ScenariosTable.findMany();
 };
 
-export const getScenario = async (id: ScenarioParsed['id']) => {
-    const res = await db.query.ScenariosTable.findFirst({ where: (scenario, { eq }) => eq(scenario.id, id) });
-    return res ? { ...res, data: scenarioSchema.parse(JSON.parse(res.data)) } : res;
+export const getScenario = async (id: ScenarioSelect['id']) => {
+    return await db.query.ScenariosTable.findFirst({ where: (scenario, { eq }) => eq(scenario.id, id) });
 };
 
 export const getUnplayedScenarios = async (userId: UserGameInsert['userId']) => {
@@ -28,7 +25,7 @@ export const getUnplayedScenarios = async (userId: UserGameInsert['userId']) => 
         .where(and(notInArray(ScenariosTable.id, db.select().from(sq)), eq(ScenariosTable.active, true)));
 };
 
-export const getRandom = async (ids?: ScenarioParsed['id'][]) => {
+export const getRandom = async (ids?: Array<ScenarioSelect['id']>) => {
     const query = db.select().from(ScenariosTable);
 
     const whereClause = ids
@@ -41,20 +38,16 @@ export const getRandom = async (ids?: ScenarioParsed['id'][]) => {
         .limit(1)
         .execute();
 
-    const first = res.at(0);
-
-    return first ? { ...first, data: scenarioSchema.parse(JSON.parse(first.data)) } : first;
+    return res.at(0);
 };
 
-export const writeScenarios = async (scenariosData: Array<ScenarioParsed['data']>) => {
-    const data = scenariosData.map((scenarioData) => ({ data: JSON.stringify(scenarioData) }));
-    const res = await db.insert(ScenariosTable).values(data).returning();
-    return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
+export const writeScenarios = async (scenariosData: Array<ScenarioSelect['data']>) => {
+    const data = scenariosData.map((scenarioData) => ({ data: scenarioData }));
+    return await db.insert(ScenariosTable).values(data).returning();
 };
 
-export const deleteScenario = async (id: ScenarioParsed['id']) => {
-    const res = await db.delete(ScenariosTable).where(eq(ScenariosTable.id, id)).returning();
-    return res.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }));
+export const deleteScenario = async (id: ScenarioSelect['id']) => {
+    return await db.delete(ScenariosTable).where(eq(ScenariosTable.id, id)).returning();
 };
 
 export const getScenariosPage = async (pageIndex: number, pageSize: number) => {
@@ -68,14 +61,14 @@ export const getScenariosPage = async (pageIndex: number, pageSize: number) => {
             .offset(pageIndex);
         return {
             count: total[0]?.value,
-            values: values.map((row) => ({ ...row, data: scenarioSchema.parse(JSON.parse(row.data)) }))
+            values
         };
     } catch {
         return { count: 0, values: [] };
     }
 };
 
-export const changeScenarioVisibility = async (id: ScenarioParsed['id'], active: ScenarioParsed['active']) => {
+export const changeScenarioVisibility = async (id: ScenarioSelect['id'], active: ScenarioSelect['active']) => {
     try {
         return await db.update(ScenariosTable).set({ active }).where(eq(ScenariosTable.id, id)).returning();
     } catch {

@@ -10,7 +10,7 @@ import {
 } from '~/lib/db/queries';
 import { unstable_cache } from 'next/cache';
 import { cacheTags } from '~/lib/constants';
-import { ScenarioParsed } from '~/lib/types';
+import { ScenarioSelect } from '~/lib/types';
 
 export async function createScenario(
     _prevState: ActionState,
@@ -51,7 +51,7 @@ export async function createScenario(
     return { message: `Scenario${result.length > 1 && 's'} created`, error: false };
 }
 
-export async function deleteScenario(_prevState: ActionState, id: ScenarioParsed['id']): Promise<ActionState> {
+export async function deleteScenario(_prevState: ActionState, id: ScenarioSelect['id']): Promise<ActionState> {
     const result = await deleteDBScenario(id);
 
     if (result.length === 0) {
@@ -75,7 +75,7 @@ export async function getScenariosPage(pageIndex: number, pageSize: number) {
 
 export async function changeScenarioVisibility(
     _prevState: ActionState,
-    payload: Pick<ScenarioParsed, 'id' | 'active'>
+    payload: Pick<ScenarioSelect, 'id' | 'active'>
 ): Promise<ActionState> {
     const { id, active } = payload;
     const result = await changeDBScenarioVisibility(id, active);
