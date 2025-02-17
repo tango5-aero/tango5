@@ -6,8 +6,7 @@ const FlightBackground = () => {
             <Image
                 src="/images/flight.svg"
                 alt="Flight background"
-                objectFit="contain"
-                objectPosition="bottom"
+                style={{ objectFit: 'contain', objectPosition: 'bottom' }}
                 width="1348"
                 height="782"
             />

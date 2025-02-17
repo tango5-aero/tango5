@@ -7,7 +7,12 @@ import { usePathname } from 'next/navigation';
 import { PropsWithoutRef } from 'react';
 import Link from 'next/link';
 
-const Navbar = (props: PropsWithoutRef<{ backstageAccess: boolean }>) => {
+type NavbarProps = {
+    backstageAccess: boolean;
+    playDisabled: boolean;
+};
+
+const Navbar = (props: PropsWithoutRef<NavbarProps>) => {
     const pathname = usePathname();
 
     return (
@@ -40,7 +45,11 @@ const Navbar = (props: PropsWithoutRef<{ backstageAccess: boolean }>) => {
                             variant="link">
                             Scores
                         </LinkButton>
-                        <LinkButton href="/app/play" className="ml-2 mr-6 text-xl uppercase" variant="map">
+                        <LinkButton
+                            href="/app/play"
+                            className="ml-2 mr-6 text-xl uppercase"
+                            variant="map"
+                            disabled={props.playDisabled}>
                             Play
                         </LinkButton>
                         <SignedOut>

@@ -1,7 +1,7 @@
 'use server';
 
 import { currentUser } from '@clerk/nextjs/server';
-import { unstable_cache } from 'next/cache';
+import { revalidatePath, unstable_cache } from 'next/cache';
 import { cacheTags } from '~/lib/constants';
 import {
     getUserGames,
@@ -71,6 +71,13 @@ export async function deleteUserGame(_prevState: ActionState, id: UserGameSelect
         return { message: `UserGame #${id} not found`, error: true };
     }
 
+    // Revalidate path to update navbar (make sure play button is enabled if needed)
+    const user = await currentUser();
+
+    if (user?.id === res[0].userId) {
+        revalidatePath('/backstage');
+    }
+
     return { message: `UserGame #${id} deleted`, error: false };
 }
 
@@ -82,6 +89,13 @@ export async function resetUserProgress(
         await deleteUserGames(userId);
     } catch {
         return { message: `Error deleting games for user #${userId}`, error: true };
+    }
+
+    // Revalidate path to update navbar (make sure play button is enabled if needed)
+    const user = await currentUser();
+
+    if (user?.id === userId) {
+        revalidatePath('/backstage');
     }
 
     return { message: `Games for user #${userId} deleted`, error: false };

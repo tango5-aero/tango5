@@ -5,13 +5,17 @@ import { GamePerformance } from '~/components/game/game-performance';
 import { LinkButton } from '~/components/ui/link-button';
 import { UserGamesTable } from '~/components/usergame/usergames-table';
 import { LoadingSpinner } from '~/components/ui/loading-spinner';
+import { UserConsentForm } from '~/components/user/user-consent-form';
 import { getUnplayedScenarios } from '~/lib/db/queries';
+import { getUserInfo } from '~/lib/actions/users';
 
 export default async function Page() {
     const user = await currentUser();
     if (!user) {
         redirect('/');
     }
+
+    const userInfo = await getUserInfo();
     const unplayedScenarios = (await getUnplayedScenarios(user.id)).length;
 
     return (
@@ -38,6 +42,8 @@ export default async function Page() {
                     {'Well done! You have completed all the scenarios'}
                 </p>
             )}
+
+            <UserConsentForm consent={userInfo?.consent} />
 
             <LinkButton href="/app/play" variant="map" size="map" disabled={unplayedScenarios === 0}>
                 {'Play'}

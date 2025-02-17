@@ -1,6 +1,7 @@
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { Game } from '~/components/game/game';
+import { GameFinish } from '~/components/game/game-finish';
 import { getRandom, getUnplayedScenarios } from '~/lib/db/queries';
 
 export default async function Page() {
@@ -12,9 +13,9 @@ export default async function Page() {
 
     const unplayedScenarios = await getUnplayedScenarios(user.id);
 
-    // if no remaining scenarios take the user to summary page
+    // if no remaining scenarios, show a thanks for playing message
     if (unplayedScenarios.length === 0) {
-        redirect('/app/scores');
+        return <GameFinish />;
     }
 
     const scenario = await getRandom(unplayedScenarios.map((s) => s.id));

@@ -5,7 +5,7 @@ const Footer = () => {
     return (
         <footer className="mt-auto flex w-full flex-row items-center justify-between bg-translucent px-10 py-5">
             <Link href="https://databeacon.aero/" target="_blank">
-                <Image src="/images/databeacon.png" width="70" height="70" alt="DataBeacon" />
+                <Image src="/images/databeacon.png" width="70" height="45" alt="DataBeacon" />
             </Link>
             <div className="flex flex-row items-center justify-start gap-5">
                 <p className="font-barlow text-sm font-light">© 2025 DataBeacon</p>

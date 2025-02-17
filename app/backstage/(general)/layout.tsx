@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { Navbar } from '~/components/ui/navbar';
+import { getUnplayedScenarios } from '~/lib/db/queries';
 
 export default async function DashBoardLayout({ children }: PropsWithChildren) {
     const user = await currentUser();
@@ -24,9 +25,11 @@ export default async function DashBoardLayout({ children }: PropsWithChildren) {
         redirect('/');
     }
 
+    const allScenariosCompleted = (await getUnplayedScenarios(user.id)).length === 0;
+
     return (
         <>
-            <Navbar backstageAccess={true} />
+            <Navbar backstageAccess={true} playDisabled={allScenariosCompleted} />
             <SidebarProvider className="pt-[80px]">
                 <Sidebar variant="inset" className="pt-[80px]">
                     <SidebarContent>
