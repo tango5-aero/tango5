@@ -43,7 +43,7 @@ export async function GameFinish() {
                     See my scores
                 </LinkButton>
 
-                <UserConsentForm consent={userInfo?.consent ?? false} />
+                <UserConsentForm consent={userInfo?.consent} />
             </main>
             <Footer />
         </>

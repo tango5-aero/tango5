@@ -5,7 +5,7 @@ import { CheckedState } from '@radix-ui/react-checkbox';
 import { updateConsent } from '~/lib/actions/users';
 import { Checkbox } from '~/components/ui/checkbox';
 
-const UserConsentForm = (props: PropsWithoutRef<{ consent: boolean }>) => {
+const UserConsentForm = (props: PropsWithoutRef<{ consent?: boolean }>) => {
     const id = useId();
 
     const onChangeConsent = (value: CheckedState) => {
