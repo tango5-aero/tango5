@@ -2,7 +2,7 @@ name: Feature
 description: A request, idea or new functionality.
 title: "[Feature]: "
 labels: []
-projects: ["tango5-aero/1"]
+projects: ["databeacon/17"]
 type: feature
 body:
   - type: textarea
