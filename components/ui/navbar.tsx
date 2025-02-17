@@ -13,7 +13,7 @@ const Navbar = (props: PropsWithoutRef<{ backstageAccess: boolean }>) => {
     return (
         <nav className="fixed z-30 w-full">
             <div className="flex h-[80px] flex-col justify-center bg-navbarBG">
-                <div className="flex items-center justify-between px-12 text-xl">
+                <div className="flex items-center justify-between px-10 text-xl">
                     <div>
                         <Link href="/">
                             <Image src="/images/tango5-logo.svg" width={30} height={37} alt={'Tango5'} />
