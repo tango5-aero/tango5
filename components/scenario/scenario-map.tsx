@@ -349,8 +349,8 @@ const LayersIds = {
 } as const;
 
 const scaleBbox = (boundaries: BBox): BBox => {
-    const estimatedPaddingX = 0.4;
-    const estimatedPaddingY = 0.4;
+    const estimatedPaddingX = Math.abs(boundaries[2] - boundaries[0]) * 0.18;
+    const estimatedPaddingY = Math.abs(boundaries[3] - boundaries[1]) * 0.18;
 
     return [
         boundaries[0] - estimatedPaddingX,
