@@ -10,7 +10,7 @@ import { MapEvent, MapMouseEvent, MapSourceDataEvent } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { destination, point, Units } from '@turf/turf';
 import { areDifferent, BBox } from '~/lib/domain/geometry';
-import { MAP_SOURCE_ID } from '~/lib/constants';
+import { MAP_PADDING, MAP_SOURCE_ID } from '~/lib/constants';
 
 type ScenarioMapProps = {
     style?: CSSProperties;
@@ -349,8 +349,8 @@ const LayersIds = {
 } as const;
 
 const scaleBbox = (boundaries: BBox): BBox => {
-    const estimatedPaddingX = Math.abs(boundaries[2] - boundaries[0]) * 0.18;
-    const estimatedPaddingY = Math.abs(boundaries[3] - boundaries[1]) * 0.18;
+    const estimatedPaddingX = Math.abs(boundaries[2] - boundaries[0]) * MAP_PADDING;
+    const estimatedPaddingY = Math.abs(boundaries[3] - boundaries[1]) * MAP_PADDING;
 
     return [
         boundaries[0] - estimatedPaddingX,
