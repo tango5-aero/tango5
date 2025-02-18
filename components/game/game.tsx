@@ -235,7 +235,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
                 </>
             )}
 
-            {isMapReady && (
+            {isMapReady && !shouldShowSolution && (
                 <>
                     <GameProgress
                         className="fixed left-16 top-5 z-10 transition-all hover:scale-110"
