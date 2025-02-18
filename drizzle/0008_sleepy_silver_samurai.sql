@@ -1,0 +1,1 @@
+ALTER TABLE "scenarios" ADD COLUMN "demo" boolean DEFAULT false NOT NULL;
