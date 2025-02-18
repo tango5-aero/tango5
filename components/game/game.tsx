@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import posthog from 'posthog-js';
 import { Duration } from 'luxon';
 import { completeUserGame } from '~/lib/actions';
-import { GAME_TIMEOUT_MS, TIME_TO_REMOVE_FAILED_PAIRS_MS } from '~/lib/constants';
+import { GAME_MAX_SCENARIOS_IN_A_ROW, GAME_TIMEOUT_MS, TIME_TO_REMOVE_FAILED_PAIRS_MS } from '~/lib/constants';
 import { Pcd } from '~/lib/domain/pcd';
 import { Scenario } from '~/lib/domain/scenario';
 import { ScenarioSelect } from '~/lib/types';
@@ -29,16 +29,19 @@ const posthogEvents = {
 };
 
 const Game = (props: PropsWithoutRef<GameProps>) => {
-    const searchParams = useSearchParams();
-    const shouldShowSolution = searchParams.get('solution') === 'true';
     const { replace } = useRouter();
+    const searchParams = useSearchParams();
+
+    const shouldShowSolution = searchParams.get('solution') === 'true';
+
     const [scenario, setScenario] = useState({
         ...props.scenario,
         data: new Scenario(props.scenario.data)
     });
     const [unplayedScenarios, setUnplayedScenarios] = useState(
-        props.unplayedScenarios !== undefined ? props.unplayedScenarios - 1 : undefined
+        props.unplayedScenarios !== undefined ? props.unplayedScenarios - 1 : 0
     );
+    const [scenariosInARow, setScenariosInARow] = useState(1);
 
     // Game related state
     const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
@@ -134,6 +137,13 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
             return;
         }
 
+        // When user plays N scenarios in a row, redirect to scores. Otherwise increment the counter
+        if (scenariosInARow >= GAME_MAX_SCENARIOS_IN_A_ROW) {
+            replace('/app/scores');
+            return;
+        }
+        setScenariosInARow((prev) => prev + 1);
+
         // Preparing next scenario, reset timer and game state
         gameStartTimeMs.current = undefined;
 
@@ -218,12 +228,14 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
                         className="fixed bottom-12 right-24 z-10 px-8"
                         disabled={gameSuccess === null}
                         loading={completionPending}
-                        onClick={handleNextScenario}
-                    />
+                        loadingText={unplayedScenarios > 0 ? 'Saving...' : 'Finishing...'}
+                        onClick={handleNextScenario}>
+                        {scenariosInARow >= GAME_MAX_SCENARIOS_IN_A_ROW ? 'Finish' : 'Next'}
+                    </GameNextButton>
                 </>
             )}
 
-            {isMapReady && (
+            {isMapReady && !shouldShowSolution && (
                 <>
                     <GameProgress
                         className="fixed left-16 top-5 z-10 transition-all hover:scale-110"

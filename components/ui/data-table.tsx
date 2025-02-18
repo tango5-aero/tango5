@@ -76,9 +76,9 @@ export function DataTable<TData, TValue>({
                 </TableHeader>
                 {loading ? (
                     <TableBody>
-                        <TableRow>
+                        <TableRow className="hover:bg-inherit">
                             <TableCell colSpan={columns.length} className="h-32 text-center">
-                                <div className="flex h-full w-full items-center justify-center">
+                                <div className="flex h-full w-full items-center justify-center text-gray-900">
                                     <LoadingSpinner size={36} />
                                 </div>
                             </TableCell>
@@ -103,7 +103,7 @@ export function DataTable<TData, TValue>({
                                 </TableRow>
                             ))
                         ) : (
-                            <TableRow>
+                            <TableRow className="hover:bg-inherit">
                                 <TableCell
                                     colSpan={columns.length}
                                     className={cn(
