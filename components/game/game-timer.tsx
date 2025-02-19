@@ -20,7 +20,7 @@ const renderTime = ({ remainingTime }: { remainingTime: number }) => {
     return <div className="select-none text-2xl font-bold">{remainingTime}</div>;
 };
 
-const GameCountdown = (props: PropsWithoutRef<GameCountdownProps>) => {
+const GameTimer = (props: PropsWithoutRef<GameCountdownProps>) => {
     return (
         <div className={cn('flex items-center justify-center', props.className)}>
             <div
@@ -41,4 +41,4 @@ const GameCountdown = (props: PropsWithoutRef<GameCountdownProps>) => {
     );
 };
 
-export { GameCountdown };
+export { GameTimer };
