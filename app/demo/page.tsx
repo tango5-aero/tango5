@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { Game } from '~/components/game/game';
+import { UserGame } from '~/components/usergame/usergame';
 import { getDemoScenarios, getRandom } from '~/lib/db/queries';
 
 export default async function Page() {
@@ -17,5 +17,5 @@ export default async function Page() {
         redirect('/');
     }
 
-    return <Game scenario={scenario} unplayedScenarios={demoScenarios.length} />;
+    return <UserGame scenario={scenario} unplayedScenarios={demoScenarios.length} />;
 }

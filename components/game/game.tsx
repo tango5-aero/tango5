@@ -1,45 +1,23 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { PropsWithoutRef, startTransition, useActionState, useCallback, useEffect, useRef, useState } from 'react';
-import { toast } from 'sonner';
-import posthog from 'posthog-js';
+import { PropsWithoutRef, useCallback, useEffect, useRef, useState } from 'react';
 import { Duration } from 'luxon';
-import { completeUserGame } from '~/lib/actions';
 import { GAME_TIMEOUT_MS, TIME_TO_REMOVE_FAILED_PAIRS_MS } from '~/lib/constants';
 import { Pcd } from '~/lib/domain/pcd';
-import { Scenario } from '~/lib/domain/scenario';
-import { ScenarioSelect } from '~/lib/types';
 import { GameCountdown } from '~/components/game/game-countdown';
-import { IconButton } from '~/components/ui/icon-button';
-import { GameNextButton } from '~/components/game/game-next-button';
 import { GameProgress } from '~/components/game/game-progress';
 import { ScenarioMap } from '~/components/scenario/scenario-map';
-import Image from 'next/image';
+import { ScenarioUserGame } from '../usergame/usergame';
 
 type GameProps = {
-    scenario: ScenarioSelect;
-    unplayedScenarios?: number;
-    backstageAccess?: boolean;
-};
-
-const posthogEvents = {
-    gameStart: 'game_start',
-    gameFinish: 'game_finish'
+    scenario: ScenarioUserGame;
+    shouldShowSolution?: boolean;
+    startGame: () => void;
+    endGame: (success: boolean, playTime: string | null) => void;
 };
 
 const Game = (props: PropsWithoutRef<GameProps>) => {
-    const searchParams = useSearchParams();
-    const shouldShowSolution = searchParams.get('solution') === 'true';
-    const { replace } = useRouter();
-    const [scenario, setScenario] = useState({
-        ...props.scenario,
-        data: new Scenario(props.scenario.data)
-    });
-    const [unplayedScenarios, setUnplayedScenarios] = useState(
-        props.unplayedScenarios !== undefined ? props.unplayedScenarios - 1 : undefined
-    );
-
+    const { scenario, shouldShowSolution } = props;
     // Game related state
     const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
@@ -47,46 +25,23 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
     const [gameSuccess, setGameSuccess] = useState<boolean | null>(null); // true if game is won, false if lost, null if not finished
     const selectedPairsRef = useRef(selectedPairs);
 
-    const [nextScenarioState, completeGameAction, completionPending] = useActionState(completeUserGame, {
-        scenario: props.scenario,
-        pendingScenarios: props.unplayedScenarios ?? 0,
-        error: false
-    });
-
     const gameStartTimeMs = useRef<number | undefined>(undefined);
 
     useEffect(() => {
         if (isMapReady && typeof gameStartTimeMs.current === 'undefined') {
             gameStartTimeMs.current = performance.now();
-
-            if (props.backstageAccess) return;
-
-            posthog.capture(posthogEvents.gameStart, {
-                scenarioId: scenario.id
-            });
+            props.startGame();
         }
-    }, [scenario.id, isMapReady, props.backstageAccess]);
+    }, [scenario.id, isMapReady]);
 
     useEffect(() => {
         if (gameSuccess === null) return;
-        if (props.backstageAccess) return;
 
         const elapsed = gameStartTimeMs.current ? performance.now() - gameStartTimeMs.current : 0;
+        const playTime = gameSuccess ? Duration.fromMillis(elapsed).toString() : null;
 
-        startTransition(async () => {
-            completeGameAction({
-                scenarioId: scenario.id,
-                playTime: gameSuccess ? Duration.fromMillis(elapsed).toString() : null,
-                success: gameSuccess
-            });
-        });
-
-        posthog.capture(posthogEvents.gameFinish, {
-            scenarioId: scenario.id,
-            playTime: elapsed,
-            success: gameSuccess
-        });
-    }, [scenario, gameSuccess, completeGameAction, props.backstageAccess]);
+        props.endGame(gameSuccess, playTime);
+    }, [scenario, gameSuccess]);
 
     useEffect(() => {
         if (scenario.data.isSolution(selectedPairs) || shouldShowSolution) {
@@ -119,36 +74,6 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
         }
     }, [selectedPairs, isClear]);
 
-    const handleNextScenario = () => {
-        if (nextScenarioState.error) {
-            toast.error('Something went wrong, could not load next scenario');
-            replace('/app/scores');
-            return;
-        }
-
-        const { scenario: nextScenario, pendingScenarios } = nextScenarioState;
-
-        // There are no more scenarios to play, redirect to games page
-        if (!nextScenario && pendingScenarios === 0) {
-            replace('/app/scores');
-            return;
-        }
-
-        // Preparing next scenario, reset timer and game state
-        gameStartTimeMs.current = undefined;
-
-        setSelectedFlight(null);
-        setSelectedPairs([]);
-        setIsMapReady(false);
-        setGameSuccess(null);
-        setUnplayedScenarios(pendingScenarios - 1);
-
-        setScenario({
-            ...nextScenario,
-            data: new Scenario(nextScenario.data)
-        });
-    };
-
     const selectFlight = (id: string) => {
         // if the game is over do not allow further interactions
         if (gameSuccess !== null) {
@@ -180,6 +105,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
                 (selectedPair[0] === pair[0] && selectedPair[1] === pair[1]) ||
                 (selectedPair[0] === pair[1] && selectedPair[1] === pair[0])
         );
+
         if (alreadySelected) {
             return;
         }
@@ -191,38 +117,6 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
 
     return (
         <main>
-            <div className="fixed bottom-1 right-72 z-10 mt-10 text-xs text-white/15">{scenario.id}</div>
-
-            <IconButton href={'/app/tutorial'} hoverText={'Help'}>
-                <div className="border-carousel-dots button-shadow fixed right-[180px] top-6 z-10 flex w-[38px] cursor-pointer items-center justify-center rounded-full border bg-map font-barlow text-3xl text-secondary hover:bg-sidebar-foreground">
-                    ?
-                </div>
-            </IconButton>
-
-            <IconButton href={props.backstageAccess ? '/backstage/scenarios' : '/app/scores'} hoverText={'Options'}>
-                <Image
-                    src="/images/gear.svg"
-                    width={27}
-                    height={27}
-                    alt="Options"
-                    className="border-carousel-dots button-shadow fixed right-[108px] top-6 z-10 h-[38px] w-[38px] cursor-pointer rounded-full border bg-map p-1 hover:bg-sidebar-foreground"
-                />
-            </IconButton>
-
-            {!props.backstageAccess && (
-                <>
-                    <div className="fixed right-60 top-7 z-10 mt-[3px] select-none font-barlow font-light text-map">
-                        Remaining scenarios: {unplayedScenarios}
-                    </div>
-                    <GameNextButton
-                        className="fixed bottom-12 right-24 z-10 px-8"
-                        disabled={gameSuccess === null}
-                        loading={completionPending}
-                        onClick={handleNextScenario}
-                    />
-                </>
-            )}
-
             {isMapReady && (
                 <>
                     <GameProgress
