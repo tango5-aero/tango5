@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { PropsWithoutRef, startTransition, useActionState, useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import posthog from 'posthog-js';
@@ -10,7 +10,7 @@ import { GAME_MAX_SCENARIOS_IN_A_ROW, GAME_TIMEOUT_MS, TIME_TO_REMOVE_FAILED_PAI
 import { Pcd } from '~/lib/domain/pcd';
 import { Scenario } from '~/lib/domain/scenario';
 import { ScenarioSelect } from '~/lib/types';
-import { GameCountdown } from '~/components/game/game-countdown';
+import { GameTimer } from '~/components/game/game-timer';
 import { IconButton } from '~/components/ui/icon-button';
 import { GameNextButton } from '~/components/game/game-next-button';
 import { GameProgress } from '~/components/game/game-progress';
@@ -19,6 +19,8 @@ import Image from 'next/image';
 
 type GameProps = {
     scenario: ScenarioSelect;
+    revealSolution?: boolean;
+    countdownRunning?: boolean;
     unplayedScenarios?: number;
     backstageAccess?: boolean;
 };
@@ -30,9 +32,6 @@ const posthogEvents = {
 
 const Game = (props: PropsWithoutRef<GameProps>) => {
     const { replace } = useRouter();
-    const searchParams = useSearchParams();
-
-    const shouldShowSolution = searchParams.get('solution') === 'true';
 
     const [scenario, setScenario] = useState({
         ...props.scenario,
@@ -92,10 +91,10 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
     }, [scenario, gameSuccess, completeGameAction, props.backstageAccess]);
 
     useEffect(() => {
-        if (scenario.data.isSolution(selectedPairs) || shouldShowSolution) {
+        if (scenario.data.isSolution(selectedPairs) || props.revealSolution) {
             setGameSuccess(true);
         }
-    }, [scenario, selectedPairs, shouldShowSolution]);
+    }, [scenario, selectedPairs, props.revealSolution]);
 
     const isClear = useCallback(
         (pair: [string, string]) => {
@@ -235,17 +234,21 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
                 </>
             )}
 
-            {isMapReady && !shouldShowSolution && (
+            {isMapReady && (
                 <>
                     <GameProgress
                         className="fixed left-16 top-5 z-10 transition-all hover:scale-110"
                         total={scenario.data.solution.length}
-                        progress={scenario.data.numberCorrect(selectedPairs)}
+                        progress={
+                            props.revealSolution
+                                ? scenario.data.solution.length
+                                : scenario.data.numberCorrect(selectedPairs)
+                        }
                     />
-                    <GameCountdown
+                    <GameTimer
                         className="fixed left-36 top-5 z-10 transition-all hover:scale-110"
                         initialCount={GAME_TIMEOUT_MS / 1000}
-                        running={gameSuccess === null}
+                        running={!props.revealSolution ? !props.countdownRunning && gameSuccess === null : false}
                         onComplete={() => setGameSuccess(false)}
                     />
                 </>
