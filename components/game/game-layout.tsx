@@ -7,15 +7,15 @@ import { Game } from '~/components/game/game';
 
 type GameLayoutProps = {
     scenario: ScenarioSelect;
-    showSolution?: boolean;
+    revealSolution?: boolean;
     backstageAccess?: boolean;
     remainingScenarios?: number;
 };
 
 export const GameLayout = (props: PropsWithoutRef<GameLayoutProps>) => {
-    const [countdownRunning, setCountdownRunning] = useState(!props.showSolution);
+    const [countdownRunning, setCountdownRunning] = useState(!props.revealSolution);
 
-    if (!props.showSolution) {
+    if (!props.revealSolution) {
         return (
             <GameInitialCountdown running={countdownRunning} onComplete={() => setCountdownRunning(false)}>
                 <Game countdownRunning={countdownRunning} {...props} />

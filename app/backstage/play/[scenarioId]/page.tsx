@@ -15,5 +15,5 @@ export default async function Page({ params, searchParams }: { params: Params; s
 
     if (!scenario?.data) notFound();
 
-    return <GameLayout backstageAccess scenario={scenario} showSolution={showSolution} />;
+    return <GameLayout backstageAccess scenario={scenario} revealSolution={showSolution} />;
 }

@@ -19,7 +19,7 @@ import Image from 'next/image';
 
 type GameProps = {
     scenario: ScenarioSelect;
-    showSolution?: boolean;
+    revealSolution?: boolean;
     countdownRunning?: boolean;
     unplayedScenarios?: number;
     backstageAccess?: boolean;
@@ -91,10 +91,10 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
     }, [scenario, gameSuccess, completeGameAction, props.backstageAccess]);
 
     useEffect(() => {
-        if (scenario.data.isSolution(selectedPairs) || props.showSolution) {
+        if (scenario.data.isSolution(selectedPairs) || props.revealSolution) {
             setGameSuccess(true);
         }
-    }, [scenario, selectedPairs, props.showSolution]);
+    }, [scenario, selectedPairs, props.revealSolution]);
 
     const isClear = useCallback(
         (pair: [string, string]) => {
@@ -240,7 +240,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
                         className="fixed left-16 top-5 z-10 transition-all hover:scale-110"
                         total={scenario.data.solution.length}
                         progress={
-                            props.showSolution
+                            props.revealSolution
                                 ? scenario.data.solution.length
                                 : scenario.data.numberCorrect(selectedPairs)
                         }
@@ -248,7 +248,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
                     <GameTimer
                         className="fixed left-36 top-5 z-10 transition-all hover:scale-110"
                         initialCount={GAME_TIMEOUT_MS / 1000}
-                        running={!props.showSolution ? !props.countdownRunning && gameSuccess === null : false}
+                        running={!props.revealSolution ? !props.countdownRunning && gameSuccess === null : false}
                         onComplete={() => setGameSuccess(false)}
                     />
                 </>
