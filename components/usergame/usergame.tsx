@@ -15,7 +15,7 @@ type UserGameProps = {
     scenario: ScenarioSelect;
     unplayedScenarios?: number;
     backstageAccess?: boolean;
-    isDemo?: boolean;
+    demoScenarios?: ScenarioSelect[];
 };
 
 export type ScenarioUserGame = {
@@ -38,6 +38,7 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
     const gameRef = useRef<{ resetGame: () => void }>(null);
     const searchParams = useSearchParams();
     const shouldShowSolution = searchParams.get('solution') === 'true';
+    const isDemo = props.demoScenarios && props.demoScenarios?.length > 0;
     const { replace } = useRouter();
 
     const [nextScenarioState, completeGameAction, completionPending] = useActionState(completeUserGame, {
@@ -50,6 +51,7 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
         ...props.scenario,
         data: new Scenario(props.scenario.data)
     });
+
     const [unplayedScenarios, setUnplayedScenarios] = useState(
         props.unplayedScenarios !== undefined ? props.unplayedScenarios - 1 : undefined
     );
@@ -58,31 +60,45 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
     const handleGameStart = useCallback(() => {
         if (props.backstageAccess) return;
 
-        posthog.capture(posthogEvents.gameStart, {
-            scenarioId: scenario.id
-        });
-    }, [scenario.id, props.backstageAccess]);
+        if (!isDemo) {
+            posthog.capture(posthogEvents.gameStart, {
+                scenarioId: scenario.id
+            });
+        }
+        if (isDemo) {
+            posthog.capture(posthogEvents.demoStart, {
+                scenarioId: scenario.id
+            });
+        }
+    }, [scenario.id, props.backstageAccess, isDemo]);
 
     const handleGameFinish = useCallback(
         (success: boolean, playTime: string | null) => {
             if (props.backstageAccess) return;
 
-            startTransition(async () => {
-                completeGameAction({
-                    scenarioId: scenario.id,
-                    playTime: playTime,
-                    success: success
+            if (!isDemo) {
+                startTransition(async () => {
+                    completeGameAction({
+                        scenarioId: scenario.id,
+                        playTime: playTime,
+                        success: success
+                    });
                 });
-            });
+                posthog.capture(posthogEvents.gameFinish, {
+                    scenarioId: scenario.id,
+                    success
+                });
+            }
+            if (isDemo) {
+                posthog.capture(posthogEvents.demoFinish, {
+                    scenarioId: scenario.id,
+                    success
+                });
+            }
 
             setEnableNext(true);
-
-            posthog.capture(posthogEvents.gameFinish, {
-                scenarioId: scenario.id,
-                success
-            });
         },
-        [scenario.id, props.backstageAccess, completeGameAction]
+        [scenario.id, props.backstageAccess, completeGameAction, isDemo]
     );
 
     const handleNextScenario = () => {
