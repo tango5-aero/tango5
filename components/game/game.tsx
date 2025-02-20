@@ -21,7 +21,7 @@ type GameProps = {
     scenario: ScenarioSelect;
     revealSolution?: boolean;
     countdownRunning?: boolean;
-    unplayedScenarios?: number;
+    remainingScenarios?: number;
     backstageAccess?: boolean;
 };
 
@@ -38,7 +38,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
         data: new Scenario(props.scenario.data)
     });
     const [unplayedScenarios, setUnplayedScenarios] = useState(
-        props.unplayedScenarios !== undefined ? props.unplayedScenarios - 1 : 0
+        props.remainingScenarios !== undefined ? props.remainingScenarios - 1 : 0
     );
     const [scenariosInARow, setScenariosInARow] = useState(1);
 
@@ -51,7 +51,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
 
     const [nextScenarioState, completeGameAction, completionPending] = useActionState(completeUserGame, {
         scenario: props.scenario,
-        pendingScenarios: props.unplayedScenarios ?? 0,
+        pendingScenarios: props.remainingScenarios ?? 0,
         error: false
     });
 
@@ -62,16 +62,18 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
             gameStartTimeMs.current = performance.now();
 
             if (props.backstageAccess) return;
+            if (props.revealSolution) return;
 
             posthog.capture(posthogEvents.gameStart, {
                 scenarioId: scenario.id
             });
         }
-    }, [scenario.id, isMapReady, props.backstageAccess]);
+    }, [scenario.id, isMapReady, props.backstageAccess, props.revealSolution]);
 
     useEffect(() => {
         if (gameSuccess === null) return;
         if (props.backstageAccess) return;
+        if (props.revealSolution) return;
 
         const elapsed = gameStartTimeMs.current ? performance.now() - gameStartTimeMs.current : 0;
 
@@ -88,7 +90,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
             playTime: elapsed,
             success: gameSuccess
         });
-    }, [scenario, gameSuccess, completeGameAction, props.backstageAccess]);
+    }, [scenario, gameSuccess, completeGameAction, props.backstageAccess, props.revealSolution]);
 
     useEffect(() => {
         if (scenario.data.isSolution(selectedPairs) || props.revealSolution) {
@@ -218,7 +220,7 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
                 />
             </IconButton>
 
-            {!props.backstageAccess && (
+            {!props.backstageAccess && !props.revealSolution && (
                 <>
                     <div className="fixed right-60 top-7 z-10 mt-[3px] select-none font-barlow font-light text-map">
                         Remaining scenarios: {unplayedScenarios}

@@ -1,7 +1,8 @@
 'use client';
 
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, Row } from '@tanstack/react-table';
 import { Check, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { PropsWithoutRef } from 'react';
 import { DataTable } from '~/components/ui/data-table';
 import { UserGameDeleteDialog } from '~/components/usergame/usergame-delete-dialog';
@@ -73,6 +74,7 @@ const adminColumns: ColumnDef<UserGameSelect>[] = [
 ];
 
 export const UserGamesTable = (props: PropsWithoutRef<UserGamesTableProps>) => {
+    const router = useRouter();
     const { pagination, onPaginationChange, limit, offset } = usePagination();
 
     const { data, rowCount, loading, forceRefresh } = useTableApi(
@@ -81,6 +83,11 @@ export const UserGamesTable = (props: PropsWithoutRef<UserGamesTableProps>) => {
         offset
     );
 
+    const handleRowClick = (row: Row<UserGameSelect>) => {
+        if (props.adminAccess) return;
+        router.push(`/app/solution/${row.original.scenarioId}`);
+    };
+
     return (
         <TableContext value={{ forceRefresh, variant: props.adminAccess ? 'default' : 'tango5' }}>
             <DataTable
@@ -88,6 +95,7 @@ export const UserGamesTable = (props: PropsWithoutRef<UserGamesTableProps>) => {
                 rowCount={rowCount}
                 loading={loading}
                 onPaginationChange={onPaginationChange}
+                onRowClick={handleRowClick}
                 pagination={pagination}
                 columns={props.adminAccess ? adminColumns : userColumns}
                 initialState={{ columnVisibility: { data: false } }}

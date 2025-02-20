@@ -13,7 +13,7 @@ export default async function Page({ params, searchParams }: { params: Params; s
 
     const scenario = await getScenario(id);
 
-    if (!scenario?.data) notFound();
+    if (!scenario) notFound();
 
     return <GameLayout backstageAccess scenario={scenario} revealSolution={showSolution} />;
 }
