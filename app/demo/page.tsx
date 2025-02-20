@@ -11,5 +11,5 @@ export default async function Page() {
         redirect('/');
     }
 
-    return <UserGame scenario={scenario} unplayedScenarios={demoScenarios.length} demoScenarios={demoScenarios} />;
+    return <UserGame scenario={scenario} remainingScenarios={demoScenarios.length} demoScenarios={demoScenarios} />;
 }

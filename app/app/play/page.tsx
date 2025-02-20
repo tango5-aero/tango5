@@ -1,7 +1,7 @@
 import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { GameFinish } from '~/components/game/game-finish';
-import { UserGame } from '~/components/usergame/usergame';
+import { GameLayout } from '~/components/game/game-layout';
 import { getRandom, getUnplayedScenarios } from '~/lib/db/queries';
 
 export default async function Page() {
@@ -25,5 +25,5 @@ export default async function Page() {
         redirect('/app/scores');
     }
 
-    return <UserGame scenario={scenario} unplayedScenarios={unplayedScenarios.length} />;
+    return <GameLayout scenario={scenario} remainingScenarios={unplayedScenarios.length} />;
 }

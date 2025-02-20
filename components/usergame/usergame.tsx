@@ -3,19 +3,22 @@ import { PropsWithoutRef, startTransition, useActionState, useCallback, useRef, 
 import { ScenarioSelect } from '~/lib/types';
 import { GameNextButton } from '../game/game-next-button';
 import { Game } from '../game/game';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { completeUserGame } from '~/lib/actions';
 import posthog from 'posthog-js';
 import { Scenario } from '~/lib/domain/scenario';
 import { toast } from 'sonner';
 import Image from 'next/image';
 import { IconButton } from '../ui/icon-button';
+import { GAME_MAX_SCENARIOS_IN_A_ROW } from '~/lib/constants';
 
 type UserGameProps = {
     scenario: ScenarioSelect;
-    unplayedScenarios?: number;
+    remainingScenarios?: number;
     backstageAccess?: boolean;
     demoScenarios?: ScenarioSelect[];
+    countdownRunning?: boolean;
+    revealSolution?: boolean;
 };
 
 export type ScenarioUserGame = {
@@ -36,14 +39,12 @@ const posthogEvents = {
 
 const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
     const gameRef = useRef<{ resetGame: () => void }>(null);
-    const searchParams = useSearchParams();
-    const shouldShowSolution = searchParams.get('solution') === 'true';
     const isDemo = props.demoScenarios && props.demoScenarios?.length > 0;
     const { replace } = useRouter();
 
     const [nextScenarioState, completeGameAction, completionPending] = useActionState(completeUserGame, {
         scenario: props.scenario,
-        pendingScenarios: props.unplayedScenarios ?? 0,
+        pendingScenarios: props.remainingScenarios ?? 0,
         error: false
     });
 
@@ -52,9 +53,10 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
         data: new Scenario(props.scenario.data)
     });
 
-    const [unplayedScenarios, setUnplayedScenarios] = useState(
-        props.unplayedScenarios !== undefined ? props.unplayedScenarios - 1 : undefined
+    const [remainingScenarios, setUnplayedScenarios] = useState(
+        props.remainingScenarios !== undefined ? props.remainingScenarios - 1 : undefined
     );
+    const [scenariosInARow, setScenariosInARow] = useState(1);
     const [enableNext, setEnableNext] = useState(false);
 
     const handleGameStart = useCallback(() => {
@@ -115,6 +117,12 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
             replace('/app/scores');
             return;
         }
+        // When user plays N scenarios in a row, redirect to scores. Otherwise increment the counter
+        if (scenariosInARow >= GAME_MAX_SCENARIOS_IN_A_ROW) {
+            replace('/app/scores');
+            return;
+        }
+        setScenariosInARow((prev) => prev + 1);
 
         setUnplayedScenarios(pendingScenarios - 1);
         setEnableNext(false);
@@ -147,20 +155,22 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
             {!props.backstageAccess && (
                 <>
                     <div className="fixed right-60 top-7 z-10 mt-[3px] select-none font-barlow font-light text-map">
-                        Remaining scenarios: {unplayedScenarios}
+                        Remaining scenarios: {remainingScenarios}
                     </div>
                     <GameNextButton
                         className="fixed bottom-12 right-24 z-10 px-8"
                         disabled={!enableNext}
                         loading={completionPending}
-                        onClick={handleNextScenario}
-                    />
+                        loadingText={'Saving...'}
+                        onClick={handleNextScenario}>
+                        {scenariosInARow >= GAME_MAX_SCENARIOS_IN_A_ROW ? 'Finish' : 'Next'}
+                    </GameNextButton>
                 </>
             )}
             <Game
                 ref={gameRef}
                 scenario={scenario}
-                shouldShowSolution={shouldShowSolution}
+                revealSolution={props.revealSolution}
                 startGame={handleGameStart}
                 endGame={handleGameFinish}
             />

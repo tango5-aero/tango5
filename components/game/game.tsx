@@ -4,7 +4,7 @@ import { PropsWithoutRef, useCallback, useEffect, useImperativeHandle, useRef, u
 import { Duration } from 'luxon';
 import { GAME_TIMEOUT_MS, TIME_TO_REMOVE_FAILED_PAIRS_MS } from '~/lib/constants';
 import { Pcd } from '~/lib/domain/pcd';
-import { GameCountdown } from '~/components/game/game-countdown';
+import { GameTimer } from '~/components/game/game-timer';
 import { GameProgress } from '~/components/game/game-progress';
 import { ScenarioMap } from '~/components/scenario/scenario-map';
 import { ScenarioUserGame } from '../usergame/usergame';
@@ -12,7 +12,8 @@ import React from 'react';
 
 type GameProps = {
     scenario: ScenarioUserGame;
-    shouldShowSolution?: boolean;
+    revealSolution?: boolean;
+    countdownRunning?: boolean;
     startGame: () => void;
     endGame: (success: boolean, playTime: string | null) => void;
 };
@@ -22,7 +23,7 @@ type ResetGameHandle = {
 };
 
 const Game = React.forwardRef<ResetGameHandle, PropsWithoutRef<GameProps>>((props, ref) => {
-    const { scenario, shouldShowSolution, startGame, endGame } = props;
+    const { scenario, revealSolution, startGame, endGame } = props;
     // Game related state
     const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
@@ -49,10 +50,10 @@ const Game = React.forwardRef<ResetGameHandle, PropsWithoutRef<GameProps>>((prop
     }, [scenario, gameSuccess, endGame]);
 
     useEffect(() => {
-        if (scenario.data.isSolution(selectedPairs) || shouldShowSolution) {
+        if (scenario.data.isSolution(selectedPairs) || props.revealSolution) {
             setGameSuccess(true);
         }
-    }, [scenario, selectedPairs, shouldShowSolution]);
+    }, [scenario, selectedPairs, revealSolution]);
 
     const isClear = useCallback(
         (pair: [string, string]) => {
@@ -140,12 +141,14 @@ const Game = React.forwardRef<ResetGameHandle, PropsWithoutRef<GameProps>>((prop
                     <GameProgress
                         className="fixed left-16 top-5 z-10 transition-all hover:scale-110"
                         total={scenario.data.solution.length}
-                        progress={scenario.data.numberCorrect(selectedPairs)}
+                        progress={
+                            revealSolution ? scenario.data.solution.length : scenario.data.numberCorrect(selectedPairs)
+                        }
                     />
-                    <GameCountdown
+                    <GameTimer
                         className="fixed left-36 top-5 z-10 transition-all hover:scale-110"
                         initialCount={GAME_TIMEOUT_MS / 1000}
-                        running={gameSuccess === null}
+                        running={!props.revealSolution ? !props.countdownRunning && gameSuccess === null : false}
                         onComplete={() => setGameSuccess(false)}
                     />
                 </>
