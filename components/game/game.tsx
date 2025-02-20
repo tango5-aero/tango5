@@ -1,6 +1,6 @@
 'use client';
 
-import { PropsWithoutRef, useCallback, useEffect, useRef, useState } from 'react';
+import { PropsWithoutRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { Duration } from 'luxon';
 import { GAME_TIMEOUT_MS, TIME_TO_REMOVE_FAILED_PAIRS_MS } from '~/lib/constants';
 import { Pcd } from '~/lib/domain/pcd';
@@ -8,6 +8,7 @@ import { GameCountdown } from '~/components/game/game-countdown';
 import { GameProgress } from '~/components/game/game-progress';
 import { ScenarioMap } from '~/components/scenario/scenario-map';
 import { ScenarioUserGame } from '../usergame/usergame';
+import React from 'react';
 
 type GameProps = {
     scenario: ScenarioUserGame;
@@ -16,8 +17,12 @@ type GameProps = {
     endGame: (success: boolean, playTime: string | null) => void;
 };
 
-const Game = (props: PropsWithoutRef<GameProps>) => {
-    const { scenario, shouldShowSolution } = props;
+type ResetGameHandle = {
+    resetGame: () => void;
+};
+
+const Game = React.forwardRef<ResetGameHandle, PropsWithoutRef<GameProps>>((props, ref) => {
+    const { scenario, shouldShowSolution, startGame, endGame } = props;
     // Game related state
     const [selectedFlight, setSelectedFlight] = useState<string | null>(null);
     const [selectedPairs, setSelectedPairs] = useState<[string, string][]>([]);
@@ -30,9 +35,9 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
     useEffect(() => {
         if (isMapReady && typeof gameStartTimeMs.current === 'undefined') {
             gameStartTimeMs.current = performance.now();
-            props.startGame();
+            startGame();
         }
-    }, [scenario.id, isMapReady]);
+    }, [scenario.id, isMapReady, startGame]);
 
     useEffect(() => {
         if (gameSuccess === null) return;
@@ -40,8 +45,8 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
         const elapsed = gameStartTimeMs.current ? performance.now() - gameStartTimeMs.current : 0;
         const playTime = gameSuccess ? Duration.fromMillis(elapsed).toString() : null;
 
-        props.endGame(gameSuccess, playTime);
-    }, [scenario, gameSuccess]);
+        endGame(gameSuccess, playTime);
+    }, [scenario, gameSuccess, endGame]);
 
     useEffect(() => {
         if (scenario.data.isSolution(selectedPairs) || shouldShowSolution) {
@@ -73,6 +78,19 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
             }, TIME_TO_REMOVE_FAILED_PAIRS_MS);
         }
     }, [selectedPairs, isClear]);
+
+    useImperativeHandle(ref, () => {
+        return {
+            resetGame() {
+                console.log('test resetGame');
+                gameStartTimeMs.current = undefined;
+                setSelectedFlight(null);
+                setSelectedPairs([]);
+                setIsMapReady(false);
+                setGameSuccess(null);
+            }
+        };
+    }, []);
 
     const selectFlight = (id: string) => {
         // if the game is over do not allow further interactions
@@ -144,6 +162,8 @@ const Game = (props: PropsWithoutRef<GameProps>) => {
             />
         </main>
     );
-};
+});
+
+Game.displayName = 'Game';
 
 export { Game };

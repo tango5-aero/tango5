@@ -1,5 +1,5 @@
 'use client';
-import { PropsWithoutRef, startTransition, useActionState, useState } from 'react';
+import { PropsWithoutRef, startTransition, useActionState, useCallback, useRef, useState } from 'react';
 import { ScenarioSelect } from '~/lib/types';
 import { GameNextButton } from '../game/game-next-button';
 import { Game } from '../game/game';
@@ -35,6 +35,7 @@ const posthogEvents = {
 } as const;
 
 const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
+    const gameRef = useRef<{ resetGame: () => void }>(null);
     const searchParams = useSearchParams();
     const shouldShowSolution = searchParams.get('solution') === 'true';
     const { replace } = useRouter();
@@ -54,34 +55,35 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
     );
     const [enableNext, setEnableNext] = useState(false);
 
-    const handleGameStart = () => {
+    const handleGameStart = useCallback(() => {
         if (props.backstageAccess) return;
-
-        setEnableNext(false);
 
         posthog.capture(posthogEvents.gameStart, {
             scenarioId: scenario.id
         });
-    };
+    }, [scenario.id, props.backstageAccess]);
 
-    const handleGameFinish = (success: boolean, playTime: string | null) => {
-        if (props.backstageAccess) return;
+    const handleGameFinish = useCallback(
+        (success: boolean, playTime: string | null) => {
+            if (props.backstageAccess) return;
 
-        startTransition(async () => {
-            completeGameAction({
-                scenarioId: scenario.id,
-                playTime: playTime,
-                success: success
+            startTransition(async () => {
+                completeGameAction({
+                    scenarioId: scenario.id,
+                    playTime: playTime,
+                    success: success
+                });
             });
-        });
 
-        setEnableNext(true);
+            setEnableNext(true);
 
-        posthog.capture(posthogEvents.gameFinish, {
-            scenarioId: scenario.id,
-            success
-        });
-    };
+            posthog.capture(posthogEvents.gameFinish, {
+                scenarioId: scenario.id,
+                success
+            });
+        },
+        [scenario.id, props.backstageAccess, completeGameAction]
+    );
 
     const handleNextScenario = () => {
         if (nextScenarioState.error) {
@@ -99,13 +101,14 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
         }
 
         setUnplayedScenarios(pendingScenarios - 1);
+        setEnableNext(false);
+
+        if (gameRef.current) gameRef.current.resetGame();
 
         setScenario({
             ...nextScenario,
             data: new Scenario(nextScenario.data)
         });
-
-        setEnableNext(false);
     };
 
     return (
@@ -139,6 +142,7 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
                 </>
             )}
             <Game
+                ref={gameRef}
                 scenario={scenario}
                 shouldShowSolution={shouldShowSolution}
                 startGame={handleGameStart}
