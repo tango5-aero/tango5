@@ -1,16 +1,30 @@
 'use server';
 
-import { ActionState } from '.';
+import { ActionGetScenarioState, ActionState } from '.';
 import { ScenarioData, scenarioSchema } from '~/lib/domain/scenario';
 import { writeScenarios } from '~/lib/db/queries';
 import {
     deleteScenario as deleteDBScenario,
     getScenariosPage as getDBScenariosPage,
-    changeScenarioVisibility as changeDBScenarioVisibility
+    changeScenarioVisibility as changeDBScenarioVisibility,
+    getScenario as getScenarioDB
 } from '~/lib/db/queries';
 import { unstable_cache } from 'next/cache';
 import { cacheTags } from '~/lib/constants';
 import { ScenarioSelect } from '~/lib/types';
+
+export async function getScenario(
+    _prevState: ActionGetScenarioState,
+    id: ScenarioSelect['id']
+): Promise<ActionGetScenarioState> {
+    const res = await getScenarioDB(id);
+
+    if (!res) {
+        return { errorMessage: `Scenario #${id} not found`, error: true };
+    }
+
+    return { scenario: res, error: false };
+}
 
 export async function createScenario(
     _prevState: ActionState,

@@ -1,16 +1,18 @@
 'use client';
 
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, Row } from '@tanstack/react-table';
 import { Check, X } from 'lucide-react';
-import { PropsWithoutRef } from 'react';
+import { PropsWithoutRef, startTransition, useActionState, useEffect, useState } from 'react';
 import { DataTable } from '~/components/ui/data-table';
 import { UserGameDeleteDialog } from '~/components/usergame/usergame-delete-dialog';
 import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
 import { TableContext } from '~/hooks/use-table-context';
-import { getCurrentUserGamesPage, getUserGamesPage } from '~/lib/actions';
-import { UserGameSelect } from '~/lib/types';
+import { getCurrentUserGamesPage, getScenario, getUserGamesPage } from '~/lib/actions';
+import { ScenarioSelect, UserGameSelect } from '~/lib/types';
 import { formatDuration } from '~/lib/utils';
+import { GameSolutionViewer } from '../game/game-solution-viewer';
+import { toast } from 'sonner';
 
 type UserGamesTableProps = {
     adminAccess: boolean;
@@ -73,6 +75,12 @@ const adminColumns: ColumnDef<UserGameSelect>[] = [
 ];
 
 export const UserGamesTable = (props: PropsWithoutRef<UserGamesTableProps>) => {
+    const [showSolution, setShowSolution] = useState(false);
+    const [scenario, setScenario] = useState<ScenarioSelect | undefined>(undefined);
+    const [solutionScenarioState, getSolutionScenario, isLoadingSolution] = useActionState(getScenario, {
+        scenario: undefined,
+        error: false
+    });
     const { pagination, onPaginationChange, limit, offset } = usePagination();
 
     const { data, rowCount, loading, forceRefresh } = useTableApi(
@@ -81,17 +89,47 @@ export const UserGamesTable = (props: PropsWithoutRef<UserGamesTableProps>) => {
         offset
     );
 
+    const handleRowClick = (row: Row<UserGameSelect>) => {
+        setShowSolution(true);
+        startTransition(async () => {
+            getSolutionScenario(row.original.scenarioId);
+        });
+    };
+
+    const handleCloseDialog = () => {
+        setShowSolution(false);
+        setScenario(undefined);
+    };
+
+    useEffect(() => {
+        if (solutionScenarioState.error) {
+            toast.error(`Failed to get solution from scenario: ${solutionScenarioState.errorMessage}`);
+            return;
+        }
+
+        setScenario(solutionScenarioState.scenario);
+    }, [solutionScenarioState]);
+
     return (
-        <TableContext value={{ forceRefresh, variant: props.adminAccess ? 'default' : 'tango5' }}>
-            <DataTable
-                data={data}
-                rowCount={rowCount}
-                loading={loading}
-                onPaginationChange={onPaginationChange}
-                pagination={pagination}
-                columns={props.adminAccess ? adminColumns : userColumns}
-                initialState={{ columnVisibility: { data: false } }}
+        <>
+            <TableContext value={{ forceRefresh, variant: props.adminAccess ? 'default' : 'tango5' }}>
+                <DataTable
+                    data={data}
+                    rowCount={rowCount}
+                    loading={loading}
+                    onPaginationChange={onPaginationChange}
+                    onRowClick={!props.adminAccess ? handleRowClick : undefined}
+                    pagination={pagination}
+                    columns={props.adminAccess ? adminColumns : userColumns}
+                    initialState={{ columnVisibility: { data: false } }}
+                />
+            </TableContext>
+            <GameSolutionViewer
+                open={showSolution}
+                onClose={handleCloseDialog}
+                scenario={scenario}
+                loading={isLoadingSolution}
             />
-        </TableContext>
+        </>
     );
 };

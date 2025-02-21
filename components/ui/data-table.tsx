@@ -5,6 +5,7 @@ import {
     InitialTableState,
     OnChangeFn,
     PaginationState,
+    Row,
     useReactTable
 } from '@tanstack/react-table';
 
@@ -20,6 +21,7 @@ interface DataTableProps<TData, TValue> {
     rowCount: number;
     loading: boolean;
     onPaginationChange: OnChangeFn<PaginationState>;
+    onRowClick?: (row: Row<TData>) => void;
     initialState?: InitialTableState;
     pagination: {
         pageSize: number;
@@ -32,6 +34,7 @@ export function DataTable<TData, TValue>({
     columns,
     data,
     onPaginationChange,
+    onRowClick,
     rowCount,
     initialState,
     pagination
@@ -91,9 +94,11 @@ export function DataTable<TData, TValue>({
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && 'selected'}
+                                    onClick={() => onRowClick && onRowClick(row)}
                                     className={cn(
                                         variant === 'tango5' &&
-                                            '!border-b border-gray-300 font-barlow text-xl font-light text-gray-900 hover:bg-muted/15'
+                                            '!border-b border-gray-300 font-barlow text-xl font-light text-gray-900 hover:bg-muted/15',
+                                        onRowClick && 'cursor-pointer'
                                     )}>
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id} className={cn(variant === 'tango5' && 'px-16')}>

@@ -22,6 +22,22 @@ export const getUserGames = async (userId?: UserGameInsert['userId']) => {
     return await query.execute();
 };
 
+export const checkGameIsPlayed = async (scenarioId: UserGameInsert['scenarioId']) => {
+    const user = await currentUser();
+
+    if (!user) {
+        throw new Error('User not found');
+    }
+
+    const res = await db
+        .select()
+        .from(UserGamesTable)
+        .where(and(eq(UserGamesTable.userId, user.id), eq(UserGamesTable.scenarioId, scenarioId)))
+        .execute();
+
+    return res.length > 0;
+};
+
 export const deleteUserGame = async (id: UserGameSelect['id']) => {
     return await db.delete(UserGamesTable).where(eq(UserGamesTable.id, id)).returning();
 };

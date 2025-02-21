@@ -9,5 +9,8 @@ export type ActionScenarioState =
     | { scenario: ScenarioSelect; pendingScenarios: number; error: false }
     | { scenario: undefined; pendingScenarios: 0; error: false }
     | { error: true; errorMessage: string };
+export type ActionGetScenarioState =
+    | { scenario: ScenarioSelect | undefined; error: false }
+    | { error: true; errorMessage: string };
 
 export default revalidateCacheTag;
