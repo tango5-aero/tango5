@@ -13,7 +13,7 @@ type GameLayoutProps = {
     demoScenarios?: ScenarioSelect[];
 };
 
-export const GameLayout = (props: PropsWithoutRef<GameLayoutProps>) => {
+export const GameScene = (props: PropsWithoutRef<GameLayoutProps>) => {
     const [countdownRunning, setCountdownRunning] = useState(!props.revealSolution);
 
     if (!props.revealSolution) {
