@@ -7,7 +7,7 @@ import { Pcd } from '~/lib/domain/pcd';
 import { GameTimer } from '~/components/game/game-timer';
 import { GameProgress } from '~/components/game/game-progress';
 import { ScenarioMap } from '~/components/scenario/scenario-map';
-import { ScenarioUserGame } from '../usergame/usergame';
+import { ScenarioUserGame } from '~/components/usergame/usergame';
 import React from 'react';
 
 type GameProps = {

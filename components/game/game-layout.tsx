@@ -3,7 +3,7 @@
 import { PropsWithoutRef, useState } from 'react';
 import { ScenarioSelect } from '~/lib/types';
 import { GameInitialCountdown } from '~/components/game/game-initial-countdown';
-import { UserGame } from '../usergame/usergame';
+import { UserGame } from '~/components/usergame/usergame';
 
 type GameLayoutProps = {
     scenario: ScenarioSelect;

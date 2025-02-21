@@ -1,7 +1,7 @@
 'use client';
 import { PropsWithoutRef, startTransition, useActionState, useCallback, useRef, useState } from 'react';
 import { ScenarioSelect } from '~/lib/types';
-import { GameNextButton } from '../game/game-next-button';
+import { GameNextButton } from '~/components/game/game-next-button';
 import { Game } from '../game/game';
 import { useRouter } from 'next/navigation';
 import { completeUserGame } from '~/lib/actions';
@@ -9,7 +9,7 @@ import posthog from 'posthog-js';
 import { Scenario } from '~/lib/domain/scenario';
 import { toast } from 'sonner';
 import Image from 'next/image';
-import { IconButton } from '../ui/icon-button';
+import { IconButton } from '~/components/ui/icon-button';
 import { GAME_MAX_SCENARIOS_IN_A_ROW } from '~/lib/constants';
 
 type UserGameProps = {
