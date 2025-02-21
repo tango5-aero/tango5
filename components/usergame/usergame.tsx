@@ -103,53 +103,55 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
     );
 
     const handleNextScenario = () => {
-        if (nextScenarioState.error) {
-            toast.error('Something went wrong, could not load next scenario');
-            replace('/app/scores');
-            return;
+        if (!isDemo) {
+            if (nextScenarioState.error) {
+                toast.error('Something went wrong, could not load next scenario');
+                replace('/app/scores');
+                return;
+            }
+
+            const { scenario: nextScenario, pendingScenarios } = nextScenarioState;
+
+            // There are no more scenarios to play, redirect to games page
+            if (!nextScenario && pendingScenarios === 0) {
+                replace('/app/scores');
+                return;
+            }
+            // When user plays N scenarios in a row, redirect to scores. Otherwise increment the counter
+            if (scenariosInARow >= GAME_MAX_SCENARIOS_IN_A_ROW) {
+                replace('/app/scores');
+                return;
+            }
+
+            setScenariosInARow((prev) => prev + 1);
+            setRemainingScenarios(pendingScenarios - 1);
+            setEnableNext(false);
+
+            if (gameRef.current) gameRef.current.resetGame();
+
+            setScenario({
+                ...nextScenario,
+                data: new Scenario(nextScenario.data)
+            });
         }
 
-        const { scenario: nextScenario, pendingScenarios } = nextScenarioState;
+        if (isDemo) {
+            const nextScenarioIndex = remainingScenarios ? remainingScenarios - 1 : undefined;
+            const nextScenario = nextScenarioIndex ? props.demoScenarios?.[nextScenarioIndex] : undefined;
+            if (!nextScenario) {
+                replace('/login');
+                return;
+            }
 
-        // There are no more scenarios to play, redirect to games page
-        if (!nextScenario && pendingScenarios === 0) {
-            replace('/app/scores');
-            return;
+            if (gameRef.current) gameRef.current.resetGame();
+            setEnableNext(false);
+            setRemainingScenarios(nextScenarioIndex);
+
+            setScenario({
+                ...nextScenario,
+                data: new Scenario(nextScenario.data)
+            });
         }
-        // When user plays N scenarios in a row, redirect to scores. Otherwise increment the counter
-        if (scenariosInARow >= GAME_MAX_SCENARIOS_IN_A_ROW) {
-            replace('/app/scores');
-            return;
-        }
-
-        setScenariosInARow((prev) => prev + 1);
-        setRemainingScenarios(pendingScenarios - 1);
-        setEnableNext(false);
-
-        if (gameRef.current) gameRef.current.resetGame();
-
-        setScenario({
-            ...nextScenario,
-            data: new Scenario(nextScenario.data)
-        });
-    };
-
-    const handleNextDemoScenario = () => {
-        const nextScenarioIndex = remainingScenarios ? remainingScenarios - 1 : undefined;
-        const nextScenario = nextScenarioIndex ? props.demoScenarios?.[nextScenarioIndex] : undefined;
-        if (!nextScenario) {
-            replace('/login');
-            return;
-        }
-
-        if (gameRef.current) gameRef.current.resetGame();
-        setEnableNext(false);
-        setRemainingScenarios(nextScenarioIndex);
-
-        setScenario({
-            ...nextScenario,
-            data: new Scenario(nextScenario.data)
-        });
     };
 
     return (
@@ -181,7 +183,7 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
                         disabled={!enableNext}
                         loading={completionPending}
                         loadingText={'Saving...'}
-                        onClick={!isDemo ? handleNextScenario : handleNextDemoScenario}>
+                        onClick={handleNextScenario}>
                         {scenariosInARow >= GAME_MAX_SCENARIOS_IN_A_ROW ? 'Finish' : 'Next'}
                     </GameNextButton>
                 </>
