@@ -135,8 +135,8 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
     };
 
     const handleNextDemoScenario = () => {
-        const nextScenarioIndex = remainingScenarios ? remainingScenarios - 1 : -1;
-        const nextScenario = props.demoScenarios?.[nextScenarioIndex];
+        const nextScenarioIndex = remainingScenarios ? remainingScenarios - 1 : undefined;
+        const nextScenario = nextScenarioIndex ? props.demoScenarios?.[nextScenarioIndex] : undefined;
         if (!nextScenario) {
             replace('/login');
             return;
