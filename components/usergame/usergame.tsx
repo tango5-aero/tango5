@@ -1,6 +1,6 @@
 'use client';
 import { PropsWithoutRef, startTransition, useActionState, useCallback, useRef, useState } from 'react';
-import { ScenarioSelect } from '~/lib/types';
+import { ScenarioUserGame, UserGameProps } from '~/lib/types';
 import { GameNextButton } from '~/components/game/game-next-button';
 import { Game } from '../game/game';
 import { useRouter } from 'next/navigation';
@@ -10,32 +10,7 @@ import { Scenario } from '~/lib/domain/scenario';
 import { toast } from 'sonner';
 import Image from 'next/image';
 import { IconButton } from '~/components/ui/icon-button';
-import { GAME_MAX_SCENARIOS_IN_A_ROW } from '~/lib/constants';
-
-type UserGameProps = {
-    scenario: ScenarioSelect;
-    remainingScenarios?: number;
-    backstageAccess?: boolean;
-    demoScenarios?: ScenarioSelect[];
-    countdownRunning?: boolean;
-    revealSolution?: boolean;
-};
-
-export type ScenarioUserGame = {
-    data: Scenario;
-    id: number;
-    active: boolean;
-    demo: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-};
-
-const posthogEvents = {
-    gameStart: 'game_start',
-    gameFinish: 'game_finish',
-    demoStart: 'demo_start',
-    demoFinish: 'demo_finish'
-} as const;
+import { GAME_MAX_SCENARIOS_IN_A_ROW, posthogEvents } from '~/lib/constants';
 
 const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
     const gameRef = useRef<{ resetGame: () => void }>(null);
