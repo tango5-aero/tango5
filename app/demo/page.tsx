@@ -15,7 +15,7 @@ export default async function Page() {
     return (
         <>
             <SupportButton />
-            <GameScene scenario={scenario} remainingScenarios={demoScenarios.length} demoScenarios={demoScenarios} />;
+            <GameScene scenario={scenario} remainingScenarios={demoScenarios.length} demoMode />;
         </>
     );
 }

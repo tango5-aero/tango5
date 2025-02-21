@@ -4,7 +4,7 @@ import { ScenarioUserGame, UserGameProps } from '~/lib/types';
 import { GameNextButton } from '~/components/game/game-next-button';
 import { Game } from '../game/game';
 import { useRouter } from 'next/navigation';
-import { completeUserGame } from '~/lib/actions';
+import { completeDemoGame, completeUserGame } from '~/lib/actions';
 import posthog from 'posthog-js';
 import { Scenario } from '~/lib/domain/scenario';
 import { toast } from 'sonner';
@@ -13,15 +13,9 @@ import { IconButton } from '~/components/ui/icon-button';
 import { GAME_MAX_SCENARIOS_IN_A_ROW, posthogEvents } from '~/lib/constants';
 
 const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
+    const isDemo = props.demoMode;
     const gameRef = useRef<{ resetGame: () => void }>(null);
-    const isDemo = props.demoScenarios && props.demoScenarios?.length > 0;
     const { replace } = useRouter();
-
-    const [nextScenarioState, completeGameAction, completionPending] = useActionState(completeUserGame, {
-        scenario: props.scenario,
-        pendingScenarios: props.remainingScenarios ?? 0,
-        error: false
-    });
 
     const [scenario, setScenario] = useState<ScenarioUserGame>({
         ...props.scenario,
@@ -33,6 +27,19 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
     );
     const [scenariosInARow, setScenariosInARow] = useState(1);
     const [enableNext, setEnableNext] = useState(false);
+
+    const [nextScenarioState, completeGameAction, completionPending] = useActionState(completeUserGame, {
+        scenario: props.scenario,
+        pendingScenarios: props.remainingScenarios ?? 0,
+        error: false
+    });
+    const [nextDemoScenarioState, completeDemoAction, completionDemoPending] = useActionState(completeDemoGame, {
+        scenario: props.scenario,
+        pendingScenarios: props.remainingScenarios ?? 0,
+        played: [props.scenario.id],
+        error: false
+    });
+
     const handleGameStart = useCallback(() => {
         if (props.backstageAccess) return;
 
@@ -66,6 +73,13 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
                 });
             }
             if (isDemo) {
+                startTransition(async () => {
+                    if (nextDemoScenarioState.error) return;
+
+                    completeDemoAction({
+                        played: [...nextDemoScenarioState.played, scenario.id]
+                    });
+                });
                 posthog.capture(posthogEvents.demoFinish, {
                     scenarioId: scenario.id,
                     success
@@ -74,7 +88,7 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
 
             setEnableNext(true);
         },
-        [scenario.id, props.backstageAccess, completeGameAction, isDemo]
+        [scenario.id, props.backstageAccess, completeGameAction, completeDemoAction, isDemo]
     );
 
     const handleNextScenario = () => {
@@ -111,16 +125,23 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
         }
 
         if (isDemo) {
-            const nextScenarioIndex = remainingScenarios ? remainingScenarios - 1 : undefined;
-            const nextScenario = nextScenarioIndex ? props.demoScenarios?.[nextScenarioIndex] : undefined;
-            if (!nextScenario) {
+            if (nextDemoScenarioState.error) {
+                toast.error('Something went wrong, could not load next demo scenario');
                 replace('/login');
                 return;
             }
 
-            if (gameRef.current) gameRef.current.resetGame();
+            const { scenario: nextScenario, pendingScenarios } = nextDemoScenarioState;
+
+            // There are no more scenarios to play, redirect to games page
+            if (!nextScenario && pendingScenarios === 0) {
+                replace('/login');
+                return;
+            }
+
             setEnableNext(false);
-            setRemainingScenarios(nextScenarioIndex);
+            setRemainingScenarios(pendingScenarios - 1);
+            if (gameRef.current) gameRef.current.resetGame();
 
             setScenario({
                 ...nextScenario,
@@ -156,7 +177,7 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
                     <GameNextButton
                         className="fixed bottom-12 right-24 z-10 px-8"
                         disabled={!enableNext}
-                        loading={completionPending}
+                        loading={isDemo ? completionDemoPending : completionPending}
                         loadingText={'Saving...'}
                         onClick={handleNextScenario}>
                         {scenariosInARow >= GAME_MAX_SCENARIOS_IN_A_ROW ? 'Finish' : 'Next'}

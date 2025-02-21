@@ -11,9 +11,9 @@ export type UserGameProps = {
     scenario: ScenarioSelect;
     remainingScenarios?: number;
     backstageAccess?: boolean;
-    demoScenarios?: ScenarioSelect[];
     countdownRunning?: boolean;
     revealSolution?: boolean;
+    demoMode?: boolean;
 };
 
 export type ScenarioUserGame = {
@@ -23,4 +23,8 @@ export type ScenarioUserGame = {
     demo: boolean;
     createdAt: Date;
     updatedAt: Date;
+};
+
+export type CompleteDemoPayload = {
+    played: ScenarioSelect['id'][];
 };

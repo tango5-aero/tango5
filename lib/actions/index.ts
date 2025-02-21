@@ -10,4 +10,9 @@ export type ActionScenarioState =
     | { scenario: undefined; pendingScenarios: 0; error: false }
     | { error: true; errorMessage: string };
 
+export type ActionDemoScenarioState =
+    | { scenario: ScenarioSelect; pendingScenarios: number; played: ScenarioSelect['id'][]; error: false }
+    | { scenario: undefined; pendingScenarios: 0; played: []; error: false }
+    | { error: true; errorMessage: string };
+
 export default revalidateCacheTag;

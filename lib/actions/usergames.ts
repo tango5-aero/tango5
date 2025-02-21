@@ -12,10 +12,11 @@ import {
     deleteUserGames,
     getUserGamesPage as getDBUserGamesPage,
     getCurrentUserGamesPage as getDBCurrentUserGamesPage,
-    getCurrentUserGamesPerformance as getDBCurrentUserGamesPerformance
+    getCurrentUserGamesPerformance as getDBCurrentUserGamesPerformance,
+    getUnplayedDemoScenarios
 } from '~/lib/db/queries';
-import { UserGameInsert, UserGameSelect } from '~/lib/types';
-import revalidateCacheTag, { ActionScenarioState, ActionState } from '.';
+import { CompleteDemoPayload, UserGameInsert, UserGameSelect } from '~/lib/types';
+import revalidateCacheTag, { ActionDemoScenarioState, ActionScenarioState, ActionState } from '.';
 
 export async function completeUserGame(
     _prevState: ActionScenarioState,
@@ -118,4 +119,25 @@ export async function getCurrentUserGamesPage(pageIndex: number, pageSize: numbe
 
 export async function getCurrentUserGamesPerformance() {
     return await getDBCurrentUserGamesPerformance();
+}
+
+export async function completeDemoGame(
+    _prevState: ActionScenarioState,
+    payload: CompleteDemoPayload
+): Promise<ActionDemoScenarioState> {
+    const { played } = payload;
+
+    const unplayedScenarios = await getUnplayedDemoScenarios(played);
+
+    if (unplayedScenarios.length === 0) {
+        return { scenario: undefined, pendingScenarios: 0, played: [], error: false };
+    }
+
+    const scenario = unplayedScenarios[0];
+
+    if (!scenario) {
+        return { error: true, errorMessage: 'Error getting next scenario' };
+    }
+
+    return { scenario, pendingScenarios: unplayedScenarios.length, played, error: false };
 }
