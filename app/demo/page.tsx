@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { GameLayout } from '~/components/game/game-layout';
+import { SupportButton } from '~/components/ui/support-button';
 import { getDemoScenarios } from '~/lib/db/queries';
 
 export default async function Page() {
@@ -11,5 +12,10 @@ export default async function Page() {
         redirect('/');
     }
 
-    return <GameLayout scenario={scenario} remainingScenarios={demoScenarios.length} demoScenarios={demoScenarios} />;
+    return (
+        <>
+            <SupportButton />
+            <GameLayout scenario={scenario} remainingScenarios={demoScenarios.length} demoScenarios={demoScenarios} />;
+        </>
+    );
 }
