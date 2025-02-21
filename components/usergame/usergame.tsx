@@ -134,7 +134,7 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
             const { scenario: nextScenario, pendingScenarios } = nextDemoScenarioState;
 
             // There are no more scenarios to play, redirect to games page
-            if (!nextScenario && pendingScenarios === 0) {
+            if (!nextScenario || pendingScenarios <= 0) {
                 replace('/login');
                 return;
             }
