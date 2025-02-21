@@ -3,18 +3,20 @@
 import Link from 'next/link';
 import { ScenarioDeleteDialog } from '~/components/scenario/scenario-delete-dialog';
 import { type ScenarioData } from '~/lib/domain/scenario';
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, Row } from '@tanstack/react-table';
 import { DataTable } from '~/components/ui/data-table';
 import { Download, PlayIcon, EyeIcon } from 'lucide-react';
 import { usePagination } from '~/hooks/use-pagination';
 import { useTableApi } from '~/hooks/use-table-api';
-import { getScenariosPage } from '~/lib/actions';
+import { changeScenarioIsDemo, changeScenarioVisibility, getScenariosPage } from '~/lib/actions';
 import { TableContext } from '~/hooks/use-table-context';
 import { ScenarioUploadDialog } from './scenario-upload-dialog';
 import { Flight } from '~/lib/domain/flight';
 import { Pcd } from '~/lib/domain/pcd';
 import { ScenarioSelect } from '~/lib/types';
-import { ScenarioActiveCheckbox } from './scenario-active-checkbox';
+import { CheckboxAction } from './checkbox-action';
+import { useDialogAction } from '~/hooks/use-dialog-action';
+import { cacheTags } from '~/lib/constants';
 
 export const columns: ColumnDef<ScenarioSelect>[] = [
     {
@@ -70,15 +72,12 @@ export const columns: ColumnDef<ScenarioSelect>[] = [
     {
         accessorKey: 'active',
         header: () => <div className="text-right">Active</div>,
-        cell: ({ row }) => {
-            const active = row.getValue('active') as boolean;
-            const id = row.getValue('id') as number;
-            return (
-                <div className="mr-2 flex justify-end">
-                    <ScenarioActiveCheckbox id={id} checked={active} />
-                </div>
-            );
-        }
+        cell: ({ row }) => <ActiveCell row={row} />
+    },
+    {
+        accessorKey: 'demo',
+        header: () => <div className="text-right">Demo</div>,
+        cell: ({ row }) => <DemoCell row={row} />
     },
     {
         accessorKey: 'actions',
@@ -125,5 +124,35 @@ export const ScenariosTable = () => {
             />
             <ScenarioUploadDialog />
         </TableContext>
+    );
+};
+
+const ActiveCell = ({ row }: { row: Row<ScenarioSelect> }) => {
+    const active = row.getValue('active') as boolean;
+    const id = row.getValue('id') as number;
+    const { action } = useDialogAction(
+        `Changing visibility for scenario #${id}`,
+        changeScenarioVisibility,
+        cacheTags.scenarios
+    );
+    return (
+        <div className="mr-2 flex justify-end">
+            <CheckboxAction action={(value: boolean) => action({ id, active: value })} checked={active} />
+        </div>
+    );
+};
+
+const DemoCell = ({ row }: { row: Row<ScenarioSelect> }) => {
+    const active = row.getValue('demo') as boolean;
+    const id = row.getValue('id') as number;
+    const { action } = useDialogAction(
+        `Changing is demo for scenario #${id}`,
+        changeScenarioIsDemo,
+        cacheTags.scenarios
+    );
+    return (
+        <div className="mr-2 flex justify-end">
+            <CheckboxAction action={(value: boolean) => action({ id, demo: value })} checked={active} />
+        </div>
     );
 };

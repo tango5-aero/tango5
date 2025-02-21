@@ -6,6 +6,7 @@ export const ScenariosTable = pgTable('scenarios', {
     id: serial('id').primaryKey(),
     data: jsonb('data').$type<ScenarioData>().notNull(),
     active: boolean('active').default(false).notNull(),
+    demo: boolean('demo').default(false).notNull(),
     createdAt,
     updatedAt
 });

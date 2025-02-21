@@ -4,6 +4,7 @@ import { ActionState } from '.';
 import { ScenarioData, scenarioSchema } from '~/lib/domain/scenario';
 import { writeScenarios } from '~/lib/db/queries';
 import {
+    changeScenarioIsDemo as changeDBScenarioIsDemo,
     deleteScenario as deleteDBScenario,
     getScenariosPage as getDBScenariosPage,
     changeScenarioVisibility as changeDBScenarioVisibility
@@ -85,4 +86,18 @@ export async function changeScenarioVisibility(
     }
 
     return { message: `Scenario #${id} is now ${active ? 'active' : 'inactive'}`, error: false };
+}
+
+export async function changeScenarioIsDemo(
+    _prevState: ActionState,
+    payload: Pick<ScenarioSelect, 'id' | 'demo'>
+): Promise<ActionState> {
+    const { id, demo } = payload;
+    const result = await changeDBScenarioIsDemo(id, demo);
+
+    if (result.length === 0) {
+        return { message: `Scenario #${id} not found`, error: true };
+    }
+
+    return { message: `Scenario #${id} is now ${demo ? 'demo' : 'not demo'}`, error: false };
 }

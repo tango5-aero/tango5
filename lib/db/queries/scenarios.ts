@@ -75,3 +75,22 @@ export const changeScenarioVisibility = async (id: ScenarioSelect['id'], active:
         return [];
     }
 };
+
+export const changeScenarioIsDemo = async (id: ScenarioSelect['id'], demo: ScenarioSelect['demo']) => {
+    try {
+        return await db.update(ScenariosTable).set({ demo }).where(eq(ScenariosTable.id, id)).returning();
+    } catch {
+        return [];
+    }
+};
+
+export const getDemoScenarios = async () => {
+    return await db.select().from(ScenariosTable).where(eq(ScenariosTable.demo, true)).orderBy(ScenariosTable.id);
+};
+
+export const getUnplayedDemoScenarios = async (played: ScenarioSelect['id'][]) => {
+    return await db
+        .select()
+        .from(ScenariosTable)
+        .where(and(notInArray(ScenariosTable.id, played), eq(ScenariosTable.demo, true)));
+};

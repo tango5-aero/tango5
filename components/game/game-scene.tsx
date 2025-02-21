@@ -3,25 +3,26 @@
 import { PropsWithoutRef, useState } from 'react';
 import { ScenarioSelect } from '~/lib/types';
 import { GameInitialCountdown } from '~/components/game/game-initial-countdown';
-import { Game } from '~/components/game/game';
+import { UserGame } from '~/components/usergame/usergame';
 
 type GameLayoutProps = {
     scenario: ScenarioSelect;
     revealSolution?: boolean;
     backstageAccess?: boolean;
     remainingScenarios?: number;
+    demoMode?: boolean;
 };
 
-export const GameLayout = (props: PropsWithoutRef<GameLayoutProps>) => {
+export const GameScene = (props: PropsWithoutRef<GameLayoutProps>) => {
     const [countdownRunning, setCountdownRunning] = useState(!props.revealSolution);
 
     if (!props.revealSolution) {
         return (
             <GameInitialCountdown running={countdownRunning} onComplete={() => setCountdownRunning(false)}>
-                <Game countdownRunning={countdownRunning} {...props} />
+                <UserGame countdownRunning={countdownRunning} {...props} />
             </GameInitialCountdown>
         );
     }
 
-    return <Game countdownRunning={countdownRunning} {...props} />;
+    return <UserGame countdownRunning={countdownRunning} {...props} />;
 };

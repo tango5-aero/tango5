@@ -18,3 +18,10 @@ export const TIME_TO_REMOVE_FAILED_PAIRS_MS = 5000;
 export const BREAKPOINT_SMALL_SCREEN = 1024;
 
 export const MAP_PADDING = 0.18;
+
+export const posthogEvents = {
+    gameStart: 'game_start',
+    gameFinish: 'game_finish',
+    demoStart: 'demo_start',
+    demoFinish: 'demo_finish'
+} as const;
