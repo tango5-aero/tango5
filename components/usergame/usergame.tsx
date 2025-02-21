@@ -53,12 +53,11 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
         data: new Scenario(props.scenario.data)
     });
 
-    const [remainingScenarios, setUnplayedScenarios] = useState(
+    const [remainingScenarios, setRemainingScenarios] = useState(
         props.remainingScenarios !== undefined ? props.remainingScenarios - 1 : undefined
     );
     const [scenariosInARow, setScenariosInARow] = useState(1);
     const [enableNext, setEnableNext] = useState(false);
-
     const handleGameStart = useCallback(() => {
         if (props.backstageAccess) return;
 
@@ -122,12 +121,30 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
             replace('/app/scores');
             return;
         }
-        setScenariosInARow((prev) => prev + 1);
 
-        setUnplayedScenarios(pendingScenarios - 1);
+        setScenariosInARow((prev) => prev + 1);
+        setRemainingScenarios(pendingScenarios - 1);
         setEnableNext(false);
 
         if (gameRef.current) gameRef.current.resetGame();
+
+        setScenario({
+            ...nextScenario,
+            data: new Scenario(nextScenario.data)
+        });
+    };
+
+    const handleNextDemoScenario = () => {
+        const nextScenarioIndex = remainingScenarios ? remainingScenarios - 1 : -1;
+        const nextScenario = props.demoScenarios?.[nextScenarioIndex];
+        if (!nextScenario) {
+            replace('/login');
+            return;
+        }
+
+        if (gameRef.current) gameRef.current.resetGame();
+        setEnableNext(false);
+        setRemainingScenarios(nextScenarioIndex);
 
         setScenario({
             ...nextScenario,
@@ -154,15 +171,17 @@ const UserGame = (props: PropsWithoutRef<UserGameProps>) => {
             </IconButton>
             {!props.backstageAccess && (
                 <>
-                    <div className="fixed right-60 top-7 z-10 mt-[3px] select-none font-barlow font-light text-map">
-                        Remaining scenarios: {remainingScenarios}
-                    </div>
+                    {!isDemo && (
+                        <div className="fixed right-60 top-7 z-10 mt-[3px] select-none font-barlow font-light text-map">
+                            Remaining scenarios: {remainingScenarios}
+                        </div>
+                    )}
                     <GameNextButton
                         className="fixed bottom-12 right-24 z-10 px-8"
                         disabled={!enableNext}
                         loading={completionPending}
                         loadingText={'Saving...'}
-                        onClick={handleNextScenario}>
+                        onClick={!isDemo ? handleNextScenario : handleNextDemoScenario}>
                         {scenariosInARow >= GAME_MAX_SCENARIOS_IN_A_ROW ? 'Finish' : 'Next'}
                     </GameNextButton>
                 </>

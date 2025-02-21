@@ -10,6 +10,7 @@ type GameLayoutProps = {
     revealSolution?: boolean;
     backstageAccess?: boolean;
     remainingScenarios?: number;
+    demoScenarios?: ScenarioSelect[];
 };
 
 export const GameLayout = (props: PropsWithoutRef<GameLayoutProps>) => {
