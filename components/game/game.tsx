@@ -83,7 +83,6 @@ const Game = React.forwardRef<ResetGameHandle, PropsWithoutRef<GameProps>>((prop
     useImperativeHandle(ref, () => {
         return {
             resetGame() {
-                console.log('test resetGame');
                 gameStartTimeMs.current = undefined;
                 setSelectedFlight(null);
                 setSelectedPairs([]);
