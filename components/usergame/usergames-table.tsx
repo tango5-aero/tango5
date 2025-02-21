@@ -84,7 +84,6 @@ export const UserGamesTable = (props: PropsWithoutRef<UserGamesTableProps>) => {
     );
 
     const handleRowClick = (row: Row<UserGameSelect>) => {
-        if (props.adminAccess) return;
         router.push(`/app/solution/${row.original.scenarioId}`);
     };
 
@@ -95,7 +94,7 @@ export const UserGamesTable = (props: PropsWithoutRef<UserGamesTableProps>) => {
                 rowCount={rowCount}
                 loading={loading}
                 onPaginationChange={onPaginationChange}
-                onRowClick={handleRowClick}
+                onRowClick={!props.adminAccess ? handleRowClick : undefined}
                 pagination={pagination}
                 columns={props.adminAccess ? adminColumns : userColumns}
                 initialState={{ columnVisibility: { data: false } }}
